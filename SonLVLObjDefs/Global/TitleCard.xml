@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="trigger" Debug="true">
+  <Images>
+    <ImageFromSheet id="trigger" sheet="Global/Display.gif" sourcex="239" sourcey="239" width="16" height="16">
+      <Offset X="-8" Y="-8"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Display Offset" description="How offset this Title Card's sprites will be. Used in accordance with the Act name, to keep alignment." type="int" startbit="0" length="8" />
+  </Properties>
+</ObjDef>

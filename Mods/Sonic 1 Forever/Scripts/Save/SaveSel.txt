@@ -1,0 +1,1061 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Sonic Team Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias object.value0 : fade.alpha
+private alias object.value1 : nosave.arrowflash
+private alias object.value3 : swoopin
+private alias object.value4 : nosave.offset
+private alias object.value5 : hold.time
+public alias 12 : slot.total
+
+
+public alias saveRAM[257] : saved.spindash
+public alias saveRAM[258] : saved.speedCap
+public alias saveRAM[259] : saved.airSpeedCap
+public alias saveRAM[260] : saved.spikeBehavior
+public alias saveRAM[261] : saved.shieldType
+public alias saveRAM[262] : saved.superStates
+public alias saveRAM[263] : saved.Jumplock
+public alias saveRAM[264] : saved.Supermusic
+public alias saveRAM[265] : saved.Dropdash
+public alias saveRAM[266] : saved.Instashield
+public alias saveRAM[267] : saved.Peelout
+public alias saveRAM[268] : saved.FlightCancel
+public alias saveRAM[269] : saved.SonicMaxDash
+public alias saveRAM[270] : saved.Speen
+public alias saveRAM[271] : saved.Supercancel
+public alias saveRAM[272] : saved.Drowning
+public alias saveRAM[273] : saved.Timer
+public alias saveRAM[274] : saved.region
+public alias saveRAM[275] : saved.UFO
+public alias saveRAM[276] : saved.rotate
+public alias saveRAM[277] : saved.invincibilityType
+public alias saveRAM[280] : saved.gogoplus
+public alias saveRAM[281] : saved.lives
+public alias saveRAM[282] : saved.bubble
+public alias saveRAM[285] : saved.GHZwater
+public alias saveRAM[286] : saved.language
+public alias saveRAM[295] : saved.mobile
+public alias saveRAM[296] : saved.transmobile
+
+//Saveslot 0	0-7
+//Saveslot 1	8-15
+//Saveslot 2	16-23
+//Saveslot 3	24-31
+//Saveslot 4	32 - 39
+//Saveslot 5	40 - 47
+
+// Function declarations
+reserve function save_fadein
+reserve function save_slotselect
+reserve function save_stageselect
+reserve function save_charaselect
+reserve function save_loadsave
+reserve function save_loadspecial
+reserve function save_loadcomplete
+reserve function save_loadnew
+reserve function save_exit
+reserve function nosave_highlight
+reserve function nosave_charaselect
+reserve function nosave_load
+reserve function delete_highlight
+reserve function delete_slotselect
+reserve function delete_confirm
+reserve function delete_execute
+reserve function PlayRingSound
+reserve function SlotTouch
+reserve function menu.holdmovement
+
+// Static Values
+public value save.highlight = 0;
+public value complete.stage = 0;
+public value new.character = 0;
+public value DeleteYesNo = 0;
+public value pop.frame = 0;
+public value pop.timer = 0;
+public value partnerpop.frame = 0;
+public value partnerpop.timer = 0;
+public value touch.delay = 0;
+
+//Tables
+
+
+function menu.holdmovement
+		if inputDown.up == 1
+			hold.time++
+			if hold.time >= 20
+				inputPress.up = 1
+				hold.time = 12
+			end if
+		else	
+			if inputDown.down == 1
+				hold.time++
+				if hold.time >= 20
+					inputPress.down = 1
+					hold.time = 12
+				end if
+			else
+				if inputDown.right == 1
+					hold.time++
+					if hold.time >= 20
+						inputPress.right = 1
+						hold.time = 12
+					end if		
+				else
+					if inputDown.left == 1
+						hold.time++
+						if hold.time >= 20
+							inputPress.left = 1
+							hold.time = 12
+						end if		
+					else
+						hold.time = 0
+					end if
+				end if
+			end if
+		end if
+end function 
+
+function SlotTouch
+	if saved.mobile == 1
+		if touch.delay < 20
+			touch.delay++
+		else
+			checkResult = -1
+			foreach (TypeName[Save Slot], arrayPos0, ALL_ENTITIES)
+				if checkResult == -1
+					//find the slot on screen
+					temp0 = object[arrayPos0].ixpos
+					temp0 -= screen.xoffset
+					temp2 = temp0
+					temp2 -= 45
+					if temp2 < 0
+						temp2 = 0
+					end if
+					temp0 += 45
+					if temp0 > screen.xsize
+						temp0 = screen.xsize
+					end if
+					if save.highlight == object[arrayPos0].propertyValue
+						if object.state == save_slotselect
+							if temp2 < screen.xsize
+								if temp0 > 0					
+									CheckTouchRect(temp2, 62, temp0, 180)
+									if checkResult > -1
+										touch.delay = 0
+										inputPress.buttonA = 1
+									end if
+								end if
+							end if
+						else
+							if object.state == save_stageselect
+								if temp2 < screen.xsize
+									if temp0 > 0					
+										temp3 = temp2
+										temp3 += 45
+										CheckTouchRect(temp3, 110, temp0, 160)
+										if checkResult > -1
+											touch.delay = 0
+											inputPress.right = 1
+										else
+											CheckTouchRect(temp2, 62, temp0, 180)
+											if checkResult > -1
+												touch.delay = 0
+												inputPress.buttonA = 1
+											end if
+										end if
+									end if
+								end if
+							else
+								if object.state == save_charaselect
+									if temp2 < screen.xsize
+										if temp0 > 0		
+											CheckTouchRect(temp2, 62, temp0, 100)
+											if checkResult > -1
+												touch.delay = 0
+												inputPress.right = 1
+											else
+												CheckTouchRect(temp2, 62, temp0, 180)
+												if checkResult > -1
+													touch.delay = 0
+													inputPress.buttonA = 1
+												end if
+											end if
+										end if
+									end if
+								else
+									if object.state == delete_confirm									
+										temp3 = object[arrayPos0].ixpos
+										temp3 -= screen.xoffset
+										CheckTouchRect(temp2, 62, temp3, 180)
+										if checkResult > -1
+											touch.delay = 0
+											if DeleteYesNo == 1
+												CallFunction(delete_execute)
+												object.state = save_slotselect
+											else
+												DeleteYesNo = 1
+											end if
+										else
+											CheckTouchRect(temp3, 62, temp0, 180)
+											if checkResult > -1
+												touch.delay = 0
+												object.state = save_slotselect
+												DeleteYesNo = 0
+											end if
+										end if
+									else
+										if object.state == nosave_charaselect
+											if temp2 < screen.xsize
+												if temp0 > 0					
+													CheckTouchRect(temp2, 62, temp0, 180)
+													if checkResult > -1
+														touch.delay = 0
+														object.state = save_slotselect
+														PlaySfx(SfxName[Score Add], 0)
+														save.highlight = object[arrayPos0].propertyValue
+													end if
+												end if
+											end if
+										end if
+									end if
+								end if
+							end if
+						end if
+					else
+						if temp2 < screen.xsize
+							if temp0 > 0					
+								CheckTouchRect(temp2, 62, temp0, 180)
+								if checkResult > -1
+									touch.delay = 0
+									object.state = save_slotselect
+									PlaySfx(SfxName[Score Add], 0)
+									save.highlight = object[arrayPos0].propertyValue
+								end if
+							end if
+						end if
+					end if
+				end if
+			next
+			if checkResult == -1
+				temp0 = screen.xsize
+				temp0 -= 59
+				temp1 = temp0 
+				temp1 += 44
+				CheckTouchRect(temp0, 185, temp1, 240)
+				if checkResult > -1
+					inputPress.buttonY = 1
+					touch.delay = 0
+				end if			
+			end if
+			if checkResult == -1
+				temp0 = screen.xsize
+				temp0 -= 134
+				temp1 = temp0 
+				temp1 += 64
+				CheckTouchRect(temp0, 185, temp1, 240)
+				if checkResult > -1
+					touch.delay = 0
+					if object.state != nosave_charaselect
+						object.state = nosave_charaselect
+					else						
+						inputPress.right = 1
+					end if
+				else
+					if object.state == nosave_charaselect
+						temp0 -= 70
+						temp1 -= 70
+						CheckTouchRect(temp0, 185, temp1, 240)
+						if checkResult > -1
+							inputPress.buttonA = 1
+						end if
+					end if
+				end if			
+			end if
+			if checkResult == -1
+				CheckTouchRect(0, 0, screen.xsize, 40)
+				if checkResult > -1
+					touch.delay = 0
+					object.state = save_exit
+				end if			
+			end if
+		end if
+	else
+		touch.delay = 1000
+	end if
+end function
+
+function save_fadein
+	if fade.alpha == 0
+		fade.alpha = 384
+	end if
+	SetScreenFade(0, 0, 0, fade.alpha)
+	fade.alpha -= 16
+	if fade.alpha <= 0
+		PlayMusic(1)
+		fade.alpha = 0
+		object.state = save_slotselect
+	end if
+end function
+
+function save_slotselect
+	CallFunction(SlotTouch)
+	if inputPress.left == 1
+		save.highlight--
+		PlaySfx(SfxName[Score Add], 0)
+		while save.highlight < 0
+			save.highlight += slot.total
+		loop
+	else
+		if inputPress.right == 1
+			save.highlight++
+			PlaySfx(SfxName[Score Add], 0)
+			save.highlight %= slot.total
+		end if
+	end if
+	if inputPress.buttonB == 1
+		object.state = save_exit
+	else
+		temp0 = inputPress.buttonA
+		temp0 |= inputPress.start
+		if temp0 == 1
+			arrayPos0 = save.highlight
+			arrayPos0 <<= 3
+			arrayPos0 += 1000
+			arrayPos1 = arrayPos0
+			arrayPos1 += 4
+			switch saveRAM[arrayPos1]
+				case 0//New Save
+					CallFunction(PlayRingSound)
+					object.state = save_charaselect
+					pop.frame = 0
+					pop.timer = 0
+					partnerpop.frame = 0
+					partnerpop.timer = 0					
+					break
+				case 20 //Complete Save	
+					CallFunction(PlayRingSound)
+					object.state = save_stageselect
+					break
+				default
+					if saveRAM[arrayPos1] > 127
+						object.state = save_loadspecial
+						PlaySfx(SfxName[Warp], 0)
+					else
+						object.state = save_loadsave
+						CallFunction(PlayRingSound)
+					end if
+					break
+			end switch
+		else
+			if inputPress.down == 1
+				PlaySfx(SfxName[Score Add], 0)
+				object.state = nosave_highlight
+			else
+				if inputPress.buttonY == 1
+					foreach (TypeName[Save Slot], arrayPos0, ALL_ENTITIES)
+						if object[arrayPos0].propertyValue == save.highlight
+							if object[arrayPos0].value0 == 0
+								object.state = delete_confirm
+								PlaySfx(SfxName[Skidding], 0)
+							else
+								PlaySfx(SfxName[Bonus Points], 0)
+							end if
+						end if
+					next
+				end if
+			end if
+		end if
+	end if
+end function
+
+function save_stageselect	
+	CallFunction(SlotTouch)
+	if inputPress.buttonB == 1
+		object.state = save_slotselect
+	else
+		if inputPress.left == 1
+			complete.stage--
+			PlaySfx(SfxName[Score Add], 0)
+			while complete.stage < 0
+				complete.stage += 7
+			loop
+		else
+			if inputPress.right == 1
+				complete.stage++
+				PlaySfx(SfxName[Score Add], 0)
+				complete.stage %= 7
+			else
+				temp0 = inputPress.buttonA
+				temp0 |= inputPress.start
+				if temp0 == 1
+					CallFunction(PlayRingSound)
+					object.state = save_loadcomplete
+				end if
+			end if
+		end if
+	end if
+end function
+
+function save_charaselect
+
+	CallFunction(SlotTouch)
+	temp3 = 5
+	temp3 += saveRAM[412]
+	
+	if inputPress.buttonB == 1
+		object.state = save_slotselect
+	else
+		if inputPress.left == 1
+			new.character--
+			PlaySfx(SfxName[Score Add], 0)
+			while new.character < 0
+				new.character += temp3
+			loop
+			pop.frame = 0
+			pop.timer = 0
+			partnerpop.frame = 0
+			partnerpop.timer = 0	
+		else
+			if inputPress.right == 1
+				new.character++
+				PlaySfx(SfxName[Score Add], 0)
+				new.character %= temp3
+				pop.frame = 0
+				pop.timer = 0
+				partnerpop.frame = 0
+				partnerpop.timer = 0	
+			else
+				temp0 = inputPress.buttonA
+				temp0 |= inputPress.start
+				if temp0 == 1
+					CallFunction(PlayRingSound)
+					object.state = save_loadnew
+				end if
+			end if
+		end if
+	end if	
+end function
+
+function save_loadsave
+	fade.alpha += 16
+	music.volume -= 2
+	SetScreenFade(0, 0, 0, fade.alpha)
+	if fade.alpha >= 384
+		StopMusic()
+		options.gameMode = 1
+		options.saveSlot = save.highlight
+		options.attractMode = 0
+		lampPostID = 0
+		arrayPos0 = save.highlight
+		arrayPos0 <<= 3
+		arrayPos0 += 1000
+		stage.playerListPos = saveRAM[arrayPos0]
+		arrayPos0++
+		player.lives = saveRAM[arrayPos0]
+		arrayPos0++
+		player.score = saveRAM[arrayPos0]
+		arrayPos0++
+		player.scoreBonus = saveRAM[arrayPos0]
+		arrayPos0++
+		stage.listPos = saveRAM[arrayPos0]
+		stage.listPos--
+		stage.activeList = REGULAR_STAGE
+		arrayPos0++
+		specialStage.emeralds = saveRAM[arrayPos0]
+		arrayPos0++
+		specialStage.listPos = saveRAM[arrayPos0]
+		arrayPos0++
+		player.continues = saveRAM[arrayPos0]
+		LoadStage()
+	end if
+end function
+
+function save_loadspecial
+	fade.alpha += 8
+	music.volume -= 2
+	SetScreenFade(color5, color7, color5, fade.alpha)
+	if fade.alpha >= 384
+		StopMusic()
+		options.gameMode = 1
+		options.saveSlot = save.highlight
+		options.attractMode = 0
+		lampPostID = 0
+		arrayPos0 = save.highlight
+		arrayPos0 <<= 3
+		arrayPos0 += 1000
+		stage.playerListPos = saveRAM[arrayPos0]
+		arrayPos0++
+		player.lives = saveRAM[arrayPos0]
+		arrayPos0++
+		player.score = saveRAM[arrayPos0]
+		arrayPos0++
+		player.scoreBonus = saveRAM[arrayPos0]
+		arrayPos0++
+		
+		temp0 = saveRAM[arrayPos1]		
+		temp0 -= 129
+		specialStage.nextZone = temp0
+		stage.activeList = SPECIAL_STAGE
+					
+		arrayPos0++
+		specialStage.emeralds = saveRAM[arrayPos0]
+		arrayPos0++
+		specialStage.listPos = saveRAM[arrayPos0]
+		arrayPos0++
+		player.continues = saveRAM[arrayPos0]
+		stage.listPos = specialStage.listPos
+		LoadPalette("SpecialStage.act",0,0,0,128)
+		LoadStage()
+	end if
+end function
+
+function save_loadcomplete
+	fade.alpha += 16
+	music.volume -= 2
+	SetScreenFade(0, 0, 0, fade.alpha)
+	if fade.alpha >= 384
+		StopMusic()
+		options.gameMode = 1
+		options.saveSlot = save.highlight
+		options.attractMode = 0
+		lampPostID = 0
+		arrayPos0 = save.highlight
+		arrayPos0 <<= 3
+		arrayPos0 += 1000
+		stage.playerListPos = saveRAM[arrayPos0]
+		arrayPos0++
+		player.lives = saveRAM[arrayPos0]
+		arrayPos0++
+		player.score = 0
+		arrayPos0++
+		player.scoreBonus = 50000
+		arrayPos0++
+		stage.listPos = complete.stage
+		stage.listPos *= 3
+		stage.activeList = REGULAR_STAGE		
+		arrayPos0++
+		specialStage.emeralds = saveRAM[arrayPos0]
+		arrayPos0++
+		specialStage.listPos = saveRAM[arrayPos0]
+		arrayPos0++
+		player.continues = saveRAM[arrayPos0]
+		LoadStage()
+	end if
+end function
+
+function save_loadnew
+	fade.alpha += 16
+	music.volume -= 2
+	SetScreenFade(0, 0, 0, fade.alpha)
+	if fade.alpha >= 384
+		StopMusic()
+		options.gameMode = 1
+		options.saveSlot = save.highlight
+		options.attractMode = 0
+		lampPostID = 0
+		arrayPos0 = save.highlight
+		arrayPos0 <<= 3
+		arrayPos0 += 1000
+		
+		//Write New Save
+		arrayPos1 = arrayPos0
+		switch new.character
+			case 0 //Sonic
+				saveRAM[arrayPos1] = 0
+				break
+			case 1 //Tails
+				saveRAM[arrayPos1] = 1
+				break
+			case 2 //Knuckles
+				saveRAM[arrayPos1] = 2
+				break
+			case 3 //Amy
+				saveRAM[arrayPos1] = 5
+				break
+			case 4 //Sonic and Tails
+				saveRAM[arrayPos1] = 3
+				break
+			case 5 //Knuckles and Tails
+				saveRAM[arrayPos1] = 4
+				break				
+		end switch
+		arrayPos1++
+		saveRAM[arrayPos1] = 3
+		arrayPos1++
+		saveRAM[arrayPos1] = 0
+		arrayPos1++
+		saveRAM[arrayPos1] = 50000
+		arrayPos1++
+		saveRAM[arrayPos1] = 1
+		arrayPos1++
+		saveRAM[arrayPos1] = 0
+		arrayPos1++
+		saveRAM[arrayPos1] = 0
+		arrayPos1++
+		saveRAM[arrayPos1] = 0
+		WriteSaveRAM()
+		
+		stage.playerListPos = saveRAM[arrayPos0]
+		arrayPos0++
+		player.lives = saveRAM[arrayPos0]
+		arrayPos0++
+		player.score = saveRAM[arrayPos0]
+		arrayPos0++
+		player.scoreBonus = saveRAM[arrayPos0]
+		arrayPos0++
+		stage.listPos = saveRAM[arrayPos0]
+		stage.listPos--
+		stage.activeList = REGULAR_STAGE
+		arrayPos0++
+		specialStage.emeralds = saveRAM[arrayPos0]
+		arrayPos0++
+		specialStage.listPos = saveRAM[arrayPos0]
+		arrayPos0++
+		player.continues = saveRAM[arrayPos0]
+		LoadStage()
+	end if
+end function
+
+function save_exit
+	fade.alpha += 16
+	music.volume -= 2
+	SetScreenFade(0, 0, 0, fade.alpha)
+	if fade.alpha >= 384
+		StopMusic()
+		stage.activeList = PRESENTATION_STAGE
+		stage.listPos = 6
+		LoadStage()
+	end if
+end function
+
+function nosave_highlight
+	if inputPress.buttonB == 1
+		object.state = save_exit
+	else
+		if inputPress.right == 1
+			PlaySfx(SfxName[Score Add], 0)
+			object.state = delete_highlight
+		else
+			if inputPress.up == 1
+				PlaySfx(SfxName[Score Add], 0)
+				object.state = save_slotselect
+			else
+				temp0 = inputPress.buttonA
+				temp0 |= inputPress.start
+				if temp0 == 1
+					CallFunction(PlayRingSound)
+					object.state = nosave_charaselect
+				end if
+			end if
+		end if
+	end if
+end function
+
+function nosave_charaselect
+	CallFunction(SlotTouch)
+	temp3 = 5
+	temp3 += saveRAM[412]
+	
+	if inputPress.buttonB == 1
+		object.state = nosave_highlight
+	else
+		if inputPress.left == 1
+			new.character--
+			PlaySfx(SfxName[Score Add], 0)
+			while new.character < 0
+				new.character += temp3
+			loop
+		else
+			if inputPress.right == 1
+				new.character++
+				PlaySfx(SfxName[Score Add], 0)
+				new.character %= temp3
+			else
+				temp0 = inputPress.buttonA
+				temp0 |= inputPress.start
+				if temp0 == 1
+					CallFunction(PlayRingSound)
+					object.state = nosave_load
+				end if
+			end if
+		end if
+	end if		
+end function
+
+function nosave_load
+	fade.alpha += 16
+	music.volume -= 2
+	SetScreenFade(0, 0, 0, fade.alpha)
+	if fade.alpha >= 384
+		StopMusic()
+		options.gameMode = 0
+		options.attractMode = 0
+		lampPostID = 0
+		
+		switch new.character
+			case 0 //Sonic
+				stage.playerListPos = 0
+				break
+			case 1 //Tails
+				stage.playerListPos = 1
+				break
+			case 2 //Knuckles
+				stage.playerListPos = 2
+				break
+			case 3 //Amy
+				stage.playerListPos = 5
+				break
+			case 4 //Sonic and Tails
+				stage.playerListPos = 3
+				break
+			case 5 //Knuckles and Tails
+				stage.playerListPos = 4
+				break				
+		end switch
+		
+		player.lives = 3
+		player.score = 0
+		player.scoreBonus = 50000
+		stage.listPos = 0
+		stage.activeList = REGULAR_STAGE
+		specialStage.emeralds = 0
+		specialStage.listPos = 0
+		player.continues = 0
+		LoadStage()
+	end if
+end function
+
+function delete_highlight
+	if inputPress.buttonB == 1
+		object.state = save_exit
+	else
+		if inputPress.left == 1
+			PlaySfx(SfxName[Score Add], 0)
+			object.state = nosave_highlight
+		else
+			if inputPress.up == 1
+				PlaySfx(SfxName[Score Add], 0)
+				object.state = save_slotselect
+			else
+				temp0 = inputPress.buttonA
+				temp0 |= inputPress.start
+				if temp0 == 1
+					PlaySfx(SfxName[Spike], 0)
+					object.state = delete_slotselect
+				end if
+			end if
+		end if
+	end if
+end function
+
+function delete_slotselect
+	if inputPress.left == 1
+		save.highlight--
+		PlaySfx(SfxName[Score Add], 0)
+		while save.highlight < 0
+			save.highlight += slot.total
+		loop
+	else
+		if inputPress.right == 1
+			save.highlight++
+			PlaySfx(SfxName[Score Add], 0)
+			save.highlight %= slot.total
+		end if
+	end if
+	if inputPress.buttonB == 1
+		object.state = save_slotselect
+	else
+		temp0 = inputPress.buttonA
+		temp0 |= inputPress.start
+		if temp0 == 1
+			foreach (TypeName[Save Slot], arrayPos0, ALL_ENTITIES)
+				if object[arrayPos0].propertyValue == save.highlight
+					if object[arrayPos0].value0 == 0
+						object.state = delete_confirm
+						PlaySfx(SfxName[Skidding], 0)
+					else
+						PlaySfx(SfxName[Bonus Points], 0)
+					end if
+				end if
+			next
+		end if
+	end if
+end function
+
+function delete_confirm
+	CallFunction(SlotTouch)
+	if inputPress.buttonB == 1
+		object.state = save_slotselect
+		DeleteYesNo = 0
+	else
+		temp0 = inputPress.left
+		temp0 |= inputPress.right
+		if temp0 == 1
+			PlaySfx(SfxName[Score Add], 0)
+			DeleteYesNo ^= 1
+		else
+			temp0 = inputPress.buttonA
+			temp0 |= inputPress.start
+			if temp0 == 1
+				if DeleteYesNo == 1
+					CallFunction(delete_execute)
+				end if
+				object.state = save_slotselect
+			end if
+		end if
+	end if
+end function
+
+function delete_execute
+		arrayPos0 = save.highlight
+		arrayPos0 <<= 3
+		arrayPos0 += 1000
+		temp1 = 0
+		while temp1 < 8
+			saveRAM[arrayPos0] = 0
+			arrayPos0++
+			temp1++
+		loop
+		PlaySfx(SfxName[Lose Rings], 0)
+		DeleteYesNo = 0
+		WriteSaveRAM()
+		
+		foreach (TypeName[Save Slot], arrayPos0, ALL_ENTITIES)
+			if object[arrayPos0].propertyValue == save.highlight
+				object[arrayPos0].value9 = 0
+			end if
+		next	
+		
+end function
+
+event ObjectMain
+	CallFunction(menu.holdmovement)
+	nosave.arrowflash++
+	nosave.arrowflash %= 60
+	CallFunction(object.state)
+	if swoopin == 0
+		if screen.xoffset < 0
+			screen.xoffset += 40
+			if screen.xoffset > 0
+				screen.xoffset = 0
+				swoopin = 1
+			end if
+		end if
+	end if
+end event
+
+
+event ObjectDraw
+	//Draw Background
+	temp0 = 0
+	temp1 = 0
+	while temp0 < screen.xsize
+		while temp1 < screen.ysize
+			DrawSpriteScreenXY(0, temp0, temp1)
+			temp1 += 12
+		loop
+		temp1 = 0
+		temp0 += 12
+	loop
+	
+	//Header
+	DrawRect(0, 0, screen.xsize, 40, color5, color5, color7, 255)
+	DrawRect(0, 40, screen.xsize, 10, 0, 0, 0, 255)
+	DrawRect(0, 45, screen.xsize, 1, color7, color7, color7, 255)
+	DrawSpriteScreenXY(1, 0, 0)
+	DrawSpriteScreenXY(2, screen.xcenter, 16)
+	if saved.mobile == 1
+		DrawSpriteScreenXY(17, 0, 10)
+	end if
+	
+	//Footer
+	DrawRect(0, 196, screen.xsize, 44, 0, 0, 0, 255)
+	DrawRect(0, 198, screen.xsize, 1, color7, 0, 0, 255)	
+	DrawRect(0, 199, screen.xsize, 1, color7, color7, color7, 255)
+	DrawRect(0, 238, screen.xsize, 1, color7, color7, color7, 255)
+	DrawRect(0, 239, screen.xsize, 1, color7, 0, 0, 255)	
+	
+	//No Save
+	temp3 = 0
+	temp0 = screen.xsize
+	temp0 -= 135
+	DrawSpriteScreenXY(3, temp0, screen.ysize)
+	if object.state == nosave_highlight
+		DrawSpriteScreenXY(4, temp0, screen.ysize)
+		DrawSpriteScreenXY(5, temp0, screen.ysize)
+	else
+		CheckEqual(object.state, nosave_charaselect)
+		temp2 = checkResult
+		temp3 = checkResult
+		CheckEqual(object.state, nosave_load)
+		temp2 |= checkResult
+		if temp2 == 1
+			temp1 = new.character
+			temp1 += 6
+			DrawSpriteScreenXY(temp1, temp0, screen.ysize)
+			DrawSpriteScreenXY(5, temp0, screen.ysize)
+			if temp3 == 1
+				if nosave.arrowflash < 30
+					DrawSpriteScreenXY(12, temp0, screen.ysize)
+				end if
+			end if
+		end if			
+	end if
+	temp3 &= saved.mobile
+	if temp3 == 1
+		if nosave.offset < 50
+			nosave.offset += 8
+			if nosave.offset >= 50
+				nosave.offset = 50
+			end if
+		end if
+	else
+		if nosave.offset > 0
+			nosave.offset -= 8
+			if nosave.offset <= 0
+				nosave.offset = 0
+			end if
+		end if	
+	end if
+	temp0 -= 50
+	temp4 = screen.ysize
+	temp4 += 20
+	temp4 -= nosave.offset
+	DrawSpriteScreenXY(18, temp0, temp4)
+	
+	//Delete
+	temp0 = screen.xsize
+	temp0 -= 60
+	DrawSpriteScreenXY(14, temp0, screen.ysize)
+	CheckEqual(object.state, delete_highlight)
+	temp2 = checkResult
+	CheckEqual(object.state, delete_slotselect)
+	temp2 |= checkResult
+	CheckEqual(object.state, delete_confirm)
+	temp2 |= checkResult
+	if temp2 == 1
+		DrawSpriteScreenXY(15, temp0, screen.ysize)
+		DrawSpriteScreenXY(16, temp0, screen.ysize)
+	end if
+end event
+
+
+event ObjectStartup
+	LoadPalette("SaveSelect.act", 0, 0, 0, 256)
+	LoadSpriteSheet("Menus/SaveSelect.gif")
+	
+	SpriteFrame(0, 0, 12, 12, 152, 1) //0 Background
+	SpriteFrame(0, 0, 106, 118, 405, 393) //1 Header Star
+	switch saved.language
+	case 0
+		SpriteFrame(-75, 0, 150, 18, 1, 1) //2 Title
+		break
+	case 1
+		SpriteFrame(-110, -5, 215, 23, 308, 38) //2 Title PTBR
+		break
+	case 2
+		SpriteFrame(-130, 0, 258, 18, 100, 317) //2 Title SP
+		break
+	end switch
+	
+	//No Save
+	switch saved.language
+	case 0
+		SpriteFrame(0, -55, 66, 55, 1, 261) //3 No Save Frame
+		SpriteFrame(13, -44, 38, 26, 1, 372) //4 Red X
+		SpriteFrame(6, -13, 53, 11, 166, 261) //5 No Save Text
+		break
+	case 1
+		SpriteFrame(-14, -55, 85, 55, 182, 178) //3 No Save Frame
+		SpriteFrame(13, -44, 38, 26, 1, 372) //4 Red X
+		SpriteFrame(-3, -11, 71, 7, 166, 285) //5 No Save Text
+		break
+	case 2
+		SpriteFrame(-14, -55, 85, 55, 268, 178) //3 No Save Frame
+		SpriteFrame(13, -44, 38, 26, 1, 372) //4 Red X
+		SpriteFrame(-3, -11, 71, 7, 166, 301) //5 No Save Text
+		break
+	end switch
+	SpriteFrame(13, -44, 38, 26, 1, 344) //6 Sonic
+	SpriteFrame(13, -44, 38, 26, 40, 344) //7 Tails
+	SpriteFrame(13, -44, 38, 26, 79, 344) //8 Knuckles
+	SpriteFrame(13, -44, 38, 26, 196, 344) //9 Amy
+	SpriteFrame(13, -44, 38, 26, 118, 344) //10 Sonic and Tails
+	SpriteFrame(13, -44, 38, 26, 157, 344) //11 Knuckles and Tails
+	switch saved.language
+	case 0
+		SpriteFrame(7, -46, 50, 28, 115, 261) //12 Select Arrow 
+		break
+	case 1
+		SpriteFrame(7, -46, 50, 28, 115, 261) //12 Select Arrow 
+		break
+	case 2
+		SpriteFrame(7, -46, 50, 28, 115, 261) //12 Select Arrow 
+		break
+	endswitch
+	SpriteFrame(13, -44, 38, 26, 1, 317) //13 Soink
+	
+	//Delete
+	switch saved.language
+	case 0
+		SpriteFrame(0, -55, 46, 55, 68, 261) //14 Frame	
+		SpriteFrame(12, -44, 24, 26, 40, 317) //15 Robotnik
+		SpriteFrame(1, -13, 44, 11, 166, 273) //16 Delete Text
+		break
+	case 1
+		SpriteFrame(0, -55, 46, 55, 238, 234) //14 Frame	
+		SpriteFrame(12, -44, 24, 26, 40, 317) //15 Robotnik
+		SpriteFrame(2, -11, 42, 7, 166, 293) //16 Delete Text
+		break
+	case 2
+		SpriteFrame(0, -55, 46, 55, 285, 234) //14 Frame	
+		SpriteFrame(12, -44, 24, 26, 40, 317) //15 Robotnik
+		SpriteFrame(3, -11, 40, 7, 166, 309) //16 Delete Text
+		break
+	end switch
+
+	SpriteFrame(0, 0, 87, 18, 196, 1) //17 Save Select back button
+	SpriteFrame(-5, 0, 49, 12, 292, 93) //18 No Save Go
+	
+	stage.debugMode = 0
+	SetMusicTrack("StartingTheShow.ogg", 1, 92561)
+	
+	
+	//we only need one save select object
+	foreach (TypeName[Save Select Menu], arrayPos0, ALL_ENTITIES)
+		object[arrayPos0].type = TypeName[Blank Object]
+		
+		object[9].type = TypeName[Save Select Menu]
+		object[9].priority = PRIORITY_ACTIVE
+		object[9].drawOrder = 1
+		object[9].state = save_fadein
+		screen.xoffset = -1500
+	next	
+end event
+
+function PlayRingSound
+	if ringPan == 0
+		PlaySfx(SfxName[Ring L], 0)
+		SetSfxAttributes(SfxName[Ring L], -1, -100)
+		ringPan = 1
+	else
+		PlaySfx(SfxName[Ring R], 0)
+		SetSfxAttributes(SfxName[Ring R], -1, 100)
+		ringPan = 0
+	end if
+end function
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+end event

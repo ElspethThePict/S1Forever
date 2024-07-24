@@ -1,0 +1,1657 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Sonic Team Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias object.value0 : zone.highlight
+private alias object.value1 : act.highlight
+private alias object.value2 : specialstage.selected
+private alias object.value3 : BestTime
+private alias object.value4 : TotalTime
+private alias object.value5 : fade.control
+private alias object.value6 : fade.effect
+private alias object.value7 : character.select
+private alias object.value8 : SonicTimes
+private alias object.value9 : TailsTimes
+private alias object.value10 : KnuxTimes
+private alias object.value11 : Act.Best
+private alias object.value12 : Clock.Time
+private alias object.value13 : ZigZag.March
+private alias object.value14 : TA.xoffset
+private alias object.value15 : TA.xtarget
+private alias object.value16 : TA.yoffset
+private alias object.value17 : TA.ytarget
+private alias object.value18 : achievement.state
+private alias object.value19 : achieve.xoffset
+private alias object.value20 : achieve.timer
+private alias object.value21 : SuperTimes
+private alias object.value22 : AmyTimes
+private alias object.value23 : level.scroll
+private alias object.value24 : level.scroll.min
+private alias object.value25 : level.scroll.max
+private alias object.value26 : MenuFunction
+private alias object.value27 : touch.delay
+private alias object.value28 : touch.fade
+private alias object.value29 : hold.time
+
+
+private alias 15 : TA.xspeed
+private alias 5 : TA.yspeed
+
+public alias saveRAM[257] : saved.spindash
+public alias saveRAM[258] : saved.speedCap
+public alias saveRAM[259] : saved.airSpeedCap
+public alias saveRAM[260] : saved.spikeBehavior
+public alias saveRAM[261] : saved.shieldType
+public alias saveRAM[262] : saved.superStates
+public alias saveRAM[263] : saved.Jumplock
+public alias saveRAM[264] : saved.Supermusic
+public alias saveRAM[265] : saved.Dropdash
+public alias saveRAM[266] : saved.Instashield
+public alias saveRAM[267] : saved.Peelout
+public alias saveRAM[268] : saved.FlightCancel
+public alias saveRAM[269] : saved.SonicMaxDash
+public alias saveRAM[270] : saved.Speen
+public alias saveRAM[271] : saved.Supercancel
+public alias saveRAM[272] : saved.Drowning
+public alias saveRAM[273] : saved.Timer
+public alias saveRAM[274] : saved.region
+public alias saveRAM[275] : saved.UFO
+public alias saveRAM[276] : saved.rotate
+public alias saveRAM[277] : saved.invincibilityType
+public alias saveRAM[280] : saved.gogoplus
+public alias saveRAM[281] : saved.lives
+public alias saveRAM[282] : saved.bubble
+public alias saveRAM[285] : saved.GHZwater
+public alias saveRAM[286] : saved.language
+public alias saveRAM[295]: saved.mobile
+public alias saveRAM[296]: saved.transmobile
+
+// Function declarations
+reserve function LoadTimeLevel
+reserve function TimesSetUp
+reserve function DrawClock
+reserve function FirstMenu
+reserve function FirstMenu43
+reserve function SecondMenu
+reserve function VersionNumber
+reserve function touch.controls
+reserve function menu.holdmovement
+
+// Static Values
+private value time.achievement = 0
+
+// Tables
+private table TimeAttack_CharacterSelect
+	0, 1, 2, 5, 100
+end table
+
+function menu.holdmovement
+	temp0 = 0
+	if inputDown.up == 1
+		temp0 = 1
+		hold.time++
+		if hold.time >= 20
+			inputPress.up = 1
+			hold.time = 12
+		end if
+	end if
+	
+	if inputDown.down == 1
+		temp0 = 1
+		hold.time++
+		if hold.time >= 20
+			inputPress.down = 1
+			hold.time = 12
+		end if
+	end if
+	
+	if inputDown.right == 1
+		temp0 = 1
+		hold.time++
+		if hold.time >= 20
+			inputPress.right = 1
+			hold.time = 12
+		end if		
+	end if
+
+	if inputDown.left == 1
+		temp0 = 1
+		hold.time++
+		if hold.time >= 20
+			inputPress.left = 1
+			hold.time = 12
+		end if		
+	end if
+	
+	if temp0 == 0
+		hold.time = 0
+	end if
+end function 
+
+function LoadTimeLevel
+		stage.player2Enabled = 0
+		options.gameMode = 2
+		options.attractMode = 0
+		player.lives = 1
+		player.continues = 0
+		player.score = 0
+		player.scoreBonus = 0xC350
+		lampPostID = 0
+		specialStage.emeralds = 0
+		specialStage.nextZone = 0
+		SuperTimeAttack = 0
+		LoadStage()
+end function
+
+function touch.controls
+	touch.delay++
+	if touch.delay >= 15
+		CheckTouchRect(0, 96, screen.xcenter, screen.ysize)
+			if checkResult > -1
+				arrayPos0 = checkResult
+				temp0 = touchscreen[arrayPos0].xpos
+				temp0 -= 56
+				temp1 = touchscreen[arrayPos0].ypos
+				temp1 -= 184
+				ATan2(temp2, temp0, temp1)
+				temp2 += 42
+				temp2 &= 255
+				temp2 >>= 6
+				switch temp2
+				case 0
+					touch.delay = 0
+					inputPress.right = 1
+					break
+				case 1
+					touch.delay = 0
+					inputPress.down = 1
+					break
+				case 2
+					touch.delay = 0
+					inputPress.left = 1
+					break
+				case 3
+					touch.delay = 0
+					inputPress.up = 1
+					break
+				end switch
+			end if
+
+		CheckTouchRect(screen.xcenter, 96, screen.xsize, 240)
+		if checkResult > -1			
+			inputDown.buttonA = 1
+		end if
+		if touchJump == 0
+			inputPress.buttonA |= inputDown.buttonA
+		end if
+		touchJump = inputDown.buttonA
+			
+		CheckTouchRect(0, 0, 40, 40)
+		if checkResult > -1
+			touch.delay = 0
+			inputPress.buttonB = 1
+		end if
+	end if
+end function
+
+event ObjectMain
+	if saved.mobile == 1
+		CallFunction(touch.controls)
+	end if
+	CallFunction(menu.holdmovement)
+	switch object.state
+		case 0
+			CallFunction(TimesSetUp)
+			object.state++
+		case 1			
+			if inputPress.down == 1
+				zone.highlight++
+				zone.highlight %= 8
+				PlaySfx(SfxName[Score Add], 0)
+			end if
+			
+			if inputPress.up == 1
+				zone.highlight--
+				while zone.highlight < 0
+					zone.highlight += 8
+				loop
+				PlaySfx(SfxName[Score Add], 0)
+			end if
+			
+			switch zone.highlight
+				case 7 //Special Stages
+					if inputPress.right == 1
+						specialstage.selected++
+						specialstage.selected %= 7
+						PlaySfx(SfxName[Score Add], 0)
+					end if
+					
+					if inputPress.left == 1
+						specialstage.selected--
+						while specialstage.selected < 0
+							specialstage.selected += 7
+						loop
+						PlaySfx(SfxName[Score Add], 0)
+					end if
+					
+					CheckEqual(inputPress.buttonA, 1)
+					temp0 = checkResult
+					CheckEqual(inputPress.start, 1)
+					temp0 |= checkResult
+					if temp0 == 1
+						stage.activeList = SPECIAL_STAGE
+						stage.listPos = specialstage.selected
+						character.select %= 4
+						object.state++
+						PlaySfx(SfxName[Lamp Post], 0)
+					end if
+					break
+					
+				case 6 //Final Zone
+					CheckEqual(inputPress.buttonA, 1)
+					temp0 = checkResult
+					CheckEqual(inputPress.start, 1)
+					temp0 |= checkResult
+					if temp0 == 1
+						stage.activeList = REGULAR_STAGE
+						stage.listPos = 18
+						object.state++
+						PlaySfx(SfxName[Lamp Post], 0)
+						character.select %= 4
+					end if
+					
+					if object[9].value26 != FirstMenu43
+						if inputPress.right == 1
+							act.highlight = 0
+							zone.highlight = 2
+							PlaySfx(SfxName[Score Add], 0)
+						end if
+						
+						if inputPress.left == 1
+							act.highlight = 2
+							zone.highlight = 2
+							PlaySfx(SfxName[Score Add], 0)
+						end if
+					end if
+					break
+				default
+					if inputPress.right == 1
+						act.highlight++
+						if object[9].value26 != FirstMenu43
+							if act.highlight == 3
+								zone.highlight += 4
+								zone.highlight %= 8
+							end if
+						end if
+						act.highlight %= 3
+						PlaySfx(SfxName[Score Add], 0)
+					end if
+					
+					if inputPress.left == 1
+						act.highlight--
+						if object[9].value26 != FirstMenu43
+							if act.highlight == -1
+								zone.highlight += 4
+								zone.highlight %= 8
+							end if
+						end if
+						while act.highlight < 0
+							act.highlight += 3
+						loop
+						PlaySfx(SfxName[Score Add], 0)
+					end if
+					
+					CheckEqual(inputPress.buttonA, 1)
+					temp0 = checkResult
+					CheckEqual(inputPress.start, 1)
+					temp0 |= checkResult
+					if temp0 == 1
+						stage.activeList = REGULAR_STAGE
+						stage.listPos = zone.highlight
+						stage.listPos *= 3
+						stage.listPos += act.highlight
+						object.state++						
+						PlaySfx(SfxName[Lamp Post], 0)
+							CheckLower(zone.highlight, 6)
+							temp0 = checkResult
+							CheckGreater(saveRAM[413], 0)
+							temp0 &= checkResult
+							if temp0 == 0
+								character.select %= 4
+							end if
+					end if
+					break
+			end switch
+			
+			if inputPress.buttonB == 1
+				stage.activeList = PRESENTATION_STAGE
+				stage.listPos = 6
+				object.state = 101
+				//PlaySfx(SfxName[Lamp Post], 0)
+			end if
+			break
+		case 2			
+			if inputPress.right == 1
+				character.select++
+				CheckLower(zone.highlight, 6)
+				temp0 = checkResult
+				CheckGreater(saveRAM[413], 0)
+				temp0 &= checkResult
+				if temp0 == 0
+					character.select %= 4
+				else
+					character.select %= 5
+				end if
+				PlaySfx(SfxName[Score Add], 0)
+			end if
+			
+			if inputPress.left == 1
+				character.select--
+				while character.select < 0
+					CheckLower(zone.highlight, 6)
+					temp0 = checkResult
+					CheckGreater(saveRAM[413], 0)
+					temp0 &= checkResult
+					if temp0 == 0
+						character.select += 4
+					else
+						character.select += 5
+					end if
+				loop
+				PlaySfx(SfxName[Score Add], 0)
+			end if
+			
+			CheckEqual(inputPress.buttonA, 1)
+			temp0 = checkResult
+			CheckEqual(inputPress.start, 1)
+			temp0 |= checkResult
+			if temp0 == 1
+				GetTableValue(stage.playerListPos, character.select, TimeAttack_CharacterSelect)
+				
+				object.state = 100
+				if zone.highlight != 7
+					PlaySfx(SfxName[Lamp Post], 0)
+				end if
+			end if
+			
+			if inputPress.buttonB == 1
+				object.state = 1
+			end if
+			break
+		case 100
+		case 101			
+			switch fade.control
+				case 1
+				case 2
+				case 3
+					fade.control = 4
+					if stage.activeList == SPECIAL_STAGE
+						fade.control = 6
+					end if
+					break
+				case 5
+				case 8
+					saveRAM[610] = zone.highlight
+					saveRAM[611] = act.highlight
+					saveRAM[612] = specialstage.selected
+					saveRAM[613] = character.select
+					WriteSaveRAM()
+					CallFunction(LoadTimeLevel)
+					break
+			end switch
+			break
+	end switch
+
+	//Achievement Display
+	if time.achievement == 1	
+		switch achievement.state
+			case 0
+				if saveRAM[411] == 1
+					time.achievement = 0	
+					achievement.state = 0
+				else
+					saveRAM[411] = 1
+					WriteSaveRAM()
+					achievement.state++
+				end if
+				break
+			case 1
+				PlaySfx(SfxName[Event], 0)
+				achieve.xoffset = 0
+				achievement.state++
+				break			
+			case 2
+				if achieve.xoffset < 200
+					achieve.xoffset += 8
+				end if
+				if achieve.xoffset >= 200
+					achieve.xoffset = 200
+					achieve.timer = 0
+					achievement.state++
+				end if
+				break
+			case 3
+				if achieve.timer < 180
+					achieve.timer++
+				else
+					achievement.state++
+				end if
+				break
+			case 4
+				if achieve.xoffset > 0
+					achieve.xoffset -= 8
+				end if
+				if achieve.xoffset <= 0
+					achieve.xoffset = 0
+					achievement.state++
+				end if
+				break
+			case 5
+				time.achievement = 0	
+				achievement.state = 0
+				break
+		end switch
+	end if
+end event
+
+
+
+//Drawing
+event ObjectDraw
+	//Offsetting
+	temp0 = TA.xoffset
+	temp0 -= TA.xtarget
+	Abs(temp0)
+	if temp0 < TA.xspeed
+		TA.xoffset = TA.xtarget
+	else
+		if TA.xoffset < TA.xtarget
+			TA.xoffset += TA.xspeed
+		end if
+		
+		
+		if TA.xoffset > TA.xtarget
+			TA.xoffset -= TA.xspeed
+		end if
+	end if
+	switch object.state
+		case 2
+		case 100
+			TA.xtarget = screen.xsize
+			TA.xtarget += 20
+			break
+		default
+			TA.xtarget = 0
+	end switch
+	
+	temp0 = TA.yoffset
+	temp0 -= TA.ytarget
+	Abs(temp0)
+	if temp0 < TA.yspeed
+		TA.yoffset = TA.ytarget
+	else
+		if TA.yoffset < TA.ytarget
+			TA.yoffset += TA.yspeed
+		end if
+		
+		
+		if TA.yoffset > TA.ytarget
+			TA.yoffset -= TA.yspeed
+		end if
+	end if
+	
+	switch object.state
+		case 2
+		case 100
+			TA.ytarget = 100
+			break
+		default
+			TA.ytarget = 0
+	end switch
+	
+	//Fade
+	switch fade.control
+		case 0
+			fade.effect = 256
+			SetScreenFade(0, 0, 0, fade.effect)
+			fade.control++
+			break
+		case 1
+			if fade.effect > 0
+				fade.effect -= 16
+			else
+				fade.control++
+			end if
+			SetScreenFade(0, 0, 0, fade.effect)
+			break
+		case 2
+			PlayMusic(1)
+			fade.control++
+			break
+		case 3
+			break
+		case 4
+			if fade.effect < 255
+				music.volume -= 10
+				fade.effect += 16
+			else
+				StopMusic()
+				fade.control++
+			end if
+			SetScreenFade(0, 0, 0, fade.effect)
+			break
+		case 5
+			SetScreenFade(0, 0, 0, 256)
+			break
+		case 6
+			PlaySfx(SfxName[Warp], 0)
+			fade.control = 7
+			fadeColor = 208
+			fadeColor <<= 16
+			temp0 = 255
+			temp0 <<= 8
+			fadeColor += temp0
+			fadeColor += 224
+			fade.effect = 0
+			break
+		case 7
+			if fade.effect < 768
+				music.volume -= 10
+				fade.effect += 8
+			else
+				LoadPalette("SpecialStage.act",0,0,0,128)
+				fade.control++
+			end if
+			SetScreenFade(color6, color7, color6, fade.effect)
+			break
+		case 8
+			StopMusic()
+			SetScreenFade(color6, color7, color6, 255)
+		break
+	end switch	
+	
+	
+	
+	
+	//Background
+	DrawRect(0, 0, screen.xsize, screen.ysize, color7, color7, color7, 255)
+	DrawRect(0, 195, screen.xsize, screen.ysize, color5, color5, color7, 255)
+	
+	temp0 = screen.xsize
+	temp0 *= 2
+	temp0 += 40
+	
+	temp1 = 0
+	temp1 -= TA.xoffset
+	temp2 = 0
+	temp2 -= TA.yoffset
+	temp2 /= 2
+	while temp1 < temp0
+		DrawSpriteScreenXY(10, temp1, temp2)
+		temp1 += 28
+	loop
+	
+	temp2 = TA.xoffset
+	temp2 /= 4
+	
+	ZigZag.March++
+	ZigZag.March %= 56
+	temp1 = 0
+	temp1 -= ZigZag.March
+	temp1 /= 2
+	temp1 -= temp2
+	while temp1 < temp0
+		DrawSpriteScreenXY(12, temp1, 195)
+		temp1 += 28
+	loop
+	
+	
+	CallFunction(DrawClock)
+	
+	CallFunction(MenuFunction)
+	
+	temp0 = screen.xcenter
+	temp0 -= TA.xoffset
+	temp2 = 0
+	temp2 -= TA.yoffset
+	temp2 /= 2
+	DrawSpriteScreenXY(11, temp0, temp2)
+
+	
+	CallFunction(SecondMenu)
+	
+	//Achievement
+	if time.achievement > 0
+		//Achievement Display
+		temp0 = screen.xsize
+		temp0 -= achieve.xoffset
+		temp1 = screen.ysize
+		temp1 -= 29
+
+		DrawSpriteScreenXY(92, temp0, temp1)
+	end if
+
+	DrawNumbers(0, 20, 50, object.state, 5, 7, 0)
+
+	if saved.mobile == 1
+		object.inkEffect = INK_ALPHA
+		CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+		if checkResult > -1
+			touch.fade = 0
+		else
+			touch.fade++
+		end if
+	
+		if touch.fade >= 400
+			if object.alpha > 0
+	   			 object.alpha -= 15
+			end if
+		else
+			switch saved.transmobile
+				case 0
+					object.alpha = 191
+					break
+				case 1
+					object.alpha = 255
+					break
+				case 2
+					object.alpha = 0
+					break
+				case 3
+					object.alpha = 63
+					break
+				case 4
+					object.alpha = 127
+					break
+				default					
+					object.alpha = 191
+					break
+			end switch
+		end if
+
+		temp0 = screen.xsize
+		temp0 -= 44
+		DrawSpriteScreenFX(113,FX_INK,26,149)
+		temp0 -= screen.xsize
+		temp0 += 55
+		DrawSpriteScreenFX(120,0,temp0,8)	
+		temp0 += screen.xsize
+		temp0 -= 125
+			if inputPress.Left==1
+				DrawSpriteScreenFX(116,FX_INK,26,151)
+			endif
+			if inputPress.Down==1
+				DrawSpriteScreenFX(115,FX_INK,26,189)
+			end if
+			if inputPress.Right==1
+				DrawSpriteScreenFX(117,FX_INK,64,151)
+			endif
+			if inputPress.Up==1
+				DrawSpriteScreenFX(114,FX_INK,26,151)
+			endif
+			temp0 += 32
+
+			if inputDown.buttonA==1
+				DrawSpriteScreenFX(119,FX_INK,temp0,163)
+			else
+				DrawSpriteScreenFX(118,FX_INK,temp0,163)
+			endif
+		end if
+	end if
+end event
+
+
+event ObjectStartup
+	LoadPalette("TimeAttack.act", 0, 0, 0, 256)
+	LoadSpriteSheet("Menus/TimeAttack.gif")
+	
+	//numbers first
+	SpriteFrame(0, 0, 7, 11, 72, 224) //0
+	SpriteFrame(1, 0, 6, 11, 1, 224) //1
+	SpriteFrame(0, 0, 7, 11, 8, 224) //2
+	SpriteFrame(0, 0, 7, 11, 16, 224) //3
+	SpriteFrame(0, 0, 7, 11, 24, 224) //4
+	SpriteFrame(0, 0, 7, 11, 32, 224) //5
+	SpriteFrame(0, 0, 7, 11, 40, 224) //6
+	SpriteFrame(0, 0, 7, 11, 48, 224) //7
+	SpriteFrame(0, 0, 7, 11, 56, 224) //8
+	SpriteFrame(0, 0, 7, 11, 64, 224) //9
+	
+	//Background 
+	SpriteFrame(0, 0, 28, 26, 396, 1) //10 Border Top
+	if saved.language == 0
+		SpriteFrame(-105, 0, 212, 47, 183, 1) //11 Time Attack Sign
+	end if
+	if saved.language == 1
+		SpriteFrame(-105, 0, 212, 47, 510, 0) //11 Time Attack Sign
+	end if	
+	if saved.language == 2
+		SpriteFrame(-121, 0, 243, 47, 510, 48) //11 Time Attack Sign
+	end if
+	SpriteFrame(0, -22, 28, 22, 154, 1) //12 Bottom ZigZags
+	SpriteFrame(-73, -73, 152, 149, 1, 1) //13 Large Circle
+	SpriteFrame(-3, -70, 5, 70, 1, 151) //14 Minute Hand
+	SpriteFrame(-5, -39, 9, 39, 7, 151) //15 Hour Hand
+	
+	//Background Pieces
+	SpriteFrame(0, 0, 16, 15, 183, 120) //16
+	SpriteFrame(0, 0, 12, 38, 193, 81) //17
+	SpriteFrame(0, 0, 25, 31, 186, 49) //18
+	SpriteFrame(0, 0, 31, 27, 154, 49) //19
+	SpriteFrame(0, 0, 47, 9, 212, 61) //20
+	SpriteFrame(0, 0, 38, 11, 154, 81) //21
+	SpriteFrame(0, 0, 33, 11, 212, 49) //22
+	SpriteFrame(0, 0, 33, 11, 212, 71) //23
+	SpriteFrame(0, 0, 17, 16, 219, 119) //24
+	SpriteFrame(0, 0, 28, 30, 154, 105) //25
+	SpriteFrame(0, 0, 18, 17, 200, 120) //26
+	SpriteFrame(0, 0, 32, 24, 206, 83) //27
+	SpriteFrame(0, 0, 38, 11, 154, 93) //28
+	
+	//Act Menu
+	SpriteFrame(0, 0, 200, 32, 1, 413) //29 Zone Frame Unhighlighted	
+	SpriteFrame(0, 0, 200, 32, 1, 446) //30 Zone Frame Highlighted
+	
+	SpriteFrame(0, 0, 15, 14, 1, 398) //31 Act 1 Grey
+	SpriteFrame(0, 0, 15, 14, 17, 398) //32 Act 2 Grey
+	SpriteFrame(0, 0, 15, 14, 33, 398) //33 Act 3 Grey
+	SpriteFrame(0, 0, 15, 14, 49, 398) //34 Act 4 Grey
+	SpriteFrame(0, 0, 15, 14, 65, 398) //35 Act 5 Grey
+	SpriteFrame(0, 0, 15, 14, 81, 398) //36 Act 6 Grey
+	SpriteFrame(0, 0, 15, 14, 97, 398) //37 Act 7 Grey
+	
+	SpriteFrame(0, 0, 15, 14, 1, 383) //38 Act 1 Red
+	SpriteFrame(0, 0, 15, 14, 17, 383) //39 Act 2 Red
+	SpriteFrame(0, 0, 15, 14, 33, 383) //40 Act 3 Red
+	SpriteFrame(0, 0, 15, 14, 49, 383) //41 Act 4 Red
+	SpriteFrame(0, 0, 15, 14, 65, 383) //42 Act 5 Red
+	SpriteFrame(0, 0, 15, 14, 81, 383) //43 Act 6 Red
+	SpriteFrame(0, 0, 15, 14, 97, 383) //44 Act 7 Red
+	
+	SpriteFrame(0, 0, 15, 14, 1, 368) //45 Act 1 Blue
+	SpriteFrame(0, 0, 15, 14, 17, 368) //46 Act 2 Blue
+	SpriteFrame(0, 0, 15, 14, 33, 368) //47 Act 3 Blue
+	
+	//Level Icons
+	switch saved.GHZwater
+		case 0 //OG
+			SpriteFrame(0, 0, 32, 24, 415, 200) //48 Green Hill
+			break
+		case 1 //Forever
+			SpriteFrame(0, 0, 32, 24, 151, 200) //48 Green Hill
+			break
+		case 2 //Title Screen
+			SpriteFrame(0, 0, 32, 24, 448, 200) //48 Green Hill
+			break
+	end switch	
+	SpriteFrame(0, 0, 32, 24, 184, 200) //49 Marble
+	SpriteFrame(0, 0, 32, 24, 217, 200) //50 Spring Yard
+	SpriteFrame(0, 0, 32, 24, 250, 200) //51 Labyrinth
+	SpriteFrame(0, 0, 32, 24, 283, 200) //52 Starlight
+	SpriteFrame(0, 0, 32, 24, 316, 200) //53 Scrap Brain
+	SpriteFrame(0, 0, 32, 24, 349, 200) //54 Final
+	SpriteFrame(0, 0, 32, 24, 382, 200) //55 Special
+	
+	//Level Names 1
+	SpriteFrame(46, 5, 71, 14, 202, 413) //56 Green Hill
+	SpriteFrame(58, 5, 47, 14, 202, 428) //57 Marble
+	SpriteFrame(43, 5, 78, 14, 202, 443) //58 Spring Yard
+	SpriteFrame(49, 5, 67, 14, 202, 458) //59 Labyrinth
+	SpriteFrame(46, 5, 71, 14, 274, 413) //60 Star Light
+	SpriteFrame(42, 5, 79, 14, 202, 473) //61 Scrap Brain
+	SpriteFrame(64, 5, 35, 14, 250, 428) //62 Final
+	SpriteFrame(56, 5, 51, 14, 202, 495) //63 Special
+	
+	
+	SpriteFrame(1, 1, 200, 32, 1, 479) //64 Red Dropshadow
+	
+	//Menu 2
+	SpriteFrame(-3, 0, 317, 61, 166, 138) //65 Name Frame
+	SpriteFrame(-20, 0, 78, 16, 431, 47) //66 Grey Silhouettes
+	SpriteFrame(-20, 0, 17, 16, 431, 30) //67 Sonic Silhouette
+	SpriteFrame(1, 1, 15, 15, 449, 31) //68 Tails Silhouette
+	SpriteFrame(19, 1, 18, 15, 465, 31) //69 Knuckles Silhouette
+	SpriteFrame(-55, 0, 109, 29, 247, 78) //70 Sonic English
+	SpriteFrame(-48, 0, 96, 29, 373, 108) //71 Tails English
+	SpriteFrame(-68, 0, 135, 29, 237, 108) //72 Knuckles English
+	SpriteFrame(-76, 0, 151, 14, 357, 64) //73 Sonic Japanese
+	SpriteFrame(-76, 1, 151, 13, 357, 79) //74 Tails Japanese
+	SpriteFrame(-70, 0, 140, 14, 357, 93) //75 Knuckles Japanese
+	SpriteFrame(0, 0, 17, 16, 17, 151) //76 Banner Border
+	SpriteFrame(0, 0, 148, 30, 17, 168) //77 Banner Text Area
+	SpriteFrame(0, 0, 8, 5, 128, 211) //78 Double Inverted Commas
+	SpriteFrame(0, 0, 4, 5, 128, 211) //79 Single Inverted Comma
+	if saved.language == 0
+		SpriteFrame(-33, 0, 27, 11, 102, 332) //80 "Act"
+		SpriteFrame(-89, 0, 96, 11, 102, 344) //81 "Current Best"
+		SpriteFrame(-74, 0, 81, 11, 102, 356) //82 "Total Best"
+	end if
+	if saved.language == 1
+		SpriteFrame(-33, 0, 29, 11, 130, 332) //80 "Act"
+		SpriteFrame(-97, 0, 104, 11, 199, 344) //81 "Current Best"
+		SpriteFrame(-96, 0, 103, 11, 199, 356) //82 "Total Best"
+	end if
+	if saved.language == 2
+		SpriteFrame(-41, 0, 37, 11, 160, 332) //80 "Act"
+		SpriteFrame(-94, 0, 101, 11, 304, 344) //81 "Current Best"
+		SpriteFrame(-85, 0, 92, 11, 304, 356) //82 "Total Best"
+	end if	
+	
+	SpriteFrame(-109, 0, 116, 11, 102, 236) //83 "Green Hill"
+	SpriteFrame(-83, 0, 90, 11, 102, 248) //84 "Marble"
+	SpriteFrame(-122, 0, 129, 11, 102, 260) //85 "Spring Yard Zone"
+	SpriteFrame(-110, 0, 117, 11, 102, 272) //86 "Labyrinth"
+	SpriteFrame(-114, 0, 121, 11, 102, 284) //87 "Star Light"
+	SpriteFrame(-118, 0, 125, 11, 102, 296) //88 "Scrap Brain"
+	SpriteFrame(-71, 0, 78, 11, 102, 308) //89 "Final"
+	SpriteFrame(-92, 0, 98, 11, 102, 320) //90 "Special"
+	
+	SpriteFrame(0, 0, 100, 94, 1, 236) //91 Star
+	SpriteFrame(0, 0, 200, 29, 311, 482) //92 Achievement
+	
+	SpriteFrame(-41, 0, 17, 16, 484, 125) //93 Super Silhouette
+	SpriteFrame(-41, 0, 17, 16, 484, 108) //94 Super Silhouette Highlighted
+	SpriteFrame(-83, 2, 165, 17, 347, 225) //95 Super English Name
+	SpriteFrame(-49, -6, 97, 14, 333, 49) //96 Super Japanese Name
+		
+	SpriteFrame(-9, 2, 5, 10, 55, 370) //97 Left Arrow
+	SpriteFrame(19, 2, 5, 10, 49, 370) //98 Right Arrow
+	
+	SpriteFrame(0, 0, 8, 7, 257, 226) //99 0
+	SpriteFrame(0, 0, 8, 7, 265, 226) //100 1
+	SpriteFrame(0, 0, 8, 7, 272, 226) //101 2
+	SpriteFrame(0, 0, 8, 7, 279, 226) //102 3
+	SpriteFrame(0, 0, 8, 7, 287, 226) //103 4
+	SpriteFrame(0, 0, 8, 7, 295, 226) //104 5
+	SpriteFrame(0, 0, 8, 7, 303, 226) //105 6
+	SpriteFrame(0, 0, 8, 7, 311, 226) //106 7
+	SpriteFrame(0, 0, 8, 7, 320, 226) //107 8
+	SpriteFrame(0, 0, 8, 7, 328, 226) //108 9
+	SpriteFrame(0, 0, 3, 7, 337, 226) //109 .
+
+	SpriteFrame(40, 0, 18, 16, 484, 30) //110 Amy Silhouette
+	SpriteFrame(-48, 0, 96, 29, 250, 234) //111 Amy English
+	SpriteFrame(274, 0, 40, 61, 471, 420) //112 Name Frame Corner
+
+	//Sonic Forever Descarga Para Android
+	SpriteFrame(0,0,64,66,347,243) //113 DPAD
+	SpriteFrame(26,0,12,25,463,307) //114 DPAD up press
+	SpriteFrame(26,0,12,26,463,345) //115 DPAD down press
+	SpriteFrame(0,25,26,13,436,344) //116 DPAD left press
+	SpriteFrame(0,25,26,13,436,358) //117 DPAD right press
+	SpriteFrame(0,0,48,48,412,243) //118 A button
+	SpriteFrame(0,0,48,48,412,292) //119 A button down
+	SpriteFrame(0,0,16,16,419,354) // 120 Pause Button
+
+	SpriteFrame(-38, 0, 75, 14, 271, 264) //121 Amy Japanese Name
+	
+	
+	
+	SetMusicTrack("TimeAttack.ogg", 1, 17556)
+	//SetMusicTrack("StartingTheShow.ogg", 1, 92561)
+	stage.debugMode = 0	
+
+	//we only need one main menu object
+	foreach (TypeName[Time Menu], arrayPos0, ALL_ENTITIES)
+		object[arrayPos0].type = TypeName[Blank Object]
+		object[9].type = TypeName[Time Menu]
+		object[9].priority = PRIORITY_ACTIVE
+		object[9].drawOrder = 5
+		object[9].propertyValue = object[arrayPos0].propertyValue
+		object[9].value0 = saveRAM[610]
+		object[9].value1 = saveRAM[611]
+		object[9].value2 = saveRAM[612]
+		object[9].value7 = saveRAM[613]
+		object[9].drawOrder = 4
+		if screen.xsize < 424
+			object[9].value26 = FirstMenu43
+		else
+			if saved.mobile == 1
+				object[9].value26 = FirstMenu43
+			else
+				object[9].value26 = FirstMenu
+			end if
+		end if
+	next
+	object[10].type = TypeName[Time Attack Portrait]
+	object[10].drawOrder = 5
+	
+end event
+
+/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+function FirstMenu
+	//Act Menu
+	temp0 = 0
+	temp6 = TA.xoffset
+	temp6 *= 2
+	
+	while temp0 < 4
+		temp1 = temp0
+		temp1 *= 47
+		temp1 += 54
+	
+		//Main Table - Left Column
+		temp2 = temp1
+		temp2 += 6
+		temp5 = 52
+		temp5 -= temp6
+		DrawRect(temp5, temp1, 86, 32, 0, 0, 0, 100)
+		temp5 += 86
+		DrawRect(temp5, temp2, 68, 20, 0, 0, 0, 100)
+		temp5 -= 131
+		DrawSpriteScreenXY(29, temp5, temp1)
+		temp2 += 3
+		temp5 += 179
+		DrawNumbers(31, temp5, temp2, 012, 3, 21, 1)
+		
+		
+		
+		//Main Table - Right Column
+		temp2 = temp1
+		temp2 += 6
+		temp5 = 259
+		temp5 -= temp6
+		DrawRect(temp5, temp1, 86, 32, 0, 0, 0, 100)
+		temp5 += 86
+		DrawRect(temp5, temp2, 68, 20, 0, 0, 0, 100)
+		temp5 -= 131
+		DrawSpriteScreenXY(29, temp5, temp1)
+		temp2 += 3
+		switch temp0
+			case 2
+				temp5 += 158
+				//DrawNumbers(31, temp5, temp2, 0, 1, 21, 0)
+				break
+			case 3
+				temp5 += 158
+				DrawNumbers(31, temp5, temp2, specialstage.selected, 1, 21, 0)
+				break
+			default
+				temp5 += 179
+				DrawNumbers(31, temp5, temp2, 012, 3, 21, 1)
+		end switch
+		
+		
+		
+		//Zone Selected - Left Column
+		if temp0 == zone.highlight
+			temp5 = 7
+			temp5 -= temp6
+			DrawSpriteScreenXY(64, temp5, temp1)
+			DrawSpriteScreenXY(30, temp5, temp1)
+			temp5 += 179
+			DrawNumbers(45, temp5, temp2, 012, 3, 21, 1)
+			switch act.highlight
+				case 0
+					temp5 -= 42
+					DrawNumbers(38, temp5, temp2, 0, 1, 21, 1)
+					break
+				case 1
+					temp5 -= 21
+					DrawNumbers(38, temp5, temp2, 1, 1, 21, 1)
+					break
+				case 2
+					DrawNumbers(38, temp5, temp2, 2, 1, 21, 1)
+					break
+			end switch
+		end if		
+		
+		
+		//Zone Selected - Right Column
+		temp3 = temp0
+		temp3 += 4
+		if temp3 == zone.highlight
+			temp5 = 214
+			temp5 -= temp6
+			DrawSpriteScreenXY(64, temp5, temp1)
+			DrawSpriteScreenXY(30, temp5, temp1)
+			switch temp0
+			case 2
+				temp5 += 158
+				//DrawNumbers(38, temp5, temp2, 0, 1, 21, 0)
+				break
+			case 3
+				temp5 += 158
+				DrawNumbers(38, temp5, temp2, specialstage.selected, 1, 21, 0)
+				DrawSpriteScreenXY(97, temp5, temp2)
+				DrawSpriteScreenXY(98, temp5, temp2)
+				break
+			default
+				temp5 += 179
+				DrawNumbers(45, temp5, temp2, 012, 3, 21, 1)
+				switch act.highlight
+					case 0
+						temp5 -= 42
+						DrawNumbers(38, temp5, temp2, 0, 1, 21, 1)
+						break
+					case 1
+						temp5 -= 21
+						DrawNumbers(38, temp5, temp2, 1, 1, 21, 1)
+						break
+					case 2
+						DrawNumbers(38, temp5, temp2, 2, 1, 21, 1)
+						break
+				end switch
+				break
+			end switch
+		end if
+		
+		
+		//Zone Names and Icons
+		temp3 = temp0
+		temp4 = temp1
+		temp4 += 3
+		temp5 = 14
+		temp5 -= temp6
+		DrawNumbers(48, temp5, temp4, temp3, 1, 21, 1)
+		DrawNumbers(56, temp5, temp4, temp3, 1, 21, 1)
+		temp3 += 4
+		temp5 += 207
+		DrawNumbers(48, temp5, temp4, temp3, 1, 21, 1)
+		DrawNumbers(56, temp5, temp4, temp3, 1, 21, 1)
+		
+		
+		
+		temp0++
+	loop
+end function
+
+
+function FirstMenu43
+	//Act Menu
+	level.scroll.min = zone.highlight
+	level.scroll.min *= 35
+	level.scroll.max = level.scroll.min
+	level.scroll.min -= 145
+	
+	if level.scroll < level.scroll.min
+		level.scroll = level.scroll.min
+	else
+		if level.scroll > level.scroll.max
+			level.scroll = level.scroll.max
+		end if
+	end if
+		
+	temp0 = 0
+	temp6 = TA.xoffset
+	temp6 *= 2
+	
+	while temp0 < 8
+		temp1 = temp0
+		temp1 *= 35
+		temp1 += 54
+		temp1 -= level.scroll
+	
+		//Main Table - Left Column
+		temp2 = temp1
+		temp2 += 6
+		temp5 = 105
+			if screen.xsize > 320
+				temp5 += screen.xcenter
+				temp5 -= 160
+			end if
+		temp5 -= temp6
+		DrawRect(temp5, temp1, 86, 32, 0, 0, 0, 100)
+		temp5 += 86
+		DrawRect(temp5, temp2, 68, 20, 0, 0, 0, 100)
+		temp5 -= 131
+		DrawSpriteScreenXY(29, temp5, temp1)
+		temp2 += 3
+		switch temp0
+			case 6
+				temp5 += 158
+				//DrawNumbers(31, temp5, temp2, 0, 1, 21, 0)
+				break
+			case 7
+				temp5 += 158
+				DrawNumbers(31, temp5, temp2, specialstage.selected, 1, 21, 0)
+				break
+			default
+				temp5 += 179
+				DrawNumbers(31, temp5, temp2, 012, 3, 21, 1)
+		end switch
+
+		
+		//Zone Selected - Left Column
+		if temp0 == zone.highlight
+			temp5 = 60
+			temp5 -= temp6
+			if screen.xsize > 320
+				temp5 += screen.xcenter
+				temp5 -= 160
+			end if
+			DrawSpriteScreenXY(64, temp5, temp1)
+			DrawSpriteScreenXY(30, temp5, temp1)
+			switch temp0
+			case 6
+				temp5 += 158
+				//DrawNumbers(38, temp5, temp2, 0, 1, 21, 0)
+				break
+			case 7
+				temp5 += 158
+				DrawNumbers(38, temp5, temp2, specialstage.selected, 1, 21, 0)
+				DrawSpriteScreenXY(97, temp5, temp2)
+				DrawSpriteScreenXY(98, temp5, temp2)
+				break
+			default
+				temp5 += 179
+				DrawNumbers(45, temp5, temp2, 012, 3, 21, 1)
+				switch act.highlight
+					case 0
+						temp5 -= 42
+						DrawNumbers(38, temp5, temp2, 0, 1, 21, 1)
+						break
+					case 1
+						temp5 -= 21
+						DrawNumbers(38, temp5, temp2, 1, 1, 21, 1)
+						break
+					case 2
+						DrawNumbers(38, temp5, temp2, 2, 1, 21, 1)
+						break
+				end switch
+				break
+			end switch
+		end if		
+
+		//Zone Names and Icons
+		temp3 = temp0
+		temp4 = temp1
+		temp4 += 3
+		temp5 = 67
+		temp5 -= temp6
+			if screen.xsize > 320
+				temp5 += screen.xcenter
+				temp5 -= 160
+			end if
+		DrawNumbers(48, temp5, temp4, temp3, 1, 21, 1)
+		DrawNumbers(56, temp5, temp4, temp3, 1, 21, 1)	
+		
+		temp0++
+	loop
+end function
+
+function SecondMenu
+	//Banner
+	temp0 = screen.xsize
+	temp0 *= 2
+	temp0 -= 129
+	temp0 -= TA.xoffset
+	temp1 = temp0
+	temp1 += 57
+	DrawRect(temp0, 0, screen.xsize, screen.ysize, color6, 0, 0, 255)
+	DrawRect(temp1, 0, 72, screen.ysize, color7, color7, color7, 255)
+	DrawRect(temp1, 0, 1, screen.ysize, color7, color4, color4, 255)
+	
+	temp1 = 0
+	while temp1 < screen.ysize
+		DrawSpriteScreenXY(76, temp0, temp1)
+		temp1 += 16
+	loop
+	
+	temp1 = temp0
+	temp1 += 44
+	DrawSpriteScreenXY(91, temp1, 140)
+	
+	temp0 += 1
+	DrawSpriteScreenXY(77, temp0, 44)
+	DrawSpriteScreenXY(77, temp0, 85)
+	DrawSpriteScreenXY(77, temp0, 124)
+	
+	//Banner Times
+	temp0 = screen.xsize
+	temp0 *= 2
+	temp0 -= TA.xoffset
+	
+	temp6 = zone.highlight
+	temp6 += 83
+	DrawSpriteScreenXY(temp6, temp0, 46)	
+	switch zone.highlight
+		case 7
+			DrawNumbers(1, temp0, 59, specialstage.selected, 1, 6, 1)
+			break
+		case 6
+			break
+		default
+			DrawSpriteScreenXY(80, temp0, 59)
+			DrawNumbers(1, temp0, 59, act.highlight, 1, 6, 1)
+			break
+		
+	end switch
+	
+	switch character.select
+		case 0
+			arrayPos1 = 500
+			break
+		case 1
+			arrayPos1 = 530
+			break
+		case 2
+			arrayPos1 = 560
+			break
+		case 3
+			arrayPos1 = 470
+			break
+		case 4
+			arrayPos1 = 590
+			break
+	end switch
+	
+	arrayPos1 += stage.listPos
+	if stage.activeList == SPECIAL_STAGE
+		arrayPos1 += 20
+	end if
+	Act.Best = saveRAM[arrayPos1]	
+	
+	switch character.select
+		case 0
+			temp5 = SonicTimes
+			break
+		case 1
+			temp5 = TailsTimes
+			break
+		case 2
+			temp5 = KnuxTimes
+			break
+		case 3
+			temp5 = AmyTimes
+			break
+		case 4
+			temp5 = SuperTimes
+			break
+	end switch
+	
+		
+	temp6 = 0
+	temp7 = 0
+	while temp5 >= 6000
+		temp7++
+		temp5 -= 6000
+	loop
+			while temp5 >= 100
+		temp6++
+		temp5 -= 100
+	loop
+	
+	
+	DrawSpriteScreenXY(82, temp0, 126)	
+	DrawNumbers(0, temp0, 139, temp5, 2, 8, 1)
+	temp0 -= 17
+	DrawSpriteScreenXY(78, temp0, 139)
+	temp0 -= 8
+	DrawNumbers(0, temp0, 139, temp6, 2, 8, 1)
+	temp0 -= 13
+	DrawSpriteScreenXY(79, temp0, 139)
+	temp0 -= 8
+	DrawNumbers(0, temp0, 139, temp7, 5, 8, 0)
+	
+	
+	temp0 = screen.xsize
+	temp0 *= 2
+	temp0 -= TA.xoffset
+	
+	temp5 = Act.Best
+	temp6 = 0
+	temp7 = 0
+	while temp5 >= 6000
+		temp7++
+		temp5 -= 6000
+	loop
+			while temp5 >= 100
+		temp6++
+		temp5 -= 100
+	loop
+	
+	DrawSpriteScreenXY(81, temp0, 87)	
+	DrawNumbers(0, temp0, 100, temp5, 2, 8, 1)
+	temp0 -= 17
+	DrawSpriteScreenXY(78, temp0, 100)
+	temp0 -= 8
+	DrawNumbers(0, temp0, 100, temp6, 2, 8, 1)
+	temp0 -= 13
+	DrawSpriteScreenXY(79, temp0, 100)
+	temp0 -= 8
+	DrawNumbers(0, temp0, 100, temp7, 5, 8, 0)
+	//End Banner Times
+	
+	//End Banner
+	
+	
+	//Name Frame
+	temp0 = screen.xsize
+	temp0 *= 2
+	switch screen.xsize
+	case 320
+		temp0 -= 293
+		break
+	case 384
+		temp0 -= 383
+		break
+	default
+		temp0 -= 403
+		break
+	end switch
+	temp0 -= TA.xoffset
+	temp1 = screen.ysize
+	temp1 += 39
+	temp1 -= TA.yoffset
+	if screen.xsize <= 384
+		DrawSpriteScreenXY(65, temp0, temp1)
+	else
+		DrawSpriteScreenXY(65, temp0, temp1)
+		DrawSpriteScreenXY(112, temp0, temp1)
+	end if
+	switch character.select
+	case 0
+		temp2 = 67
+		temp3 = 70
+		temp4 = 73
+		break
+	case 1
+		temp2 = 68
+		temp3 = 71
+		temp4 = 74
+		break
+	case 2
+		temp2 = 69
+		temp3 = 72
+		temp4 = 75
+		break
+	case 3
+		temp2 = 110
+		temp3 = 111
+		temp4 = 121
+		break
+	case 4
+		temp2 = 94
+		temp3 = 95
+		temp4 = 96
+		break
+	default
+		temp2 = 67
+		temp3 = 70
+		temp4 = 73
+		break
+	end switch
+	
+	temp0 += 109
+	temp1 += 10
+	DrawSpriteScreenXY(temp3, temp0, temp1) //English Name
+	temp1 += 32
+	DrawSpriteScreenXY(temp4, temp0, temp1) //Japanese Name
+	
+	temp0 += 136 
+	temp1 += 0
+	DrawSpriteScreenXY(66, temp0, temp1)
+	if zone.highlight < 6
+		if saveRAM[413] > 0
+			DrawSpriteScreenXY(93, temp0, temp1)
+		end if
+	end if
+	DrawSpriteScreenXY(temp2, temp0, temp1) //Silhouette
+	//End Name Frame
+end function
+
+
+function DrawClock
+	temp1 = TA.xoffset
+	temp1 /= 4
+	
+
+	temp0 = screen.xsize
+	temp0 -= 60
+	temp0 -= temp1
+	DrawSpriteScreenXY(13, temp0, 166)
+	Clock.Time++
+	Clock.Time %= 6144
+	object.rotation = Clock.Time
+	//object.rotation /= 7
+	DrawSpriteScreenFX(14, FX_ROTATE, temp0, 166)
+	object.rotation /= 12
+	DrawSpriteScreenFX(15, FX_ROTATE, temp0, 166)
+	
+	//Pieces
+	temp0 = screen.xsize
+	temp0 -= temp1
+	temp0 -= 36
+	DrawSpriteScreenXY(16, temp0, 66)
+	temp0 -= 42
+	DrawSpriteScreenXY(17, temp0, 43)
+	temp0 -= 67
+	DrawSpriteScreenXY(18, temp0, 47)
+	temp0 -= 8
+	DrawSpriteScreenXY(19, temp0, 92)
+	temp0 -= 80
+	DrawSpriteScreenXY(20, temp0, 77)
+	temp0 += 52
+	DrawSpriteScreenXY(21, temp0, 146)
+	temp0 -= 117
+	DrawSpriteScreenXY(22, temp0, 148)
+	temp0 -= 73
+	DrawSpriteScreenXY(23, temp0, 111)
+	temp0 += 349
+	DrawSpriteScreenXY(24, temp0, 222)
+	temp0 -= 91
+	DrawSpriteScreenXY(25, temp0, 226)
+	temp0 -= 37
+	DrawSpriteScreenXY(26, temp0, 207)
+	temp0 -= 72
+	DrawSpriteScreenXY(27, temp0, 224)
+	temp0 -= 104
+	DrawSpriteScreenXY(28, temp0, 221)
+end function
+
+function TimesSetUp
+	SonicTimes = 0
+	arrayPos1 = 500
+	while arrayPos1 <= 518
+		if saveRAM[arrayPos1] < 100
+			saveRAM[arrayPos1] = 59999
+		end if
+		if saveRAM[arrayPos1] > 59999
+			saveRAM[arrayPos1] = 59999
+		end if
+		SonicTimes += saveRAM[arrayPos1]		
+		arrayPos1++
+	loop
+	
+	arrayPos1 = 520
+	while arrayPos1 <= 526
+		if saveRAM[arrayPos1] < 100
+			saveRAM[arrayPos1] = 59999
+		end if
+		if saveRAM[arrayPos1] > 59999
+			saveRAM[arrayPos1] = 59999
+		end if
+		SonicTimes += saveRAM[arrayPos1]		
+		arrayPos1++
+	loop
+	
+	if SonicTimes <= 180000
+		time.achievement = 1
+	end if
+	
+	
+	TailsTimes = 0
+	arrayPos1 = 530
+	while arrayPos1 <= 548
+		if saveRAM[arrayPos1] < 100
+			saveRAM[arrayPos1] = 59999
+		end if
+		if saveRAM[arrayPos1] > 59999
+			saveRAM[arrayPos1] = 59999
+		end if
+		TailsTimes += saveRAM[arrayPos1]		
+		arrayPos1++
+	loop
+	
+	arrayPos1 = 550
+	while arrayPos1 <= 556
+		if saveRAM[arrayPos1] < 100
+			saveRAM[arrayPos1] = 59999
+		end if
+		if saveRAM[arrayPos1] > 59999
+			saveRAM[arrayPos1] = 59999
+		end if
+		TailsTimes += saveRAM[arrayPos1]		
+		arrayPos1++
+	loop
+	
+	
+	KnuxTimes = 0
+	arrayPos1 = 560
+	while arrayPos1 <= 578
+		if saveRAM[arrayPos1] < 100
+			saveRAM[arrayPos1] = 59999
+		end if
+		if saveRAM[arrayPos1] > 59999
+			saveRAM[arrayPos1] = 59999
+		end if
+		KnuxTimes += saveRAM[arrayPos1]		
+		arrayPos1++
+	loop
+	
+	arrayPos1 = 580
+	while arrayPos1 <= 586
+		if saveRAM[arrayPos1] < 100
+			saveRAM[arrayPos1] = 59999
+		end if
+		if saveRAM[arrayPos1] > 59999
+			saveRAM[arrayPos1] = 59999
+		end if
+		KnuxTimes += saveRAM[arrayPos1]		
+		arrayPos1++
+	loop
+
+
+	AmyTimes = 0
+	arrayPos1 = 470
+	while arrayPos1 <= 488
+		if saveRAM[arrayPos1] < 100
+			saveRAM[arrayPos1] = 59999
+		end if
+		if saveRAM[arrayPos1] > 59999
+			saveRAM[arrayPos1] = 59999
+		end if
+		AmyTimes += saveRAM[arrayPos1]		
+		arrayPos1++
+	loop
+	
+	arrayPos1 = 490
+	while arrayPos1 <= 496
+		if saveRAM[arrayPos1] < 100
+			saveRAM[arrayPos1] = 59999
+		end if
+		if saveRAM[arrayPos1] > 59999
+			saveRAM[arrayPos1] = 59999
+		end if
+		AmyTimes += saveRAM[arrayPos1]		
+		arrayPos1++
+	loop
+
+	SuperTimes = 0
+	arrayPos1 = 590
+	while arrayPos1 <= 607
+		if saveRAM[arrayPos1] < 100
+			saveRAM[arrayPos1] = 59999
+		end if
+		if saveRAM[arrayPos1] > 59999
+			saveRAM[arrayPos1] = 59999
+		end if
+		SuperTimes += saveRAM[arrayPos1]		
+		arrayPos1++
+	loop
+	
+	
+	WriteSaveRAM()
+	
+	temp0 = KnuxTimes
+	temp0 += SonicTimes
+	temp0 += TailsTimes
+	
+	Rand(Clock.Time, temp0)
+	//Clock.Time %= 6144
+		
+end function
+
+function VersionNumber		
+	temp0 = 7
+	temp0 -= TA.xoffset
+	temp1 = 10
+	temp2 = temp0
+	
+	if versionone > 9
+		temp0 += 8	
+	end if	
+	DrawNumbers(99, temp0, temp1, versionone, 2, 8, 0)
+	temp0 += 8
+	DrawSpriteScreenXY(109, temp0, temp1)
+	
+	temp0 += 4
+	
+	if versiontwo > 9
+		temp0 += 8	
+	end if		
+	DrawNumbers(99, temp0, temp1, versiontwo, 2, 8, 0)
+	temp0 += 8
+	DrawSpriteScreenXY(109, temp0, temp1)
+	
+	temp0 += 4
+	
+	if versionthree > 9
+		temp0 += 8	
+	end if	
+	DrawNumbers(99, temp0, temp1, versionthree, 2, 8, 0)
+	temp0 += 8
+	DrawSpriteScreenXY(109, temp0, temp1)
+	
+	temp0 += 68
+	
+	DrawNumbers(99, temp0, temp1, versionsub, 9, 8, 1)
+	
+	//DrawRect(temp2, temp1, 219, 6, 0, 0, 0, 175)
+end function
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+end event

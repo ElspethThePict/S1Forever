@@ -1,0 +1,875 @@
+
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Sonic Team Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+
+private alias 175 : game.modes.alpha
+
+private alias object.value0 : fade.control
+private alias object.value1 : char.select
+private alias object.value2 : ring.timer
+private alias object.value3 : ring.frame
+private alias object.value4 : palette.timer
+private alias object.value5 : arcade.offset
+private alias object.value6 : arrow.flash
+private alias object.value7 : touch.delay
+private alias object.value18 : achievement.state
+private alias object.value19 : achieve.xoffset
+private alias object.value20 : achieve.timer
+private alias object.value21 : hold.time
+public alias saveRAM[286] : saved.language
+public alias saveRAM[295]: saved.mobile
+
+
+// Function declarations
+reserve function ScoreOrder
+reserve function ArcadeOffsetting
+reserve function menu.holdmovement
+
+// Static Values
+private value arcade.achievement = 0
+
+// Tables
+private table Arcade_table0
+	0x6060A0, 0x80A0E0, 0xE08000, 0xE0C080, 0xA04000, 0x600000, 0xE02080, 0xE00040, 0x800000, 0x806080, 0xA08060, 0xE0C0A0, 0x80A0A0, 0xA04020
+end table
+
+private table Arcade_table1
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0 
+end table
+
+private table Arcade_table2
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0 
+end table
+
+function menu.holdmovement
+		if inputDown.up == 1
+			hold.time++
+			if hold.time >= 20
+				inputPress.up = 1
+				hold.time = 12
+			end if
+		else	
+			if inputDown.down == 1
+				hold.time++
+				if hold.time >= 20
+					inputPress.down = 1
+					hold.time = 12
+				end if
+			else
+				if inputDown.right == 1
+					hold.time++
+					if hold.time >= 20
+						inputPress.right = 1
+						hold.time = 12
+					end if		
+				else
+					if inputDown.left == 1
+						hold.time++
+						if hold.time >= 20
+							inputPress.left = 1
+							hold.time = 12
+						end if		
+					else
+						hold.time = 0
+					end if
+				end if
+			end if
+		end if
+end function 
+
+
+event ObjectMain
+	CallFunction(menu.holdmovement)
+	//from logo - background
+		if palette.timer < 0
+			palette.timer = 0
+		end if
+		palette.timer++
+		if palette.timer >= 6
+			palette.timer = 0
+			RotatePalette(0, 192, 195, 1)
+		end if
+		
+		switch object.state
+
+		case 2 //Character Select
+		if saved.mobile == 1
+      	touch.delay++
+       	if touch.delay >= 20
+	
+			temp0 = screen.xsize
+			temp0 -= screen.xsize	
+			temp1 = screen.xsize	
+			temp1 -= screen.xcenter
+			temp1 += 50
+
+				CheckTouchRect(temp0, 116, temp1, 180)
+				if checkResult > -1
+					inputPress.left = 1
+					touch.delay = 3
+				end if
+
+			temp0 = screen.xsize	
+			temp1 = screen.xsize	
+			temp1 -= screen.xcenter
+			temp1 += 100
+
+				CheckTouchRect(temp1, 116, temp0, 180)
+				if checkResult > -1
+					inputPress.right = 1
+					touch.delay = 3
+				end if
+
+			temp0 = screen.xsize
+			temp0 -= screen.xsize
+				CheckTouchRect(temp0, 206, screen.xsize, 240)
+				if checkResult > -1
+					object.state = 5
+					PlaySfx(SfxName[Ring L], 0)
+				end if
+
+				CheckTouchRect(0, 0, 50, 50)
+				if checkResult > -1
+					touch.delay = 0
+					inputPress.buttonB = 1
+				end if
+			end if
+		end if
+		
+			if inputPress.right == 1
+				char.select++
+				PlaySfx(SfxName[Score Add], 0)
+			else
+				if inputPress.left == 1
+					char.select--
+					PlaySfx(SfxName[Score Add], 0)
+				end if
+			end if
+			while char.select < 0
+				char.select += 4
+			loop
+			char.select %= 4
+			
+			CheckEqual(inputPress.start, 1)
+			temp0 = checkResult
+			CheckEqual(inputPress.buttonA, 1)
+			temp0 |= checkResult
+			if temp0 == 1
+				object.state = 3
+				PlaySfx(SfxName[Lamp Post], 0)
+			end if
+			
+			if inputPress.buttonB == 1
+				object.state = 4
+			end if
+			
+			break
+		case 3 //Waiting to Start
+			CheckEqual(inputPress.start, 1)
+			temp0 = checkResult
+			CheckEqual(inputPress.buttonA, 1)
+			temp0 |= checkResult
+			if temp0 == 1
+				object.state = 5
+				PlaySfx(SfxName[Ring L], 0)
+			end if
+			
+			if inputPress.buttonB == 1
+				object.state = 2
+			end if
+			break
+		case 6 //Outro
+		CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+		if checkResult > -1
+			object.state = 2
+			player.score = 0
+		end if
+			CheckEqual(inputPress.start, 1)
+			temp0 = checkResult
+			CheckEqual(inputPress.buttonA, 1)
+			temp0 |= checkResult
+			if temp0 == 1
+				object.state = 2
+				player.score = 0
+			end if
+			break		
+		end switch
+	//Achievement Display
+	if arcade.achievement == 1	
+		switch achievement.state
+			case 0
+				if saveRAM[421] == 1
+					arcade.achievement = 0	
+					achievement.state = 0
+				else
+					saveRAM[421] = 1
+					WriteSaveRAM()
+					achievement.state++
+				end if
+				break
+			case 1
+				PlaySfx(SfxName[Event], 0)
+				achieve.xoffset = 0
+				achievement.state++
+				break			
+			case 2
+				if achieve.xoffset < 200
+					achieve.xoffset += 8
+				end if
+				if achieve.xoffset >= 200
+					achieve.xoffset = 200
+					achieve.timer = 0
+					achievement.state++
+				end if
+				break
+			case 3
+				if achieve.timer < 180
+					achieve.timer++
+				else
+					achievement.state++
+				end if
+				break
+			case 4
+				if achieve.xoffset > 0
+					achieve.xoffset -= 8
+				end if
+				if achieve.xoffset <= 0
+					achieve.xoffset = 0
+					achievement.state++
+				end if
+				break
+			case 5
+				arcade.achievement = 0	
+				achievement.state = 0
+				break
+		end switch
+	end if
+end event
+
+
+
+event ObjectDraw		
+		CallFunction(ArcadeOffsetting)
+		switch object.state
+		
+		//Fade in/out
+		case 0 //Setup
+			screen.xoffset = 0
+			object.priority = PRIORITY_ACTIVE
+			fade.control = 256
+			stage[0].activeLayer = 1
+			object.state++
+			SetScreenFade(0, 0, 0, 255)
+			break
+		case 1 //Fade in
+			if fade.control > 0
+				fade.control -= 16
+			else
+				PlayMusic(0)
+				if player.score == 0
+					object.state++
+				else
+					object.state = 6
+				end if
+			end if
+			SetScreenFade(0, 0, 0, fade.control)
+			break
+		case 2 //Character Select
+		case 3 //Waiting to Start
+		case 6 //Outro
+			fade.control = 0
+			break
+		case 4 //Fade out to exit
+			if fade.control < 320
+				fade.control += 16
+				music.volume -= 2
+			else
+				StopMusic()
+				stage.activeList = PRESENTATION_STAGE
+				stage.listPos = 6
+				saveRAM[620] = char.select
+				WriteSaveRAM()
+				LoadStage()
+			end if
+			SetScreenFade(0, 0, 0, fade.control)
+			break
+		case 5 //Fade out to Green Hill
+			if fade.control < 320
+				fade.control += 16
+				music.volume -= 2
+			else
+				StopMusic()
+				stage.activeList = REGULAR_STAGE
+				stage.listPos = 0
+				credits.screen = 0
+				stage.debugMode = 0
+				options.stageSelectFlag = 0
+				options.gameMode = 3
+				options.attractMode = 0
+				player.lives = 2
+				player.continues = 0
+				player.score = 0
+				player.scoreBonus = 10000000
+				stage.player2Enabled = 0
+				lampPostID = 0
+				specialStage.listPos = 0
+				specialStage.emeralds = 0
+				specialStage.nextZone = 0
+					if char.select == 3
+						stage.playerListPos = 5
+					else
+						stage.playerListPos = char.select
+					end if
+				saveRAM[620] = char.select
+				WriteSaveRAM()
+				LoadStage()
+			end if
+			SetScreenFade(0, 0, 0, fade.control)
+			break
+		end switch
+		
+		//Background
+		screen.xoffset += 2
+		temp1 = 0
+		temp2 = 0
+		while temp2 < screen.ysize
+			while temp1 < screen.xsize
+				DrawRect(temp1, temp2, 15, 1, color2, color2, color2, game.modes.alpha)
+				temp1 += 15
+				DrawRect(temp1, temp2, 45, 1, 0, 0, 0, game.modes.alpha)
+				temp1 += 45
+			loop
+			temp2 += 1
+			temp1 = temp2
+			FlipSign(temp1)
+		loop
+		
+		//Base
+
+		DrawRect(0, 0, screen.xsize, 7, color7, color7, color7, 255)
+		DrawRect(0, 5, screen.xsize, 1, color7, 0, 0, 255)
+		
+		temp0 = 0
+		while temp0 < screen.xsize
+			DrawSpriteScreenXY(0, temp0, 7)
+			temp0 += 104
+		loop
+		temp0 = screen.xsize
+		temp0 -= 19
+		DrawSpriteScreenXY(1, temp0, 19)
+		
+		DrawRect(0, 49, screen.xsize, 3, color7, color7, color7, 255)
+		DrawRect(0, 50, screen.xsize, 1, color7, 0, 0, 255)
+
+		if saved.mobile == 1
+			temp0 -= screen.xsize
+			temp0 += 22
+			DrawSpriteScreenFX(66,0,temp0,8)
+		end if	
+
+		
+		//Ranks	
+		temp3 = arcade.offset
+		FlipSign(temp3)
+		DrawSpriteScreenXY(2, temp3, 50)
+		temp2 = 83
+		temp0 = 1
+		
+		while temp0 < 10
+			temp4 = temp3
+			if screen.xsize == 320	
+				temp4 += 168
+			else
+				temp4 += 179
+			end if
+			switch temp0
+				case 0
+				case 1
+					if screen.xsize == 320
+						DrawRect(temp3, temp2, 166, 13, color7, color7, color7, 255)
+					else
+						DrawRect(temp3, temp2, 177, 13, color7, color7, color7, 255)
+					end if
+					DrawSpriteScreenXY(3, temp4, temp2)
+					break
+				case 2
+				case 3
+					if screen.xsize == 320
+						DrawRect(temp3, temp2, 166, 13, color6, color6, color7, 255)
+					else 
+						DrawRect(temp3, temp2, 177, 13, color6, color6, color7, 255)
+					end if
+					DrawSpriteScreenXY(4, temp4, temp2)
+					break
+				case 4
+				case 5
+				case 6
+					if screen.xsize == 320
+						DrawRect(temp3, temp2, 166, 13, color5, color5, color7, 255)
+					else
+						DrawRect(temp3, temp2, 177, 13, color5, color5, color7, 255)
+					end if
+					DrawSpriteScreenXY(5, temp4, temp2)
+					break
+				case 7
+				case 8
+					if screen.xsize == 320
+						DrawRect(temp3, temp2, 166, 13, color4, color4, color7, 255)
+					else
+						DrawRect(temp3, temp2, 177, 13, color4, color4, color7, 255)
+					end if
+					DrawSpriteScreenXY(6, temp4, temp2)
+					break
+				default
+					if screen.xsize == 320
+						DrawRect(temp3, temp2, 166, 13, color3, color3, color6, 255)
+					else
+						DrawRect(temp3, temp2, 177, 13, color3, color3, color6, 255)
+					end if
+					DrawSpriteScreenXY(7, temp4, temp2)
+					break				
+			end switch
+			arrayPos0 = temp0
+			arrayPos0 += 620
+			temp4 = temp3
+			temp4 += 30
+			if screen.xsize == 320
+				temp4 += 8
+			end if
+			DrawNumbers(8, temp4, temp2, temp0, 2, 8, 0)
+			temp4 += 79
+			if screen.xsize == 320
+				temp4 -= 10
+			end if
+			if saveRAM[arrayPos0] >= 1000000			
+				DrawNumbers(8, temp4, temp2, saveRAM[arrayPos0], 7, 8, 1)
+			else
+				DrawNumbers(8, temp4, temp2, saveRAM[arrayPos0], 6, 8, 1)
+			end if
+			arrayPos0 += 10
+			temp1 = saveRAM[arrayPos0]
+           			if temp1 == 6
+				temp1 = 64
+			else
+				temp1 += 18
+			end if
+			temp4 += 41
+			if screen.xsize == 320
+				temp4 -= 10
+			end if
+			DrawSpriteScreenXY(temp1, temp4, temp2)
+		temp2 += 17
+		temp0++
+		loop		
+		
+		//Character Select
+		temp3 = arcade.offset
+		temp3 += screen.xsize
+		if screen.xsize == 320
+			DrawSpriteScreenXY(22, temp3, 197)
+		else
+			DrawSpriteScreenXY(22, temp3, 53)
+		end if
+		temp0 = char.select
+			if char.select == 3
+				temp0 += 60
+			else
+				temp0 += 23
+			end if
+		end if
+		if screen.xsize == 320
+			DrawSpriteScreenXY(temp0, temp3, 197)
+		else
+			DrawSpriteScreenXY(temp0, temp3, 53)
+		end if
+		if char.select == 3
+			temp0 += 2
+		else
+			temp0 += 3	
+		end if		
+		temp1 = screen.xcenter
+		if screen.xsize == 320
+			temp1 += 84
+			temp1 += arcade.offset
+			DrawSpriteScreenXY(temp0, temp1, 130)
+		else
+			temp1 += 94
+			temp1 += arcade.offset
+			DrawSpriteScreenXY(temp0, temp1, 140)
+		end if
+		if object.state == 2
+			if arrow.flash < 30
+				if screen.xsize == 320
+					temp1 -= 55	
+					DrawSpriteScreenXY(61, temp1, 140)
+					temp1 += 105	
+					DrawSpriteScreenXY(62, temp1, 140)
+				else
+					temp1 -= 75	
+					DrawSpriteScreenXY(61, temp1, 140)
+					temp1 += 150	
+					DrawSpriteScreenXY(62, temp1, 140)
+				end if
+			end if
+			arrow.flash++
+			arrow.flash %= 60
+		end if
+		
+		
+		
+		//Insert Ring
+		temp0 = screen.xsize
+		temp0 += arcade.offset
+		temp1 = screen.ysize
+		if screen.xsize == 320
+			temp1 += 3
+			temp0 += 7
+		end if
+		temp2 = 29
+		switch object.state
+			case 3
+			case 5
+				ring.timer++
+				if ring.timer >= 4
+					ring.timer = 0
+					ring.frame++
+					ring.frame %= 8
+				end if
+				temp2 += 9
+				break
+		end switch	
+		DrawSpriteScreenXY(temp2, temp0, temp1)
+		if saved.language == 2
+			temp0 -= 18
+		else
+			temp0 -= 22
+		end if
+		temp1 -= 14
+		temp2++
+		temp2 += ring.frame
+		DrawSpriteScreenXY(temp2, temp0, temp1)
+		
+		//Outro
+		temp0 = screen.xsize
+		temp0 += 75
+		temp0 -= arcade.offset
+		DrawSpriteScreenXY(47, screen.xcenter, temp0)
+		temp1 = screen.xcenter
+		temp1 -= 97
+		temp0 += 70
+		DrawSpriteScreenXY(48, temp1, temp0)
+			temp1 += 186
+		DrawNumbers(50, temp1, temp0, player.score, 6, 8, 0)
+		temp0 += 20
+		temp1 -= 186
+		DrawSpriteScreenXY(49, temp1, temp0)
+		temp1 += 186
+		arrayPos0 = 621
+		temp2 = 1
+		temp3 = 20
+		while temp2 < 10
+			if player.score == saveRAM[arrayPos0]
+				temp3 = temp2
+			end if
+			arrayPos0++
+			temp2++
+		loop
+		if temp3 == 20
+			DrawSpriteScreenXY(60, temp1, temp0)
+		else
+			DrawNumbers(50, temp1, temp0, temp3, 6, 8, 0)
+		end if
+
+	//Achievement
+	if arcade.achievement > 0
+		//Achievement Display
+		temp0 = screen.xsize
+		temp0 -= achieve.xoffset
+		temp1 = screen.ysize
+		temp1 -= 29
+
+		DrawSpriteScreenXY(67, temp0, temp1)
+	end if
+
+end event
+
+
+
+
+
+event ObjectStartup
+	foreach (TypeName[Arcade], arrayPos0, ALL_ENTITIES)
+		object[arrayPos0].type = TypeName[Blank Object]
+		ResetObjectEntity(5, TypeName[Arcade], 0, 0, 0)
+		object[5].value1 = saveRAM[620]
+		object[5].priority = PRIORITY_ACTIVE
+		if player.score > 0
+			object[5].value5 = screen.xsize
+		else
+			object[5].value5 = 0
+		end if
+	next
+	
+	LoadSpriteSheet("Menus/ArcadeMode.gif")
+	CallFunction(ScoreOrder)
+	switch saved.language
+		case 0 //english
+			SpriteFrame(0, 0, 104, 42, 1, 45) //0 Top Border
+			SpriteFrame(-158, 0, 158, 17, 216, 13) //1 'Arcade Mode'
+			SpriteFrame(0, 0, 214, 29, 1, 1) //2 Table Header
+		break	
+		case 1 //Portuguese
+			SpriteFrame(0, 0, 104, 42, 1, 45) //0 Top Border
+			SpriteFrame(-158, 0, 158, 17, 1, 322) //1 'Arcade Mode'
+			SpriteFrame(0, 0, 214, 29, 1, 124) //2 Table Header
+		break	
+		case 2 //Spanish
+			SpriteFrame(0, 0, 104, 42, 1, 45) //0 Top Border
+			SpriteFrame(-158, 0, 158, 17, 1, 322) //1 'Arcade Mode'
+			SpriteFrame(0, 0, 214, 29, 105, 340) //2 Table Header
+		break	
+	end switch	
+	
+	//Score Bar Ends
+	SpriteFrame(0, 0, 7, 13, 1, 31) //3
+	SpriteFrame(0, 0, 7, 13, 9, 31) //4
+	SpriteFrame(0, 0, 7, 13, 17, 31) //5
+	SpriteFrame(0, 0, 7, 13, 25, 31) //6
+	SpriteFrame(0, 0, 7, 13, 33, 31) //7
+	
+	//Numbers
+	SpriteFrame(0, 1, 7, 11, 288, 1) //8  0
+	SpriteFrame(0, 1, 7, 11, 216, 1) //9  1
+	SpriteFrame(0, 1, 7, 11, 224, 1) //10  2
+	SpriteFrame(0, 1, 7, 11, 232, 1) //11  3
+	SpriteFrame(0, 1, 7, 11, 240, 1) //12  4
+	SpriteFrame(0, 1, 7, 11, 248, 1) //13  5
+	SpriteFrame(0, 1, 7, 11, 256, 1) //14  6
+	SpriteFrame(0, 1, 7, 11, 264, 1) //15  7
+	SpriteFrame(0, 1, 7, 11, 272, 1) //16  8
+	SpriteFrame(0, 1, 7, 11, 280, 1) //17  9
+	
+	//Character Heads
+	SpriteFrame(0, 0, 16, 13, 305, 69) //18  Empty	
+	SpriteFrame(0, 0, 16, 13, 254, 69) //19  Sonic
+	SpriteFrame(1, 0, 15, 13, 271, 69) //20  Tails
+	SpriteFrame(0, 0, 17, 13, 287, 69) //21  Knuckles
+	
+	//Character Menu
+	SpriteFrame(-80, 0, 78, 16, 253, 83) //22 Grey Peps
+	SpriteFrame(-80, 0, 17, 16, 332, 83) //23 Sonic Highlighted
+	SpriteFrame(-59, 1, 15, 15, 350, 84) //24 Tails Highlighted
+	SpriteFrame(-41, 1, 18, 15, 366, 84) //25 Knuckles Highlighted
+	
+	//Portraits
+	SpriteFrame(-55, -74, 103, 148, 1, 363) //26 Sonic
+	if screen.xsize == 320
+		SpriteFrame(-85, -53, 158, 114, 105, 397) //27 Tails
+	else
+		SpriteFrame(-74, -53, 158, 114, 105, 397) //27 Tails
+	end if
+	SpriteFrame(-57, -66, 123, 133, 264, 379) //28 Knuckles
+	
+	//Insert Ring
+	switch saved.language
+		case 0
+		SpriteFrame(-147, -29, 147, 29, 106, 31) //29 Frame
+		break
+		case 1
+		SpriteFrame(-147, -29, 147, 29, 216, 160) //29 Frame
+		break
+		case 2
+		SpriteFrame(-147, -29, 147, 29, 364, 160) //29 Frame
+		break
+	end switch
+	SpriteFrame(-9, -9, 18, 18, 254, 31) //30 Ring0
+	SpriteFrame(-8, -9, 16, 18, 273, 31) //31 Ring1
+	SpriteFrame(-7, -9, 14, 18, 290, 31) //32 Ring2
+	SpriteFrame(-5, -9, 10, 18, 305, 31) //33 Ring3
+	SpriteFrame(-4, -9, 8, 18, 316, 31) //34 Ring4
+	SpriteFrame(-5, -9, 10, 18, 325, 31) //35 Ring5
+	SpriteFrame(-7, -9, 14, 18, 336, 31) //36 Ring6
+	SpriteFrame(-8, -9, 16, 18, 351, 31) //37 Ring7
+	
+	//Gold
+	switch saved.language
+		case 0
+		SpriteFrame(-147, -29, 147, 29, 106, 61) //38 Frame
+		break
+		case 1
+		SpriteFrame(-147, -29, 147, 29, 216, 190) //38 Frame
+		break
+		case 2
+		SpriteFrame(-147, -29, 147, 29, 364, 190) //38 Frame
+		break
+	end switch
+	SpriteFrame(-9, -9, 18, 18, 254, 50) //39 Ring0
+	SpriteFrame(-8, -9, 16, 18, 273, 50) //40 Ring1
+	SpriteFrame(-7, -9, 14, 18, 290, 50) //41 Ring2
+	SpriteFrame(-5, -9, 10, 18, 305, 50) //42 Ring3
+	SpriteFrame(-4, -9, 8, 18, 316, 50) //43 Ring4
+	SpriteFrame(-5, -9, 10, 18, 325, 50) //44 Ring5
+	SpriteFrame(-7, -9, 14, 18, 336, 50) //45 Ring6
+	SpriteFrame(-8, -9, 16, 18, 351, 50) //46 Ring7
+
+	//Outro
+	switch saved.language
+		case 0
+		SpriteFrame(-97, 0, 194, 56, 1, 156) //47 'Final Results'
+		SpriteFrame(0, 0, 44, 16, 47, 88) //48 'Score'
+		break
+		case 1
+		SpriteFrame(-97, 0, 194, 56, 217, 103) //47 'Final Results'
+		SpriteFrame(0, 0, 44, 16, 47, 88) //48 'Score'
+		break
+		case 2
+		SpriteFrame(-137, 0, 273, 56, 1, 265) //47 'Final Results'
+		SpriteFrame(0, 0, 53, 16, 160, 105) //48 'Score'
+		break
+	end switch
+	
+	switch saved.language
+	case 0
+		SpriteFrame(0, 0, 39, 16, 1, 105) //49 'Rank'
+		break
+	case 1
+		SpriteFrame(0, 0, 55, 16, 58, 105) //49 'Rank'
+		break
+	case 2
+		SpriteFrame(0, 0, 45, 16, 114, 105) //49 'Rank'
+		break
+	end switch
+	
+	//Numbers
+	SpriteFrame(0, 0, 8, 11, 396, 1) //50  0
+	SpriteFrame(0, 0, 8, 11, 405, 1) //51  1
+	SpriteFrame(0, 0, 8, 11, 414, 1) //52  2
+	SpriteFrame(0, 0, 8, 11, 423, 1) //53  3
+	SpriteFrame(0, 0, 8, 11, 396, 13) //54  4
+	SpriteFrame(0, 0, 8, 11, 405, 13) //55  5
+	SpriteFrame(0, 0, 8, 11, 414, 13) //56  6
+	SpriteFrame(0, 0, 8, 11, 423, 13) //57  7
+	SpriteFrame(0, 0, 8, 11, 396, 25) //58  8
+	SpriteFrame(0, 0, 8, 11, 405, 25) //59  9
+	SpriteFrame(0, 0, 8, 11, 396, 37) //60  -
+	
+	SpriteFrame(-21, 0, 21, 21, 1, 213) //61  <
+	SpriteFrame(0, 0, 21, 21, 23, 213) //62  >
+
+	SpriteFrame(-20, 0, 18, 16, 385, 83) //63 Amy Highlighted
+	SpriteFrame(0, 0, 17, 13, 336, 69) //64  Amy
+	SpriteFrame(-72, -80, 128, 147, 383, 231) //65  Amy Portrait
+
+	SpriteFrame(0, 0, 36, 36, 432, 1) // 66 Touch Back Button
+
+	SpriteFrame(0, 0, 200, 29, 1, 235) //67 Achievement
+	
+	
+	SetMusicTrack("Arcade.ogg", 0, 1)
+	
+	//from logo - background
+	temp0 = 208
+	temp1 = 0
+	while temp1 < 14
+		GetTableValue(temp2, temp1, Arcade_table0)
+		SetPaletteEntry(0, temp0, temp2)
+		temp0++
+		temp1++
+	loop
+end event
+
+function ArcadeOffsetting
+	switch object.state
+		case 2
+		case 3
+		case 4
+		case 5
+			if arcade.offset > 0
+				arcade.offset -= 20
+			end if
+			if arcade.offset < 0
+				arcade.offset = 0
+			end if
+			break
+		case 6
+			if arcade.offset < screen.xsize
+				arcade.offset += 20
+			end if
+			if arcade.offset > screen.xsize
+				arcade.offset = screen.xsize
+			end if
+			break
+	end switch
+end function
+
+
+function ScoreOrder
+	arrayPos0 = 621
+	arrayPos1 = 631
+	temp0 = 0
+	while temp0 < 10
+		if saveRAM[arrayPos0] >= 400000
+			arcade.achievement = 1
+		end if
+		SetTableValue(saveRAM[arrayPos0], temp0, Arcade_table1)
+		SetTableValue(saveRAM[arrayPos1], temp0, Arcade_table2)
+		temp0++
+		arrayPos0++
+		arrayPos1++
+	loop
+	
+	temp0 = 0
+	while temp0 < 10
+		temp1 = temp0
+		temp1++
+		while temp1 < 10
+			GetTableValue(temp6, temp0, Arcade_table1)
+			GetTableValue(temp7, temp1, Arcade_table1)
+			if temp6 < temp7
+				temp5 = temp6
+				temp6 = temp7
+				temp7 = temp5
+				SetTableValue(temp6, temp0, Arcade_table1)
+				SetTableValue(temp7, temp1, Arcade_table1)
+				GetTableValue(temp6, temp0, Arcade_table2)
+				GetTableValue(temp7, temp1, Arcade_table2)
+				temp5 = temp6
+				temp6 = temp7
+				temp7 = temp5
+				SetTableValue(temp6, temp0, Arcade_table2)
+				SetTableValue(temp7, temp1, Arcade_table2)
+			end if			
+			temp1++
+		loop
+		temp0++
+	loop
+	
+	arrayPos0 = 621
+	arrayPos1 = 631
+	temp0 = 0
+	while temp0 < 10
+		GetTableValue(saveRAM[arrayPos0], temp0, Arcade_table1)
+		GetTableValue(saveRAM[arrayPos1], temp0, Arcade_table2)
+		
+		temp0++
+		arrayPos0++
+		arrayPos1++
+	loop
+	WriteSaveRAM()
+end function
+
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+end event

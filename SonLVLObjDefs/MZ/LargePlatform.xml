@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="arch">
+  <Images>
+    <ImageFromSheet id="arch" sheet="MZ/Objects.gif" sourcex="1" sourcey="324" width="128" height="80">
+      <Offset X="-64" Y="-48"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="curve" sheet="MZ/Objects.gif" sourcex="317" sourcey="396" width="128" height="96">
+      <Offset X="-64" Y="-64"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="rectangle" sheet="MZ/Objects.gif" sourcex="446" sourcey="396" width="64" height="96">
+      <Offset X="-32" Y="-48"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Behaviour" description="Which movement pattern this platform should follow." type="behaviours" startbit="0" length="3" />
+    <Property name="Start Direction" description="Which direction this platform should start from. Only affects moving platforms." type="movedirs" startbit="3" length="1" />
+    <Property name="Frame" description="Which type of platform this object should be." type="frames" startbit="4" length="2" />
+  </Properties>
+  <Enums>
+    <Enum name="behaviours">
+      <EnumMember name="Static" />
+      <EnumMember name="Move - Shorter" />
+      <EnumMember name="Move - Short" />
+      <EnumMember name="Move - Long" />
+      <EnumMember name="Move - Longer" />
+      <EnumMember name="Dips (Fireballs)" />
+    </Enum>
+    <Enum name="movedirs">
+      <EnumMember name="Down" />
+      <EnumMember name="Up" />
+    </Enum>
+    <Enum name="frames">
+      <EnumMember name="Arch" />
+      <EnumMember name="Curved" />
+      <EnumMember name="Rectangular" />
+    </Enum>
+  </Enums>
+  <Display>
+    <DisplayOption>
+      <Condition property="Frame" value="Arch" />
+      <ImageRef image="arch" />
+    </DisplayOption>
+    <DisplayOption>
+      <Condition property="Frame" value="Curved" />
+      <ImageRef image="curve" />
+    </DisplayOption>
+    <DisplayOption>
+      <Condition property="Frame" value="Rectangular" />
+      <ImageRef image="rectangle" />
+    </DisplayOption>
+  </Display>
+</ObjDef>

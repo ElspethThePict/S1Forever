@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="button">
+  <Images>
+    <ImageFromSheet id="button" sheet="LZ/Objects.gif" sourcex="1" sourcey="84" width="32" height="16">
+      <Offset X="-16" Y="-8" />
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Trigger" description="What effect this button should trigger." type="types" startbit="0" length="8" />
+  </Properties>
+  <Enums>
+    <Enum name="types">
+      <EnumMember name="Generic" />
+      <EnumMember name="Open LZ3 Path" />
+      <EnumMember name="Swap Belt Platform Dir" value="3" />
+    </Enum>
+  </Enums>
+  <Subtypes>
+    <Subtype id="00" name="Generic" image="button" />
+    <Subtype id="01" name="Open LZ3 Path" image="button" />
+    <Subtype id="03" name="Swap Belt Platform Dir" image="button" />
+  </Subtypes>
+</ObjDef>

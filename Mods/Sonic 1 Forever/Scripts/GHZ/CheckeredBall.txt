@@ -1,0 +1,124 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Checkered Ball Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias 74 : TYPE_CHECKEREDBALL
+
+// Function declarations
+reserve function CheckeredBall_DebugDraw
+reserve function CheckeredBall_DebugSpawn
+reserve function CheckeredBall_Function142
+reserve function CheckeredBall_Function143
+reserve function CheckeredBall_Function144
+reserve function CheckeredBall_Function145
+reserve function CheckeredBall_Function146
+reserve function CheckeredBall_Function147
+reserve function CheckeredBall_Function148
+
+// Static Values
+
+// Tables
+private table CheckeredBall_table26
+	0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 20
+end table
+
+private table CheckeredBall_table27
+	253, 251, 248, 245, 243, 240, 237, 235, 232, 229, 226, 224, 221, 219, 216, 213, 210, 208, 205, 203, 200, 197, 195, 192
+end table
+
+function CheckeredBall_DebugDraw
+	DrawSprite(1)
+end function
+
+
+function CheckeredBall_DebugSpawn
+	CreateTempObject(TypeName[Checkered Ball], 0, object.xpos, object.ypos)
+	object[tempObjectPos].gravity = GRAVITY_AIR
+	object[tempObjectPos].value7 = object.xpos
+	object[tempObjectPos].value8 = object.ypos
+	object[tempObjectPos].value1 = object.xpos
+	object[tempObjectPos].value2 = object.ypos
+end function
+
+function CheckeredBall_Function148
+	if object.gravity == GRAVITY_AIR
+		object.yvel += 0x3800
+		object.speed = object.xvel
+	else
+		object.gravity = GRAVITY_AIR
+		object.yvel = -0x30000
+		object.tileCollisions = 0
+		PlaySfx(SfxName[Block Break], 0)
+		screen.shakeY = 5
+	end if
+	object.value6 = 0
+end function
+
+
+event ObjectMain
+	if object.priority != PRIORITY_XBOUNDS_DESTROY
+		object.priority = PRIORITY_ACTIVE
+	end if
+	CallFunction(CheckeredBall_Function148)
+	ProcessObjectMovement()
+	if object.outOfBounds == 1
+		object.type = TypeName[Blank Object]
+	end if
+end event
+
+
+event ObjectDraw
+	object.rotation = object.value3
+	object.rotation >>= 14
+	temp0 = object.rotation
+	temp0 += 8
+	temp0 >>= 4
+	temp0 &= 7
+	temp0++
+	if object.tileCollisions == 1
+		object.inkEffect = INK_NONE
+	else
+		object.inkEffect = INK_ALPHA
+	end if	
+	object.alpha = 160
+	DrawSpriteFX(temp0, FX_INK, object.xpos, object.ypos)
+	object.inkEffect = INK_ADD
+	DrawSpriteFX(0, FX_INK, object.xpos, object.ypos)
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("GHZ/Objects2.gif")
+	SpriteFrame(-24, -24, 48, 48, 1, 77)
+	SpriteFrame(-24, -24, 48, 48, 50, 77)
+	SpriteFrame(-24, -24, 48, 48, 148, 126)
+	SpriteFrame(-24, -24, 48, 48, 99, 126)
+	SpriteFrame(-24, -24, 48, 48, 50, 126)
+	SpriteFrame(-24, -24, 48, 48, 1, 126)
+	SpriteFrame(-24, -24, 48, 48, 197, 77)
+	SpriteFrame(-24, -24, 48, 48, 148, 77)
+	SpriteFrame(-24, -24, 48, 48, 99, 77)
+	LoadAnimation("WreckingBall.ani")
+	foreach (TypeName[Checkered Ball], arrayPos0, ALL_ENTITIES)
+		object[arrayPos0].gravity = GRAVITY_AIR
+		object[arrayPos0].value7 = object.xpos
+		object[arrayPos0].value8 = object.ypos
+	next
+	SetTableValue(TypeName[Checkered Ball], DebugMode_ObjCount, DebugMode_TypesTable)
+	SetTableValue(CheckeredBall_DebugDraw, DebugMode_ObjCount, DebugMode_DrawTable)
+	SetTableValue(CheckeredBall_DebugSpawn, DebugMode_ObjCount, DebugMode_SpawnTable)
+	DebugMode_ObjCount++
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+end event

@@ -1,0 +1,1359 @@
+
+
+//-------Aliases-------//
+private alias object.value0 : slot.new
+private alias object.value1 : slot.player
+private alias object.value2 : slot.lives
+private alias object.value3 : slot.score
+private alias object.value4 : slot.scoreBonus
+private alias object.value5 : slot.stage
+private alias object.value6 : slot.emeralds
+private alias object.value7 : slot.nextSpecial
+private alias object.value8 : slot.continues
+private alias object.value9 : slot.read
+
+private alias object.value10 : slot.handframe
+private alias object.value11 : slot.blinkframe
+private alias object.value12 : slot.arrowflash
+
+private alias object.value13 : slot.partnerhandframe
+private alias object.value14 : slot.partnerblinkframe
+
+
+
+// Function declarations
+reserve function Read_Save
+reserve function Draw_StaticPortrait
+reserve function Draw_Name
+reserve function Draw_Portrait
+reserve function Draw_Star
+reserve function Draw_Lives
+reserve function Draw_Level
+reserve function Draw_Emeralds
+reserve function Draw_LevelSelect
+reserve function Draw_NewSave
+reserve function Draw_NewCharacter
+reserve function Slot_Camera
+
+reserve function SonicIdle
+reserve function TailsIdle
+reserve function KnuxIdle
+reserve function SonicTailsIdle
+reserve function KnuxTailsIdle
+reserve function AmyIdle
+
+reserve function PartnerTailsIdle
+
+reserve function SonicPop
+reserve function TailsPop
+reserve function KnuxPop
+reserve function AmyPop
+reserve function SonicTailsPop
+reserve function KnuxTailsPop
+
+reserve function PartnerTailsPop
+
+// Static Values
+
+//Tables
+
+function Slot_Camera
+	if save.highlight == object.propertyValue
+		temp0 = object.ixpos
+		temp0 -= screen.xoffset
+		temp0 -= screen.xcenter
+		Abs(temp0)
+		if temp0 > screen.xsize
+			temp2 = 40
+		else
+			temp2 = 20
+		end if
+		
+		temp0 = slot.total
+		temp0--
+		temp0 *= 0x89
+		temp0 += 0x5C
+		temp0 -= screen.xsize
+		temp0 += 0x5C
+		
+		temp1 = object.ixpos
+		temp1 -= 0x5C
+		if touch.delay < 20
+			temp1 -=32
+			if temp1 < 0
+				temp1 = 0
+			end if
+		end if
+		if screen.xoffset > temp1
+			screen.xoffset -= temp2
+			if screen.xoffset < temp1
+				screen.xoffset = temp1
+			end if
+		else
+			temp1 = object.ixpos
+			temp1 -= screen.xsize
+			temp1 += 0x5C
+			if touch.delay < 20
+				temp1 += 32
+				if temp1 > temp0
+					temp1 = temp0
+				end if
+			end if
+			if screen.xoffset < temp1
+				screen.xoffset += temp2
+				if screen.xoffset > temp1
+					screen.xoffset = temp1
+				end if
+			end if
+		end if
+	end if
+end function
+
+
+function Read_Save
+	if slot.read == 0
+		arrayPos0 = object.propertyValue
+		arrayPos0 <<= 3
+		arrayPos0 += 1000
+		
+		slot.player = saveRAM[arrayPos0]
+		arrayPos0++
+		slot.lives = saveRAM[arrayPos0]
+		arrayPos0++
+		slot.score = saveRAM[arrayPos0]
+		arrayPos0++
+		slot.scoreBonus = saveRAM[arrayPos0]
+		arrayPos0++
+		slot.stage = saveRAM[arrayPos0]
+		arrayPos0++
+		slot.emeralds = saveRAM[arrayPos0]
+		arrayPos0++
+		slot.nextSpecial = saveRAM[arrayPos0]
+		arrayPos0++
+		slot.continues = saveRAM[arrayPos0]
+		
+		if slot.stage == 0
+			slot.new = 1
+		else
+			slot.new = 0
+		end if
+		slot.read = 1
+	end if
+end function
+
+function Draw_StaticPortrait
+	temp0 = object.xpos
+	temp1 = object.ypos
+	temp1 -= 0x120000
+	Rand(temp2, 9)
+	temp2 += 107
+	DrawSpriteXY(temp2, temp0, temp1)
+end function
+
+function Draw_Name
+	temp0 = object.xpos
+	temp0 -= 0x280000
+	temp1 = object.ypos
+	temp1 -= 0x380000
+	switch slot.player
+		case 0
+			temp2 = 54
+			break
+		case 1
+			temp2 = 57
+			break
+		case 2
+			temp2 = 55
+			break
+		case 3
+			temp2 = 58
+			break
+		case 4
+			temp2 = 59
+			break
+		case 5
+			temp2 = 56
+			break
+	end switch
+	DrawSpriteXY(temp2, temp0, temp1)
+end function
+
+function Draw_Portrait
+	switch slot.player
+		case 0
+			CallFunction(SonicIdle)
+			break
+		case 1
+			CallFunction(TailsIdle)
+			break
+		case 2
+			CallFunction(KnuxIdle)
+			break
+		case 3
+			CallFunction(SonicTailsIdle)
+			break
+		case 4
+			CallFunction(KnuxTailsIdle)
+			break
+		case 5
+			CallFunction(AmyIdle)
+			break
+	end switch	
+end function
+
+
+function Draw_Star
+	if slot.stage == 20
+		temp0 = object.xpos
+		temp0 += 0x1F0000
+		temp1 = object.ypos
+		temp1 -= 0x110000
+		temp2 = slot.emeralds
+		temp2 &= 63
+		if temp2 == 63
+			DrawSpriteXY(53, temp0, temp1)
+		else
+			DrawSpriteXY(52, temp0, temp1)
+		end if
+	end if
+end function
+
+function Draw_Lives
+	if saved.lives == 0
+		temp0 = object.xpos
+		temp0 -= 0xB0000
+		temp1 = object.ypos
+		temp1 += 0x20000
+		temp2 = slot.lives
+		temp2 %= 10
+		temp2 += 34
+		DrawSpriteXY(temp2, temp0, temp1)
+		temp0 -= 0x80000
+		temp2 = slot.lives
+		temp2 /= 10
+		temp2 += 34
+		DrawSpriteXY(temp2, temp0, temp1)
+		temp0 -= 0x40000
+		switch slot.player
+			case 0
+			case 3
+				temp2 = 44
+				break
+			case 1
+				temp2 = 45
+				break
+			case 2
+			case 4
+				temp2 = 46
+				break
+			case 5
+				temp2 = 47
+				break
+		end switch
+		DrawSpriteXY(temp2, temp0, temp1)
+		
+		temp0 = object.xpos
+		temp0 -= 0xB0000
+		temp1 = object.ypos
+		temp1 += 0x130000
+		temp2 = slot.continues
+		temp2 %= 10
+		temp2 += 34
+		DrawSpriteXY(temp2, temp0, temp1)
+		temp0 -= 0x80000
+		temp2 = slot.continues
+		temp2 /= 10
+		temp2 += 34
+		DrawSpriteXY(temp2, temp0, temp1)
+		temp0 -= 0x40000
+		switch slot.player
+			case 0
+			case 3
+				temp2 = 48
+				break
+			case 1
+				temp2 = 49
+				break
+			case 2
+			case 4
+				temp2 = 50
+				break
+			case 5
+				temp2 = 51
+				break
+		end switch
+		DrawSpriteXY(temp2, temp0, temp1)
+	end if
+end function
+
+function Draw_Level
+	temp0 = object.xpos
+	if saved.lives == 0
+		temp0 += 0x170000
+	end if
+	temp1 = object.ypos
+	temp1 += 0xF0000
+	DrawSpriteXY(11, temp0, temp1)
+	if slot.stage > 127 //Special Stage
+		temp2 = 20
+		temp3 = 30
+		temp4 = 0
+	else
+		switch slot.stage
+			case 1
+			case 2
+			case 3
+				temp2 = 12
+				temp3 = 22
+				break
+			case 4
+			case 5
+			case 6
+				temp2 = 13
+				temp3 = 23
+				break
+			case 7
+			case 8
+			case 9
+				temp2 = 14
+				temp3 = 24
+				break
+			case 10
+			case 11
+			case 12
+				temp2 = 15
+				temp3 = 25
+				break
+			case 13
+			case 14
+			case 15
+				temp2 = 16
+				temp3 = 26
+				break
+			case 16
+			case 17
+				temp2 = 17
+				temp3 = 27
+				break
+			case 18
+				temp2 = 18
+				temp3 = 27
+				break
+			case 19
+				temp2 = 19
+				temp3 = 28
+				break
+			case 20
+				temp2 = 21
+				temp3 = 29
+				break
+		end switch		
+		switch slot.stage
+			case 1
+			case 4
+			case 7
+			case 10
+			case 13
+			case 16
+				temp4 = 1
+				break
+			case 2
+			case 5
+			case 8
+			case 11
+			case 14
+			case 17
+				temp4 = 2
+				break
+			case 3
+			case 6
+			case 9
+			case 12
+			case 15
+			case 18
+				temp4 = 3
+				break
+			case 19
+			case 20
+				temp4 = 0
+				break
+		end switch
+	end if
+	DrawSpriteXY(temp2, temp0, temp1)
+	temp1 += 0x120000
+	if temp4 == 0
+		DrawSpriteXY(temp3, temp0, temp1)
+	else
+		temp0 -= 0x120000
+		DrawSpriteXY(temp3, temp0, temp1)
+		temp0 += 0x240000
+		temp4 += 30
+		DrawSpriteXY(temp4, temp0, temp1)
+	end if
+end function
+
+
+
+function Draw_LevelSelect
+	temp0 = object.xpos
+	if saved.lives == 0
+		temp0 += 0x170000
+	end if
+	temp1 = object.ypos
+	temp1 += 0xF0000
+	DrawSpriteXY(11, temp0, temp1)
+		switch complete.stage
+			case 0
+				temp2 = 12
+				temp3 = 89
+				break
+			case 1
+				temp2 = 13
+				temp3 = 90
+				break
+			case 2
+				temp2 = 14
+				temp3 = 91
+				break
+			case 3
+				temp2 = 15
+				temp3 = 92
+				break
+			case 4
+				temp2 = 16
+				temp3 = 93
+				break
+			case 5
+				temp2 = 17
+				temp3 = 94
+				break
+			case 6
+				temp2 = 19
+				temp3 = 95
+				break
+		end switch		
+	DrawSpriteXY(temp2, temp0, temp1)
+	if slot.arrowflash < 30
+		DrawSpriteXY(88, temp0, temp1)
+	end if
+	temp1 += 0x120000
+	DrawSpriteXY(temp3, temp0, temp1)
+end function	
+
+function Draw_Emeralds
+	temp0 = object.xpos
+	temp0 -= 0x210000
+	if saved.superStates == 1
+		temp0 -= 0x50000
+	end if
+	temp1 = object.ypos
+	temp1 += 0x2E0000
+	
+	temp2 = 6
+	temp2 += saved.superStates
+	temp3 = 0
+	
+	while temp3 < temp2
+		GetBit(temp4, slot.emeralds, temp3)
+		if temp4 == 1
+			temp5 = 4
+			temp5 += temp3
+			DrawSpriteXY(temp5, temp0, temp1)
+		else
+			DrawSpriteXY(3, temp0, temp1)
+		end if
+		temp0 += 0xB0000
+		temp3++
+	loop
+end function
+
+function Draw_NewSave
+	//Draw New Lives
+	if saved.lives == 0
+		temp0 = object.xpos
+		temp0 -= 0xB0000
+		temp1 = object.ypos
+		temp1 += 0x20000
+		temp2 = slot.lives
+		temp2 %= 10
+		temp2 += 34
+		DrawSpriteXY(temp2, temp0, temp1)
+		temp0 -= 0x80000
+		temp2 = slot.lives
+		temp2 /= 10
+		temp2 += 34
+		DrawSpriteXY(temp2, temp0, temp1)
+		temp0 -= 0x40000
+		DrawSpriteXY(96, temp0, temp1)
+		
+		temp0 = object.xpos
+		temp0 -= 0xB0000
+		temp1 = object.ypos
+		temp1 += 0x130000
+		temp2 = slot.continues
+		temp2 %= 10
+		temp2 += 34
+		DrawSpriteXY(temp2, temp0, temp1)
+		temp0 -= 0x80000
+		temp2 = slot.continues
+		temp2 /= 10
+		temp2 += 34
+		DrawSpriteXY(temp2, temp0, temp1)
+		temp0 -= 0x40000
+		DrawSpriteXY(97, temp0, temp1)
+	end if
+	
+	//Draw New Emeralds
+	temp0 = object.xpos
+	temp0 -= 0x210000
+	if saved.superStates == 1
+		temp0 -= 0x50000
+	end if
+	temp1 = object.ypos
+	temp1 += 0x2E0000
+	
+	temp2 = 6
+	temp2 += saved.superStates
+	temp3 = 0
+	
+	while temp3 < temp2
+		DrawSpriteXY(3, temp0, temp1)
+		temp0 += 0xB0000
+		temp3++
+	loop
+	
+	//Draw New Stage
+	temp0 = object.xpos
+	if saved.lives == 0
+		temp0 += 0x170000
+	end if
+	temp1 = object.ypos
+	temp1 += 0xF0000
+	DrawSpriteXY(11, temp0, temp1)
+	Rand(temp2, 9)
+	temp2 += 98
+	DrawSpriteXY(temp2, temp0, temp1)
+end function
+
+function Draw_NewCharacter
+	switch new.character
+		case 0
+			CallFunction(SonicPop)
+			break
+		case 1
+			CallFunction(TailsPop)
+			break
+		case 2
+			CallFunction(KnuxPop)
+			break
+		case 3
+			CallFunction(AmyPop)
+			break
+		case 4
+			CallFunction(SonicTailsPop)
+			break
+		case 5
+			CallFunction(KnuxTailsPop)
+			break
+	end switch	
+	if slot.arrowflash < 30
+		temp0 = object.xpos
+		temp1 = object.ypos
+		temp1 -= 0x120000
+		DrawSpriteXY(116, temp0, temp1)
+		DrawSpriteXY(117, temp0, temp1)
+	end if
+	
+	temp0 = object.xpos
+	temp0 -= 0x280000
+	temp1 = object.ypos
+	temp1 -= 0x380000
+	switch new.character
+		case 0
+			temp2 = 54
+			break
+		case 1
+			temp2 = 57
+			break
+		case 2
+			temp2 = 55
+			break
+		case 3
+			temp2 = 56
+			break
+		case 4
+			temp2 = 58
+			break
+		case 5
+			temp2 = 59
+			break
+	end switch
+	DrawSpriteXY(temp2, temp0, temp1)
+end function
+
+function SonicIdle
+	temp0 = object.xpos
+	temp1 = object.ypos
+	temp1 -= 0x120000
+	DrawSpriteXY(60, temp0, temp1)
+	DrawSpriteXY(61, temp0, temp1)
+	
+	if save.highlight == object.propertyValue
+		if slot.blinkframe == 0
+			rand(slot.blinkframe, 480)
+			slot.blinkframe += 120
+		else
+			slot.blinkframe--
+		end if
+		
+		temp2 = slot.blinkframe
+		temp2 >>= 2
+		switch temp2
+			case 1
+			case 3
+				DrawSpriteXY(64, temp0, temp1)
+				break
+			case 2
+				DrawSpriteXY(65, temp0, temp1)
+				break			
+		end switch
+		
+		slot.handframe++
+		slot.handframe%= 20
+	end if
+		
+	if slot.handframe < 10
+		DrawSpriteXY(62, temp0, temp1)
+	else
+		DrawSpriteXY(63, temp0, temp1)
+	end if
+end function
+
+function TailsIdle
+	temp0 = object.xpos
+	temp1 = object.ypos
+	temp1 -= 0x120000
+	DrawSpriteXY(73, temp0, temp1)
+	DrawSpriteXY(74, temp0, temp1)
+	
+	if save.highlight == object.propertyValue
+		if slot.blinkframe == 0
+			rand(slot.blinkframe, 480)
+			slot.blinkframe += 120
+		else
+			slot.blinkframe--
+		end if
+		
+		temp2 = slot.blinkframe
+		temp2 >>= 2
+		switch temp2
+			case 1
+				DrawSpriteXY(77, temp0, temp1)
+				break	
+			case 2
+				DrawSpriteXY(78, temp0, temp1)
+				break	
+			case 3
+				DrawSpriteXY(79, temp0, temp1)
+				break				
+		end switch
+		
+		slot.handframe++
+		slot.handframe%= 32
+	end if
+		
+	if slot.handframe < 16
+		DrawSpriteXY(75, temp0, temp1)
+	else
+		DrawSpriteXY(76, temp0, temp1)
+	end if
+end function
+
+function KnuxIdle
+	temp0 = object.xpos
+	temp1 = object.ypos
+	temp1 -= 0x120000
+	DrawSpriteXY(80, temp0, temp1)
+	DrawSpriteXY(81, temp0, temp1)
+	
+	if save.highlight == object.propertyValue
+		if slot.blinkframe == 0
+			rand(slot.blinkframe, 480)
+			slot.blinkframe += 120
+		else
+			slot.blinkframe--
+		end if
+		
+		temp2 = slot.blinkframe
+		temp2 >>= 2
+		switch temp2
+			case 1
+				DrawSpriteXY(85, temp0, temp1)
+				break	
+			case 2
+				DrawSpriteXY(86, temp0, temp1)
+				break	
+			case 3
+				DrawSpriteXY(87, temp0, temp1)
+				break				
+		end switch
+		
+		slot.handframe++
+		slot.handframe%= 40
+	end if
+	
+	if slot.handframe < 10
+		DrawSpriteXY(82, temp0, temp1)
+	else
+		if slot.handframe < 20
+			DrawSpriteXY(83, temp0, temp1)
+		else
+			if slot.handframe < 30
+				DrawSpriteXY(84, temp0, temp1)
+			else
+				DrawSpriteXY(83, temp0, temp1)
+			end if
+		end if
+	end if
+end function
+
+function AmyIdle
+	temp0 = object.xpos
+	temp1 = object.ypos
+	temp1 -= 0x120000
+	DrawSpriteXY(66, temp0, temp1)
+	DrawSpriteXY(67, temp0, temp1)
+	
+	if save.highlight == object.propertyValue
+		if slot.blinkframe == 0
+			rand(slot.blinkframe, 480)
+			slot.blinkframe += 120
+		else
+			slot.blinkframe--
+		end if
+		
+		temp2 = slot.blinkframe
+		temp2 >>= 2
+		switch temp2
+			case 1
+				DrawSpriteXY(70, temp0, temp1)
+				break
+			case 3
+				DrawSpriteXY(71, temp0, temp1)
+				break			
+			case 2
+				DrawSpriteXY(72, temp0, temp1)
+				break			
+		end switch
+		
+		slot.handframe++
+		slot.handframe%= 20
+	end if
+		
+	if slot.handframe < 10
+		DrawSpriteXY(68, temp0, temp1)
+	else
+		DrawSpriteXY(69, temp0, temp1)
+	end if
+end function
+
+function SonicTailsIdle	
+	temp0 = object.xpos
+	temp1 = object.ypos
+	temp1 -= 0x120000
+	DrawSpriteXY(122, temp0, temp1)
+	temp0 += 0xC0000
+	CallFunction(PartnerTailsIdle)
+	temp0 -= 0x180000
+	DrawSpriteXY(61, temp0, temp1)
+	
+	if save.highlight == object.propertyValue
+		if slot.blinkframe == 0
+			rand(slot.blinkframe, 480)
+			slot.blinkframe += 120
+		else
+			slot.blinkframe--
+		end if
+		
+		temp2 = slot.blinkframe
+		temp2 >>= 2
+		switch temp2
+			case 1
+			case 3
+				DrawSpriteXY(64, temp0, temp1)
+				break
+			case 2
+				DrawSpriteXY(65, temp0, temp1)
+				break			
+		end switch
+		
+		slot.handframe++
+		slot.handframe%= 20
+	end if
+		
+	if slot.handframe < 10
+		DrawSpriteXY(62, temp0, temp1)
+	else
+		DrawSpriteXY(63, temp0, temp1)
+	end if
+end function
+
+function KnuxTailsIdle
+	temp0 = object.xpos
+	temp1 = object.ypos
+	temp1 -= 0x120000
+	DrawSpriteXY(123, temp0, temp1)
+	
+	temp0 += 0xE0000
+	CallFunction(PartnerTailsIdle)
+	
+	temp0 = object.xpos
+	temp0 -= 0xB0000
+	DrawSpriteXY(81, temp0, temp1)
+	
+	if save.highlight == object.propertyValue
+		if slot.blinkframe == 0
+			rand(slot.blinkframe, 480)
+			slot.blinkframe += 120
+		else
+			slot.blinkframe--
+		end if
+		
+		temp2 = slot.blinkframe
+		temp2 >>= 2
+		switch temp2
+			case 1
+				DrawSpriteXY(85, temp0, temp1)
+				break	
+			case 2
+				DrawSpriteXY(86, temp0, temp1)
+				break	
+			case 3
+				DrawSpriteXY(87, temp0, temp1)
+				break				
+		end switch
+		
+		slot.handframe++
+		slot.handframe%= 40
+	end if
+	
+	if slot.handframe < 10
+		DrawSpriteXY(82, temp0, temp1)
+	else
+		if slot.handframe < 20
+		DrawSpriteXY(83, temp0, temp1)
+		else
+			if slot.handframe < 30
+				DrawSpriteXY(84, temp0, temp1)
+			else
+				DrawSpriteXY(83, temp0, temp1)
+			end if
+		end if
+	end if	
+end function
+
+function PartnerTailsIdle
+	DrawSpriteXY(74, temp0, temp1)
+	
+	if save.highlight == object.propertyValue
+		if slot.partnerblinkframe == 0
+			rand(slot.partnerblinkframe, 480)
+			slot.partnerblinkframe += 120
+		else
+			slot.partnerblinkframe--
+		end if
+		
+		temp2 = slot.partnerblinkframe
+		temp2 >>= 2
+		switch temp2
+			case 1
+				DrawSpriteXY(77, temp0, temp1)
+				break	
+			case 2
+				DrawSpriteXY(78, temp0, temp1)
+				break	
+			case 3
+				DrawSpriteXY(79, temp0, temp1)
+				break				
+		end switch
+		
+		slot.partnerhandframe++
+		slot.partnerhandframe%= 32
+	end if
+		
+	if slot.partnerhandframe < 16
+		DrawSpriteXY(75, temp0, temp1)
+	else
+		DrawSpriteXY(76, temp0, temp1)
+	end if
+end function
+
+function SonicPop
+	temp0 = object.xpos
+	temp1 = object.ypos
+	temp1 -= 0x120000
+	DrawSpriteXY(60, temp0, temp1)
+	if pop.frame > 8
+		CallFunction(SonicIdle)
+	else
+		temp2 = pop.frame
+		temp2 += 124
+		DrawSpriteXY(temp2, temp0, temp1)
+		pop.timer++
+		if pop.timer > 3
+			pop.frame++
+			pop.timer = 0
+		end if
+	end if
+end function
+
+function TailsPop
+	temp0 = object.xpos
+	temp1 = object.ypos
+	temp1 -= 0x120000
+	DrawSpriteXY(73, temp0, temp1)
+	if pop.frame > 6
+		CallFunction(TailsIdle)
+	else
+		temp2 = pop.frame
+		temp2 += 133
+		DrawSpriteXY(temp2, temp0, temp1)
+		pop.timer++
+		if pop.timer > 3
+			pop.frame++
+			pop.timer = 0
+		end if
+	end if
+end function
+
+function KnuxPop
+	temp0 = object.xpos
+	temp1 = object.ypos
+	temp1 -= 0x120000
+	DrawSpriteXY(80, temp0, temp1)
+	if pop.frame > 5
+		CallFunction(KnuxIdle)
+	else
+		temp2 = pop.frame
+		temp2 += 150
+		DrawSpriteXY(temp2, temp0, temp1)
+		pop.timer++
+		if pop.timer > 3
+			pop.frame++
+			pop.timer = 0
+		end if
+	end if
+end function
+
+function AmyPop
+	temp0 = object.xpos
+	temp1 = object.ypos
+	temp1 -= 0x120000
+	DrawSpriteXY(66, temp0, temp1)
+	if pop.frame > 9
+		CallFunction(AmyIdle)
+	else
+		temp2 = pop.frame
+		temp2 += 140
+		DrawSpriteXY(temp2, temp0, temp1)
+		pop.timer++
+		if pop.timer > 3
+			pop.frame++
+			pop.timer = 0
+		end if
+	end if
+end function
+
+function SonicTailsPop	
+	temp0 = object.xpos
+	temp1 = object.ypos
+	temp1 -= 0x120000
+	DrawSpriteXY(122, temp0, temp1)
+	if pop.frame > 10
+		CallFunction(SonicTailsIdle)
+	else
+		temp0 += 0xC0000
+		CallFunction(PartnerTailsPop)
+		temp0 -= 0x180000
+		temp2 = pop.frame
+		if temp2 > 8
+			temp2 = 8
+		end if
+		temp2 += 124
+		DrawSpriteXY(temp2, temp0, temp1)
+		pop.timer++
+		if pop.timer > 3
+			pop.frame++
+			pop.timer = 0
+		end if
+	end if
+end function
+
+function KnuxTailsPop	
+	temp0 = object.xpos
+	temp1 = object.ypos
+	temp1 -= 0x120000
+	DrawSpriteXY(123, temp0, temp1)
+
+	if pop.frame > 10
+		CallFunction(KnuxTailsIdle)
+	else
+		temp0 += 0xE0000
+		CallFunction(PartnerTailsPop)
+		temp0 = object.xpos
+		temp0 -= 0xB0000
+		temp2 = pop.frame
+		if temp2 > 5
+			temp2 = 5
+		end if
+		temp2 += 150
+		DrawSpriteXY(temp2, temp0, temp1)
+		pop.timer++
+		if pop.timer > 3
+			pop.frame++
+			pop.timer = 0
+		end if
+	end if
+end function
+
+function PartnerTailsPop
+	temp3 = pop.frame
+	temp3 -= 4
+	if temp3 < 0
+		temp3 = 0
+	else
+		if temp3 > 6
+			CallFunction(PartnerTailsIdle)
+		else
+			temp2 = temp3
+			temp2 += 133
+			DrawSpriteXY(temp2, temp0, temp1)
+		end if
+	end if
+end function
+
+event ObjectMain
+	//BoxCollisionTest(C_TOUCH, object.entityPos, -12, -18, 12, 18, 0, 0, 0, 1, 1)
+	slot.arrowflash++
+	slot.arrowflash %= 60
+	CallFunction(Read_Save)
+	//if screen.xoffset >= 0
+		CallFunction(Slot_Camera)
+	//end if
+	if save.highlight == object.propertyValue
+		temp0 = object.value31
+		temp0 -= 0x50000
+		if object.ypos > temp0
+			object.ypos -= 0x10000
+		else
+			object.ypos = temp0
+		end if
+	else
+		if object.ypos < object.value31
+			object.ypos += 0x10000
+		else
+			object.ypos = object.value31
+		end if
+	end if
+end event
+
+
+event ObjectDraw
+	DrawSpriteXY(0, object.value30, object.value31)
+	if save.highlight == object.propertyValue
+		DrawSpriteXY(2, object.value30, object.value31)
+	end if
+	CallFunction(Draw_StaticPortrait)
+	DrawSprite(1)
+	if slot.new == 0
+		CallFunction(Draw_Name)
+		CallFunction(Draw_Portrait)
+		CallFunction(Draw_Star)
+		CallFunction(Draw_Lives)
+		CallFunction(Draw_Emeralds)
+		CheckEqual(object[9].state, save_stageselect)
+		temp0 = checkResult
+		CheckEqual(object[9].state, save_loadcomplete)
+		temp0 |= checkResult
+		CheckEqual(save.highlight, object.propertyValue)
+		temp0 &= checkResult
+		if temp0 == 1
+			CallFunction(Draw_LevelSelect)
+		else
+			CallFunction(Draw_Level)
+		end if
+	else
+		CallFunction(Draw_NewSave)
+		CheckEqual(object[9].state, save_charaselect)
+		temp0 = checkResult
+		CheckEqual(object[9].state, save_loadnew)
+		temp0 |= checkResult
+		CheckEqual(save.highlight, object.propertyValue)
+		temp0 &= checkResult
+		if temp0 == 1
+			CallFunction(Draw_NewCharacter)
+		end if
+	end if
+	
+	if object.propertyValue == save.highlight
+		temp0 = object.ypos
+		temp0 -= 0x130000
+		if object[9].state == delete_slotselect
+			DrawSpriteXY(118, object.xpos, temp0)
+		else
+			if object[9].state == delete_confirm
+				DrawSpriteXY(119, object.xpos, temp0)
+				switch DeleteYesNo
+					case 0
+						DrawSpriteXY(121, object.xpos, temp0)
+						break
+					case 1
+						DrawSpriteXY(120, object.xpos, temp0)
+						break
+				end switch
+			end if
+		end if
+	end if
+end event
+
+event ObjectStartup
+	LoadSpriteSheet("Menus/SaveSelect.gif")
+	
+	SpriteFrame(-43, -57, 90, 118, 249, 393) //0 Drop Shadow
+	SpriteFrame(-45, -59, 90, 118, 1, 62) //1 Save Frame
+	SpriteFrame(-90, -37, 180, 72, 1, 187) //2 Save Wings
+	
+	SpriteFrame(0, 0, 10, 10, 1, 36) //3 Emerald Not Collected
+	SpriteFrame(0, 0, 10, 10, 12, 36) //4 Emerald 1
+	SpriteFrame(0, 0, 10, 10, 23, 36) //5 Emerald 2
+	SpriteFrame(0, 0, 10, 10, 34, 36) //6 Emerald 3
+	SpriteFrame(0, 0, 10, 10, 45, 36) //7 Emerald 4
+	SpriteFrame(0, 0, 10, 10, 56, 36) //8 Emerald 5
+	SpriteFrame(0, 0, 10, 10, 67, 36) //9 Emerald 6
+	SpriteFrame(0, 0, 10, 10, 78, 36) //10 Emerald 7
+	
+	//Level Icons
+	SpriteFrame(-18, -16, 36, 32, 127, 143) //11 Level Icon Frame
+	switch saved.GHZwater
+		case 0 //OG
+			SpriteFrame(-16, -12, 32, 24, 259, 93) //12 Green Hill
+			break
+		case 1 //Forever
+			SpriteFrame(-16, -12, 32, 24, 94, 93) //12 Green Hill
+			break
+		case 2 //Title
+			SpriteFrame(-16, -12, 32, 24, 259, 118) //12 Green Hill
+			break
+	end switch
+	SpriteFrame(-16, -12, 32, 24, 127, 93) //13 Marble
+	SpriteFrame(-16, -12, 32, 24, 160, 93) //14 Spring Yard
+	SpriteFrame(-16, -12, 32, 24, 193, 93) //15 Labyrinth
+	SpriteFrame(-16, -12, 32, 24, 94, 118) //16 Star Light	
+	SpriteFrame(-16, -12, 32, 24, 127, 118) //17 Scrap Brain
+	SpriteFrame(-16, -12, 32, 24, 226, 118) //18 Scrap Brain 3
+	SpriteFrame(-16, -12, 32, 24, 160, 118) //19 Final Zone
+	SpriteFrame(-16, -12, 32, 24, 193, 118) //20 Special
+	SpriteFrame(-16, -12, 32, 24, 226, 93) //21 Clear
+	
+	//Level Name
+	SpriteFrame(0, 0, 22, 6, 89, 27) //22 GHZ
+	SpriteFrame(0, 0, 14, 6, 89, 34) //23 MZ
+	SpriteFrame(0, 0, 21, 6, 89, 41) //24 SYZ
+	SpriteFrame(0, 0, 13, 6, 93, 48) //25 LZ
+	SpriteFrame(0, 0, 20, 6, 93, 55) //26 SLZ
+	SpriteFrame(0, 0, 21, 6, 112, 27) //27 SBZ
+	SpriteFrame(-16, 0, 31, 6, 112, 34) //28 FINAL
+	SpriteFrame(-17, 0, 34, 6, 112, 41) //29 CLEAR
+	SpriteFrame(-26, 0, 45, 6, 42, 27) //30 SPECIAL
+	SpriteFrame(-5, 0, 5, 6, 128, 48) //31 1
+	SpriteFrame(-5, 0, 5, 6, 134, 48) //32 2
+	SpriteFrame(-5, 0, 5, 6, 140, 48) //33 3
+	
+	//Number Sprites
+	SpriteFrame(0, 0, 7, 11, 144, 24) //34 0
+	SpriteFrame(0, 0, 7, 11, 152, 24) //35 1
+	SpriteFrame(0, 0, 7, 11, 160, 24) //36 2
+	SpriteFrame(0, 0, 7, 11, 168, 24) //37 3
+	SpriteFrame(0, 0, 7, 11, 176, 24) //38 4
+	SpriteFrame(0, 0, 7, 11, 184, 24) //39 5
+	SpriteFrame(0, 0, 7, 11, 192, 24) //40 6
+	SpriteFrame(0, 0, 7, 11, 200, 24) //41 7
+	SpriteFrame(0, 0, 7, 11, 208, 24) //42 8
+	SpriteFrame(0, 0, 7, 11, 216, 24) //43 9
+	
+	//Life/Continue Icons	
+	SpriteFrame(-16, -2, 16, 14, 1, 47) //44 Sonic Life
+	SpriteFrame(-15, -2, 15, 14, 18, 47) //45 Tails Life
+	SpriteFrame(-17, -2, 17, 14, 34, 47) //46 Knuckles Life
+	SpriteFrame(-17, -2, 17, 14, 290, 47) //47 Amy Life
+	SpriteFrame(-17, -2, 17, 24, 148, 37) //48 Sonic Continue
+	SpriteFrame(-17, -2, 17, 24, 166, 37) //49 Tails Continue
+	SpriteFrame(-17, -2, 17, 24, 184, 37) //50 Knuckles Continue
+	SpriteFrame(-17, -3, 17, 25, 272, 36) //51 Amy Continue
+	
+	//Completion Stars	
+	SpriteFrame(0, 0, 12, 11, 313, 8) //52 Complete
+	SpriteFrame(0, 0, 12, 11, 300, 8) //53 Complete Six Emeralds
+	
+	//Character Names	
+	SpriteFrame(0, 0, 27, 6, 1, 20) //54 SONIC
+	SpriteFrame(0, 0, 23, 6, 58, 20) //55 K.T.E.
+	SpriteFrame(0, 0, 20, 6, 310, 20) //56 AMY
+	
+	if saved.region == 0
+		SpriteFrame(0, 0, 28, 6, 29, 20) //57 TAILS
+		SpriteFrame(0, 0, 60, 6, 82, 20) //58 SONIC&TAILS
+		SpriteFrame(0, 0, 56, 6, 253, 20) //59 K.T.E.&TAILS
+	else	
+		SpriteFrame(0, 0, 28, 6, 224, 20) //57 MILES
+		SpriteFrame(0, 0, 61, 6, 224, 27) //58 SONIC&MILES
+		SpriteFrame(0, 0, 57, 6, 286, 27) //59 K.T.E.&MILES
+	end if
+	
+	
+	//Portrait Animation
+	SpriteFrame(-34, -30, 68, 30, 94, 62) //60 Sonic Frame
+	SpriteFrame(-14, -28, 44, 28, 532, 94) //61 Sonic Base
+	SpriteFrame(9, -16, 11, 16, 553, 123) //62 Sonic Hand 1
+	SpriteFrame(7, -16, 11, 16, 565, 123) //63 Sonic Hand 2
+	SpriteFrame(-13, -18, 17, 13, 517, 123) //64 Sonic Blink 1
+	SpriteFrame(-13, -18, 17, 13, 535, 123) //65 Sonic Blink 2
+	
+	SpriteFrame(-34, -30, 68, 30, 439, 62) //66 Amy Frame
+	SpriteFrame(-16, -28, 35, 28, 496, 94) //67 Amy Base
+	SpriteFrame(-31, -9, 15, 9, 485, 140) //68 Amy Hand 1
+	SpriteFrame(-31, -9, 15, 9, 501, 140) //69 Amy Hand 2	
+	SpriteFrame(-14, -21, 21, 16, 517, 137) //70 Amy Blink 1
+	SpriteFrame(-14, -21, 21, 16, 473, 123) //71 Amy Blink 2
+	SpriteFrame(-14, -21, 21, 16, 495, 123) //72 Amy Blink 3
+	
+	SpriteFrame(-34, -30, 68, 30, 163, 62) //73 Tails Frame
+	SpriteFrame(-24, -27, 40, 27, 440, 94) //74 Tails Base
+	SpriteFrame(11, -13, 9, 13, 463, 122) //75 Tails Hand 1
+	SpriteFrame(11, -12, 9, 12, 453, 122) //76 Tails Hand 2	
+	SpriteFrame(-3, -16, 11, 8, 449, 136) //77 Tails Blink 1
+	SpriteFrame(-3, -16, 11, 8, 461, 136) //78 Tails Blink 2
+	SpriteFrame(-3, -16, 11, 8, 449, 136) //79 Tails Blink 3
+	
+	SpriteFrame(-34, -30, 68, 30, 301, 62) //80 Knux Frame
+	SpriteFrame(-17, -28, 37, 28, 402, 93) //150 Knux Base
+	SpriteFrame(-23, -16, 17, 16, 384, 104) //82 Knux Hand 1
+	SpriteFrame(-23, -16, 17, 16, 366, 104) //83 Knux Hand 2	
+	SpriteFrame(-23, -16, 17, 16, 384, 104) //84 Knux Hand 3
+	SpriteFrame(0, -17, 19, 11, 408, 134) //85 Knux Blink 1
+	SpriteFrame(-1, -17, 20, 11, 428, 134) //86 Knux Blink 2
+	SpriteFrame(-1, -17, 20, 11, 445, 149) //87 Knux Blink 3
+	
+	//Complete Save Select
+	SpriteFrame(-16, -12, 32, 24, 94, 143) //88 Save Select Arrows
+	SpriteFrame(-11, 0, 22, 6, 89, 27) //89 GHZ
+	SpriteFrame(-7, 0, 14, 6, 89, 34) //90 MZ
+	SpriteFrame(-11, 0, 21, 6, 89, 41) //91 SYZ
+	SpriteFrame(-7, 0, 13, 6, 93, 48) //92 LZ
+	SpriteFrame(-10, 0, 20, 6, 93, 55) //93 SLZ
+	SpriteFrame(-11, 0, 21, 6, 112, 27) //94 SBZ
+	SpriteFrame(-16, 0, 31, 6, 112, 34) //95 FINAL
+	
+	//New Save Graphics
+	SpriteFrame(-16, -2, 16, 14, 52, 47) //96 Blank Life
+	SpriteFrame(-17, -2, 17, 24, 228, 37) //97 Blank Continue
+	//Level Static
+	SpriteFrame(-16, -12, 32, 24, 0, 412) //98 
+	SpriteFrame(-16, -12, 32, 24, 0, 442)
+	SpriteFrame(-16, -12, 32, 24, 0, 472)
+	SpriteFrame(-16, -12, 32, 24, 68, 412)
+	SpriteFrame(-16, -12, 32, 24, 68, 442)
+	SpriteFrame(-16, -12, 32, 24, 68, 472)
+	SpriteFrame(-16, -12, 32, 24, 136, 412)
+	SpriteFrame(-16, -12, 32, 24, 136, 442)
+	SpriteFrame(-16, -12, 32, 24, 136, 472)
+	//Character Static	
+	SpriteFrame(-34, -30, 68, 30, 0, 412) //107 Static
+	SpriteFrame(-34, -30, 68, 30, 0, 442)
+	SpriteFrame(-34, -30, 68, 30, 0, 472)
+	SpriteFrame(-34, -30, 68, 30, 68, 412)
+	SpriteFrame(-34, -30, 68, 30, 68, 442)
+	SpriteFrame(-34, -30, 68, 30, 68, 472)
+	SpriteFrame(-34, -30, 68, 30, 136, 412)
+	SpriteFrame(-34, -30, 68, 30, 136, 442)
+	SpriteFrame(-34, -30, 68, 30, 136, 472)
+	
+	//Character Select Arrows	
+	SpriteFrame(25, -19, 7, 7, 81, 331) // 116 Chara Select Right Arrow
+	SpriteFrame(-32, -19, 7, 7, 89, 331) // 117 Chara Select Left Arrow
+	
+	//Delete
+	SpriteFrame(-34, -22, 68, 22, 40, 372) // 118 Delete
+	SpriteFrame(-34, -22, 68, 22, 109, 372) // 119 Delete Confirm
+	SpriteFrame(-19, -10, 7, 7, 65, 331) // 120 Delete Right Arrow
+	SpriteFrame(12, -10, 7, 7, 73, 331) // 121 Delete Left Arrow
+	
+	//Partner Frames
+	SpriteFrame(-34, -30, 68, 30, 232, 62) //122 Sonic Tails Frame
+	SpriteFrame(-34, -30, 68, 30, 370, 62) //123 Knuckles Tails Frame
+	
+	//Popup Sprites
+	SpriteFrame(-12, -12, 30, 12, 546, 140) //124 Sonic 0
+	SpriteFrame(-13, -23, 31, 23, 545, 153) //125 Sonic 1
+	SpriteFrame(-13, -27, 31, 27, 545, 177) //126 Sonic 2
+	SpriteFrame(-14, -27, 34, 27, 542, 205) //127 Sonic 3
+	SpriteFrame(-14, -28, 34, 28, 542, 233) //128 Sonic 4
+	SpriteFrame(-14, -28, 35, 28, 541, 262) //129 Sonic 5
+	SpriteFrame(-14, -28, 35, 28, 541, 291) //130 Sonic 6
+	SpriteFrame(-14, -28, 35, 28, 541, 320) //131 Sonic 7
+	SpriteFrame(-14, -28, 35, 28, 541, 349) //132 Sonic 8
+	
+	SpriteFrame(-14, -10, 25, 10, 466, 150) //133 Tails 0
+	SpriteFrame(-16, -20, 30, 20, 461, 161) //134 Tails 1
+	SpriteFrame(-22, -25, 42, 25, 449, 182) //135 Tails 2
+	SpriteFrame(-22, -27, 42, 27, 449, 208) //136 Tails 3
+	SpriteFrame(-24, -27, 46, 27, 445, 236) //137 Tails 4
+	SpriteFrame(-25, -27, 46, 27, 445, 264) //138 Tails 5
+	SpriteFrame(-25, -27, 45, 27, 445, 292) //139 Tails 6	
+	
+	SpriteFrame(-14, -8, 30, 8, 493, 154) //140 Amy 0
+	SpriteFrame(-17, -14, 36, 14, 493, 163) //141 Amy 1
+	SpriteFrame(-18, -28, 37, 28, 493, 178) //142 Amy 2
+	SpriteFrame(-17, -28, 35, 28, 493, 207) //143 Amy 3
+	SpriteFrame(-22, -28, 41, 28, 493, 236) //144 Amy 4
+	SpriteFrame(-28, -28, 47, 28, 493, 265) //145 Amy 5
+	SpriteFrame(-30, -28, 49, 28, 491, 294) //146 Amy 6
+	SpriteFrame(-31, -28, 50, 28, 490, 323) //147 Amy 7
+	SpriteFrame(-31, -28, 50, 28, 526, 378) //148 Amy 8
+	SpriteFrame(-31, -28, 50, 28, 526, 407) //149 Amy 9
+
+	SpriteFrame(-17, -14, 33, 14, 411, 146) //150 Knux Base
+	SpriteFrame(-17, -22, 36, 22, 408, 161) //151 Knux Base
+	SpriteFrame(-18, -25, 35, 25, 409, 184) //152 Knux Base
+	SpriteFrame(-18, -28, 38, 28, 406, 210) //153 Knux Base
+	SpriteFrame(-21, -28, 41, 28, 403, 239) //154 Knux Base
+	SpriteFrame(-23, -28, 45, 28, 398, 268) //155 Knux Base
+
+	
+	screen.cameraEnabled = 0
+	temp0 = 0
+	arrayPos0 = 10
+	while temp0 < slot.total
+		ResetObjectEntity(arrayPos0, TypeName[Save Slot], temp0, 0, 0)
+		object[arrayPos0].drawOrder = 3
+		object[arrayPos0].xpos = 0x890000
+		object[arrayPos0].xpos *= temp0
+		object[arrayPos0].xpos += 0x5C0000
+		object[arrayPos0].ypos = 0x7A0000
+		object[arrayPos0].value30 = object[arrayPos0].xpos
+		object[arrayPos0].value31 = object[arrayPos0].ypos
+		object[arrayPos0].priority = PRIORITY_ACTIVE
+		temp0++
+		arrayPos0++
+	loop
+
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+end event

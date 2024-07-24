@@ -1,0 +1,3326 @@
+//-------Aliases-------//
+private alias object.value0 : menu.highlight
+private alias object.value1 : menu.vanishTimer
+private alias object.value2 : object.drawState
+private alias object.value3 : object.prevState
+private alias object.value4 : text.drawline
+private alias object.value5 : text.drawalign
+private alias object.value6 : text.xpos
+private alias object.value7 : text.ypos
+private alias object.value8 : scroll.min
+private alias object.value9 : scroll.max
+private alias object.value10 : scroll.current
+private alias object.value11 : arrow.move
+private alias object.value12 : text.headercolor
+private alias object.value13 : menu.line
+private alias object.value14 : delete.check
+private alias object.value15 : delete.ticker
+private alias object.value16 : object.curMenu
+
+// platformID aliases
+
+// these are commented out because they are in the engine script.cpp, but it's good to have them here for reference.
+// if any of you don't know how the engine.platformID case works, i will refer you to line 25 of this text file. - Cosmic
+
+// private alias 0 : RETRO_WIN
+// private alias 1 : RETRO_OSX
+// private alias 2 : RETRO_XBOX_360
+// private alias 3 : RETRO_PS3
+// private alias 4 : RETRO_iOS
+// private alias 5 : RETRO_ANDROID
+// private alias 6 : RETRO_WP7
+// private alias 7 : RETRO_UWP
+// private alias 8 : RETRO_LINUX
+// private alias 9 : RETRO_SWITCH
+
+private alias 0 : TEXT_LEFT_ALIGN
+private alias 1 : TEXT_RIGHT_ALIGN
+private alias 2 : TEXT_CENTER_ALIGN
+private alias 0 : HEADER_TEXT_GREY
+private alias 1 : HEADER_TEXT_BLUE
+private alias 2 : HEADER_TEXT_GOLD
+private alias 55 : text.margin.right
+
+// Function declarations
+reserve function display.menu
+reserve function displaystndrd.menu
+reserve function displaymob.menu
+reserve function gameplay.menu
+reserve function abilities.menu
+reserve function visuals.menu
+reserve function sound.menu
+reserve function datamang.menu
+reserve function display.draw
+reserve function displaystndrd.draw
+reserve function displaymob.draw
+reserve function gameplay.draw
+reserve function abilities.draw
+reserve function visuals.draw
+reserve function sound.draw
+reserve function datamang.draw
+reserve function options.exit
+reserve function option.text
+reserve function header.back
+reserve function header.text
+reserve function header.length
+
+reserve function delete.save
+reserve function delete.ta
+reserve function delete.arcade
+reserve function delete.golf
+reserve function delete.extra
+reserve function delete.achieve
+reserve function delete.secret
+reserve function option.restore
+
+//Static Values
+private value saved.fullscreen = 0;
+private value saved.scale = 0;
+private value saved.vsync = 0;
+private value saved.scalemode = 0;
+private value text.margin = 0;
+private value saved.fps = 0;
+
+private table StarList
+	2, 101, 272
+	158, 28, 272
+	174, 141, 272
+	234, 55, 272
+	160, 177, 273
+	244, 149, 273
+	81, 129, 273
+	184, 57, 273
+	324, 80, 273
+	33, 151, 274
+	34, 54, 274
+	92, 96, 274
+	144, 35, 274
+	207, 155, 274
+	301, 50, 274
+end table
+
+private table charspace
+	3, 6, 10, 9, 9, 9, 3, 4, 4, 7, 9, 3, 7
+	3, 11, 7, 5, 7, 7, 7, 7, 7, 7, 7, 7, 3
+	3, 6, 6, 6, 6, 10, 9, 8, 9, 9, 7, 7, 9
+	11, 5, 8, 9, 6, 11, 9, 10, 7, 10, 7, 7
+	9, 10, 9, 15, 9, 11, 9, 4, 11, 4, 5, 7
+	4, 9, 8, 9, 9, 7, 7, 9, 11, 5, 8, 9, 6
+	11, 9, 10, 7, 10, 7, 7, 9, 10, 9, 15, 9
+	11, 9, 5, 3, 5, 9
+end table
+
+function delete.save
+	arrayPos0 = 1000
+	while arrayPos0 <= 1103
+	    saveRAM[arrayPos0] = 0
+	    arrayPos0++
+	loop
+	WriteSaveRAM()
+end function
+
+function delete.ta
+	arrayPos0 = 470
+	while arrayPos0 <= 607
+	    saveRAM[arrayPos0] = 0
+	    arrayPos0++
+	loop
+	WriteSaveRAM()
+end function
+
+function delete.arcade
+	arrayPos0 = 620
+	while arrayPos0 <= 640
+	    saveRAM[arrayPos0] = 0
+	    arrayPos0++
+	loop
+	WriteSaveRAM()
+end function
+
+function delete.golf
+	arrayPos0 = 720
+	while arrayPos0 <= 740
+	    saveRAM[arrayPos0] = 0
+	    arrayPos0++
+	loop
+	WriteSaveRAM()
+end function
+
+function delete.extras
+	arrayPos0 = 650
+	while arrayPos0 <= 652
+	    saveRAM[arrayPos0] = 59999
+	    arrayPos0++
+	loop
+
+	arrayPos0 = 994
+	while arrayPos0 <= 999
+	    saveRAM[arrayPos0] = 0
+	    arrayPos0++
+	loop
+	WriteSaveRAM()
+end function
+
+function delete.achieve
+	arrayPos0 = 400
+	while arrayPos0 <= 411
+	    saveRAM[arrayPos0] = 0
+	    arrayPos0++
+	loop
+
+	arrayPos0 = 414
+	while arrayPos0 <= 416
+	    saveRAM[arrayPos0] = 0
+	    arrayPos0++
+	loop
+
+	arrayPos0 = 418
+	while arrayPos0 <= 422
+	    saveRAM[arrayPos0] = 0
+	    arrayPos0++
+	loop
+	WriteSaveRAM()
+end function
+
+function delete.secret
+	saveRAM[412] = 0
+	saveRAM[413] = 0
+	saveRAM[417] = 0
+	saveRAM[280] = 0
+	WriteSaveRAM()
+end function
+
+function option.restore
+	Engine.BGMVolume = 40
+	Engine.SFXVolume = 40
+
+	arrayPos0 = 257
+	while arrayPos0 <= 285
+	    saveRAM[arrayPos0] = 0
+	    arrayPos0++
+	loop
+
+	saveRAM[287] = 0
+	saveRAM[290] = 0
+	saveRAM[294] = 0
+
+	arrayPos0 = 296
+	while arrayPos0 <= 301
+	    saveRAM[arrayPos0] = 0
+	    arrayPos0++
+	loop
+	WriteSaveRAM()
+
+	LoadPalette("MainMenu.act", 0, 0, 0, 256)
+	CallFunction(emerald_color)
+	CreateTempObject(TypeName[Palette Police], saved.graphics, 0, 0)
+end function
+
+function display.menu
+	object.curMenu = 0
+	switch engine.platformID
+	case RETRO_WIN:
+	case RETRO_OSX:
+	case RETRO_XBOX_360:
+	case RETRO_PS3:
+		CallFunction(displaystndrd.menu)
+		break
+	case RETRO_iOS:
+	case RETRO_ANDROID:
+	case RETRO_WP7:
+		CallFunction(displaymob.menu)
+		break
+	case RETRO_UWP:
+	case RETRO_LINUX:
+		CallFunction(displaystndrd.menu)
+		break
+	case RETRO_SWITCH:
+		CallFunction(displaymob.menu)
+		break
+	end switch
+end function
+
+function displaystndrd.menu
+	CallFunction(main.sound)
+		if inputPress.up == 1
+			menu.highlight--
+			if menu.highlight < 0
+				if saved.mobile == 1
+					menu.highlight = 9
+				else
+					menu.highlight = 8
+				end if
+			end if
+		else	
+			if inputPress.down == 1
+				menu.highlight++
+				if saved.mobile == 1
+					if menu.highlight > 9
+						menu.highlight = 0
+					end if
+				else
+					if menu.highlight > 8
+						menu.highlight = 0
+					end if
+				end if
+			end if
+		end if
+		
+		if inputPress.buttonL == 1
+			object.state = datamang.menu
+			menu.highlight = 0
+		end if
+		if inputPress.buttonR == 1
+			object.state = gameplay.menu
+			menu.highlight = 0
+		end if
+		
+
+		switch menu.highlight
+			case 0 //Display Highlighted
+				if inputPress.left == 1
+					object.state = datamang.menu
+				end if
+				if inputPress.right == 1
+					object.state = gameplay.menu
+				end if
+				break
+			case 1 // Fullscreen
+				temp0 = inputPress.left
+				temp0 |= inputPress.right
+				if temp0 == 1
+					saved.fullscreen ^= 1
+					CallNativeFunction2(SetWindowFullScreen, saved.fullscreen, 0)
+				end if
+				break
+			case 2 // Screen Width		
+				if inputPress.left == 1
+					switch screen.xsize
+						case 320
+							CallNativeFunction2(SetScreenWidth, 384, 0)
+							break
+						case 384
+							CallNativeFunction2(SetScreenWidth, 426, 0)
+							break
+						case 426
+							CallNativeFunction2(SetScreenWidth, 320, 0)
+							break
+						default
+							CallNativeFunction2(SetScreenWidth, 426, 0)
+							break
+					end switch
+					CallFunction(sidebar.adj)
+				end if
+				if inputPress.right == 1
+					switch screen.xsize
+						case 320
+							CallNativeFunction2(SetScreenWidth, 426, 0)
+							break
+						case 384
+							CallNativeFunction2(SetScreenWidth, 320, 0)
+							break
+						case 426
+							CallNativeFunction2(SetScreenWidth, 384, 0)
+							break
+						default
+							CallNativeFunction2(SetScreenWidth, 426, 0)
+							break
+					end switch
+					CallFunction(sidebar.adj)
+				end if
+				break
+			case 3 // Window Scale		
+				if inputPress.left == 1					
+					saved.scale--
+					if saved.scale < 1
+						saved.scale = 4
+					end if
+					CallNativeFunction2(SetWindowScale, saved.scale, 0)
+				end if
+				if inputPress.right == 1
+					saved.scale++
+					if saved.scale > 4
+						saved.scale = 1
+					end if
+					CallNativeFunction2(SetWindowScale, saved.scale, 0)
+				end if
+				break
+			case 4 // Graphics Mode
+				temp0 = 0
+				if inputPress.left == 1
+					temp0 = 1
+					saved.graphics--
+					if saved.graphics < 0
+						saved.graphics = 2
+					end if
+				end if
+				if inputPress.right == 1
+					temp0 = 1
+					saved.graphics++
+					if saved.graphics > 2
+						saved.graphics = 0
+					end if
+				end if
+				if temp0 == 1
+					LoadPalette("MainMenu.act", 0, 0, 0, 256)
+					CallFunction(emerald_color)
+					CreateTempObject(TypeName[Palette Police], saved.graphics, 0, 0)
+				end if				
+				break
+			case 5 // Language
+				if inputPress.left == 1
+					saved.language--
+					if saved.language < 0
+						saved.language = 2
+					end if
+					CallFunction(Lang_Init)
+				end if
+				if inputPress.right == 1
+					saved.language++
+					if saved.language > 2
+						saved.language = 0
+					end if
+					CallFunction(Lang_Init)
+				end if				
+				break
+			case 6 // VSync
+				temp0 = inputPress.left
+				temp0 |= inputPress.right
+				if temp0 == 1
+					saved.vsync ^= 1
+					CallNativeFunction2(SetWindowVSync, saved.vsync, 0)
+				end if
+				break
+			case 7 // Scaling Mode
+				if inputPress.left == 1					
+					saved.scalemode--
+					if saved.scalemode < 0
+						saved.scalemode = 3
+					end if
+					CallNativeFunction2(SetWindowScaleMode, saved.scalemode, 0)
+				end if
+				if inputPress.right == 1
+					saved.scalemode++
+					if saved.scalemode > 3
+						saved.scalemode = 0
+					end if
+					CallNativeFunction2(SetWindowScaleMode, saved.scalemode, 0)
+				end if
+				break
+			case 8 // Refresh Rate
+				temp0 = inputPress.left
+				temp0 |= inputPress.right
+				if temp0 == 1
+					if saved.fps == 60
+						saved.fps = 50
+					else
+						saved.fps = 60
+					end if
+					CallNativeFunction2(SetFrameRate, saved.fps, 0)
+				end if
+				break
+			case 9 // Button Visability 
+				if inputPress.left == 1	
+					touch.fade = 0				
+					saved.transmobile--
+					if saved.transmobile < 0
+						saved.transmobile = 4
+					end if
+				end if
+				if inputPress.right == 1
+					touch.fade = 0	
+					saved.transmobile++
+					if saved.transmobile > 4
+						saved.transmobile = 0
+					end if
+				end if
+				break
+		end switch
+end function
+
+function displaymob.menu
+	CallFunction(main.sound)
+	if inputPress.up == 1
+		menu.highlight--
+		if menu.highlight < 0
+			if saved.mobile == 1
+				menu.highlight = 3
+			else
+				menu.highlight = 2
+			end if
+		end if
+	else	
+		if inputPress.down == 1
+			menu.highlight++
+			if saved.mobile == 1
+				if menu.highlight > 3
+					menu.highlight = 0
+				end if
+			else
+				if menu.highlight > 2
+					menu.highlight = 0
+				end if
+			end if
+		end if
+	end if
+
+	if inputPress.buttonL == 1
+		object.state = datamang.menu
+		menu.highlight = 0
+	end if
+	if inputPress.buttonR == 1
+		object.state = gameplay.menu
+		menu.highlight = 0
+	end if
+	
+	switch menu.highlight
+		case 0 //Display Highlighted
+			if inputPress.left == 1
+				object.state = datamang.menu
+			end if
+			if inputPress.right == 1
+				object.state = gameplay.menu
+			end if
+			break
+		case 1 // Graphics Mode
+			temp0 = 0
+			if inputPress.left == 1
+				temp0 = 1
+				saved.graphics--
+				if saved.graphics < 0
+					saved.graphics = 2
+				end if
+			end if
+			if inputPress.right == 1
+				temp0 = 1
+				saved.graphics++
+				if saved.graphics > 2
+					saved.graphics = 0
+				end if
+			end if
+			if temp0 == 1
+				LoadPalette("MainMenu.act", 0, 0, 0, 256)
+				CreateTempObject(TypeName[Palette Police], saved.graphics, 0, 0)
+			end if				
+			break
+		case 2 // Language
+			if inputPress.left == 1
+				saved.language--
+				if saved.language < 0
+					saved.language = 2
+				end if
+				CallFunction(Lang_Init)
+			end if
+			if inputPress.right == 1
+				saved.language++
+				if saved.language > 2
+					saved.language = 0
+				end if
+				CallFunction(Lang_Init)
+			end if				
+			break
+		case 3 // Button Visability 
+			if inputPress.left == 1	
+				touch.fade = 0				
+				saved.transmobile--
+				if saved.transmobile < 0
+					saved.transmobile = 4
+				end if
+			end if
+			if inputPress.right == 1
+				touch.fade = 0	
+				saved.transmobile++
+				if saved.transmobile > 4
+					saved.transmobile = 0
+				end if
+			end if
+			break
+	end switch
+end function
+
+function gameplay.menu
+	object.curMenu = 2
+	CallFunction(main.sound)
+	if inputPress.up == 1
+		menu.highlight--
+		if menu.highlight < 0
+			menu.highlight = 9
+		end if
+	else	
+		if inputPress.down == 1
+			menu.highlight++
+			if menu.highlight > 9
+				menu.highlight = 0
+			end if
+		end if
+	end if
+
+	if inputPress.buttonL == 1
+		object.state = display.menu
+		menu.highlight = 0
+	end if
+	if inputPress.buttonR == 1
+		object.state = abilities.menu	
+		menu.highlight = 0
+	end if
+	
+	switch menu.highlight
+		case 0 // Gameplay Highlighted
+			if inputPress.left == 1
+				object.state = display.menu	
+			end if
+			if inputPress.right == 1
+				object.state = abilities.menu
+			end if
+			break
+		case 1 // Emeralds
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.superStates ^= 1
+			end if
+			break
+		case 2 // Special Stage Rotation
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.specialSpin ^= 1
+			end if
+			break
+		case 3 // Random Monitors
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.randomMonitor ^= 1
+			end if
+			break
+		case 4 // Lives
+			temp0 = inputPress.left
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.lives ^= 1
+			end if
+			break
+		case 5 // Time Limit
+			if inputPress.left == 1
+				saved.timeLimit--
+				if saved.timeLimit < 0
+					saved.timeLimit = 2
+				end if
+			end if
+			if inputPress.right == 1
+				saved.timeLimit++
+				if saved.timeLimit > 2
+					saved.timeLimit = 0
+				end if
+			end if
+			break
+		case 6 // Ground Speed Cap highlighted
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.speedCap ^= 1
+			end if
+			break
+		case 7 // Air Speed Cap Hightlighted
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.airSpeedCap ^= 1
+			end if
+			break
+		case 8 // Roll Jump Lock
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.Jumplock ^= 1
+			end if
+			break
+		case 9 // Spike Bug Highlighted
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.spikeBehavior ^= 1
+			end if
+			break	
+	end switch
+end function
+
+function abilities.menu
+	object.curMenu = 3
+	CallFunction(main.sound)
+	temp0 = 9
+	temp0 += saveRAM[417]
+	if inputPress.up == 1
+		menu.highlight--
+		if menu.highlight < 0
+			menu.highlight = temp0
+		end if
+	else	
+		if inputPress.down == 1
+			menu.highlight++
+			if menu.highlight > temp0
+				menu.highlight = 0
+			end if
+		end if
+	end if
+
+	if inputPress.buttonL == 1
+		object.state = gameplay.menu
+		menu.highlight = 0
+	end if
+	if inputPress.buttonR == 1
+		object.state = visuals.menu
+		menu.highlight = 0
+	end if
+	
+	switch menu.highlight
+		case 0 //Abilities Highlighted
+			if inputPress.left == 1
+				object.state = gameplay.menu
+			end if
+			if inputPress.right == 1
+				object.state = visuals.menu
+			end if
+			break
+		case 1 // Elemental
+			temp0 = inputPress.left
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.elemental ^= 1
+			end if
+			break
+		case 2 // SpinDash				
+			if inputPress.left == 1
+				saved.Spindash--
+				if saved.Spindash < 0
+					saved.Spindash = 2
+					end if
+			end if
+			if inputPress.right == 1
+				saved.Spindash++
+				if saved.Spindash > 2
+					saved.Spindash = 0
+				end if
+			end if
+			break
+		case 3 // InstaShield
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.Instashield ^= 1
+			end if
+			break
+		case 4 // Super Peel Out
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.Peelout ^= 1
+			end if
+			break
+		case 5 // Dropdash
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.Dropdash ^= 1
+			end if
+			break
+		case 6 // Bubble Shield
+			temp0 = inputPress.left
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.bubble ^= 1
+			end if
+			break
+		case 7 // Tails Flight Cancel
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.FlightCancel ^= 1
+			end if
+			break
+		case 8 // Super Form Cancel
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.Supercancel ^= 1
+			end if
+			break
+		case 9 // Amy Moveset
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.AmyMoveset ^= 1
+			end if
+			break
+		case 10 //GoGoPlus
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.gogoplus ^= 1
+			end if
+			break
+	end switch
+end function
+
+
+function visuals.menu
+	object.curMenu = 4
+	CallFunction(main.sound)
+	if inputPress.up == 1
+		menu.highlight--
+		if menu.highlight < 0
+			menu.highlight = 13
+		end if
+	else	
+		if inputPress.down == 1
+			menu.highlight++
+			if menu.highlight > 13
+				menu.highlight = 0
+			end if
+		end if
+	end if
+
+	if inputPress.buttonL == 1
+		object.state = abilities.menu
+		menu.highlight = 0
+	end if
+	if inputPress.buttonR == 1
+		object.state = sound.menu
+		menu.highlight = 0
+	end if
+	
+	switch menu.highlight
+		case 0 //Visuals Highlighted
+			if inputPress.left == 1
+				object.state = abilities.menu
+			end if
+			if inputPress.right == 1
+				object.state = sound.menu
+			end if
+			break
+		case 1 // SPEEN
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				if saved.Speen == 1
+					saved.Speen = 0
+				else
+					saved.Speen = 1
+					temp7 = frame.count
+					temp7 %= 50
+					if temp7 == 0				
+						spawn.timer = 1
+						PlaySfx(SfxName[Trigger], 0)
+					end if
+			
+				end if
+			end if
+			break
+		case 2 // Player Rotation
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.rotate ^= 1
+			end if
+			break
+		case 3 // Shield Type
+			temp0 = inputPress.left
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.shieldType ^= 1
+				saved.shieldType &= 1
+			end if
+			break
+		case 4 // Invincibility Type
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.invincibilityType ^= 1
+			end if
+			break
+		case 5 // Extended Timer
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.Timer ^= 1
+			end if
+			break
+		case 6 // Region
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.region ^= 1
+			end if
+			break
+		case 7 // Green Hill Water Color
+
+			if inputPress.left == 1
+				saved.GHZwater--
+				if saved.GHZwater < 0
+					saved.GHZwater = 2
+				end if
+			end if
+			if inputPress.right == 1
+				saved.GHZwater++
+				if saved.GHZwater > 2
+					saved.GHZwater = 0
+				end if
+			end if
+			break
+		case 8 // UFOs
+			if inputPress.left == 1
+				saved.UFO--
+				if saved.UFO < 0
+					saved.UFO = 2
+				end if
+			end if
+			if inputPress.right == 1
+				saved.UFO++
+				if saved.UFO > 2
+					saved.UFO = 0
+				end if
+			end if
+			break	
+		case 9 // Sonic Max Dash
+			if inputPress.left == 1
+				saved.SonicMaxDash--
+				if saved.SonicMaxDash < 0
+					saved.SonicMaxDash  = 3
+				end if
+			end if
+			if inputPress.right == 1
+				saved.SonicMaxDash++
+				if saved.SonicMaxDash > 3
+					saved.SonicMaxDash = 0
+				end if
+			end if
+			break	
+		case 10 // Tails Max Dash
+			if inputPress.left == 1
+				saved.TailsMaxDash--
+				if saved.TailsMaxDash < 0
+					saved.TailsMaxDash  = 2
+				end if
+			end if
+			if inputPress.right == 1
+				saved.TailsMaxDash++
+				if saved.TailsMaxDash > 2
+					saved.TailsMaxDash = 0
+				end if
+			end if
+			break		
+		case 11 // Knux Max Dash
+			if inputPress.left == 1
+				saved.KnuxMaxDash--
+				if saved.KnuxMaxDash < 0
+					saved.KnuxMaxDash  = 2
+				end if
+			end if
+			if inputPress.right == 1
+				saved.KnuxMaxDash++
+				if saved.KnuxMaxDash > 2
+					saved.KnuxMaxDash = 0
+				end if
+			end if
+			break
+		case 12 // Amy Max Dash
+			if inputPress.left == 1
+				saved.AmyMaxDash--
+				if saved.AmyMaxDash < 0
+					saved.AmyMaxDash  = 2
+				end if
+			end if
+			if inputPress.right == 1
+				saved.AmyMaxDash++
+				if saved.AmyMaxDash > 2
+					saved.AmyMaxDash = 0
+				end if
+			end if
+			break	
+		case 13 // Super Max Dash
+			if inputPress.left == 1
+				saved.SuperMaxDash--
+				if saved.SuperMaxDash < 0
+					saved.SuperMaxDash  = 2
+				end if
+			end if
+			if inputPress.right == 1
+				saved.SuperMaxDash++
+				if saved.SuperMaxDash > 2
+					saved.SuperMaxDash = 0
+				end if
+			end if
+			break	
+	end switch
+end function
+
+
+function sound.menu
+	object.curMenu = 5
+	CallFunction(main.sound)
+	if inputPress.up == 1
+		menu.highlight--
+		if menu.highlight < 0
+			menu.highlight = 4
+		end if
+	else	
+		if inputPress.down == 1
+			menu.highlight++
+			if menu.highlight > 4
+				menu.highlight = 0
+			end if
+		end if
+	end if
+
+	if inputPress.buttonL == 1
+		object.state = visuals.menu
+		menu.highlight = 0
+	end if
+	if inputPress.buttonR == 1
+		object.state = datamang.menu
+		menu.highlight = 0
+	end if
+	
+	switch menu.highlight
+		case 0 //Sound Highlighted
+			if inputPress.left == 1
+				object.state = visuals.menu
+			end if
+			if inputPress.right == 1
+				object.state = datamang.menu
+			end if
+			break
+		case 1 // Music Volume
+			if inputPress.left == 1
+				temp0 = Engine.BGMVolume
+				temp0 -= 10
+				if temp0 < 0
+					temp0 = 0
+				end if
+				Engine.BGMVolume = temp0
+			end if
+			if inputPress.right == 1
+				temp0 = Engine.BGMVolume
+				temp0 += 10
+				if temp0 > 100
+					temp0 = 100
+				end if
+				Engine.BGMVolume = temp0
+			end if
+			break
+		case 2 // SFX Volume
+			if inputPress.left == 1
+				temp0 = Engine.SFXVolume
+				temp0 -= 10
+				if temp0 < 0
+					temp0 = 0
+				end if
+				Engine.SFXVolume = temp0
+			end if
+			if inputPress.right == 1
+				temp0 = Engine.SFXVolume
+				temp0 += 10
+				if temp0 > 100
+					temp0 = 100
+				end if
+				Engine.SFXVolume = temp0
+			end if
+			break
+		case 3 // Drowning Music
+			temp0 = inputPress.left
+			temp0 |= inputPress.right
+			if temp0 == 1
+				saved.Drowning ^= 1
+			end if
+			break
+		case 4 // Super Music
+			if inputPress.left == 1
+				saved.Supermusic--
+				if saved.Supermusic < 0
+					saved.Supermusic = 7
+				end if
+			end if
+			if inputPress.right == 1
+				saved.Supermusic++
+				if saved.Supermusic > 7
+					saved.Supermusic = 0
+				end if
+			end if
+			break				
+	end switch
+end function
+
+function datamang.menu
+	object.curMenu = 6
+	CallFunction(main.sound)
+	if inputPress.up == 1
+		menu.highlight--
+		delete.check = 0
+		if menu.highlight < 0
+			menu.highlight = 9
+		end if
+	else	
+		if inputPress.down == 1
+			menu.highlight++
+			delete.check = 0
+			if menu.highlight > 9
+				menu.highlight = 0
+			end if
+		end if
+	end if
+
+	if delete.check > 2
+		delete.check = 0
+	end if
+	if inputPress.buttonL == 1
+		object.state = sound.menu
+		menu.highlight = 0
+	end if
+	if inputPress.buttonR == 1
+		object.state = display.menu
+		menu.highlight = 0
+	end if
+	
+	switch menu.highlight
+		case 0 //Data Highlighted
+			if inputPress.left == 1
+				object.state = sound.menu
+			end if
+			if inputPress.right == 1
+				object.state = display.menu
+			end if
+			break
+		case 1 // Restore Option Default
+			temp0 = inputPress.buttonA
+			if temp0 == 1
+				delete.check = 1
+				PlaySfx(SfxName[Warn], 0)
+			end if
+			if delete.check == 2
+				CallFunction(option.restore)
+			end if
+			break
+		case 2 // Clear All
+			temp0 = inputPress.buttonA
+			if temp0 == 1
+				delete.check = 1
+				PlaySfx(SfxName[Warn], 0)
+			end if
+			if delete.check == 2
+				CallFunction(delete.save)
+				CallFunction(delete.ta)
+				CallFunction(delete.arcade)
+				CallFunction(delete.golf)
+				CallFunction(delete.extras)
+				CallFunction(delete.achieve)
+			end if
+			break
+		case 3 // Clear Saves	
+			temp0 = inputPress.buttonA
+			if temp0 == 1
+				delete.check = 1
+				PlaySfx(SfxName[Warn], 0)
+			end if
+			if delete.check == 2
+				CallFunction(delete.save)
+			end if
+			break
+		case 4 // Clear TA		
+			temp0 = inputPress.buttonA
+			if temp0 == 1
+				delete.check = 1
+				PlaySfx(SfxName[Warn], 0)
+			end if
+			if delete.check == 2
+				CallFunction(delete.ta)
+			end if
+			break
+		case 5 // Clear Arcade
+			temp0 = inputPress.buttonA
+			if temp0 == 1
+				delete.check = 1
+				PlaySfx(SfxName[Warn], 0)
+			end if
+			if delete.check == 2
+				CallFunction(delete.arcade)
+			end if
+			break
+		case 6 // Clear Golf
+			temp0 = inputPress.buttonA
+			if temp0 == 1
+				delete.check = 1
+				PlaySfx(SfxName[Warn], 0)
+			end if
+			if delete.check == 2
+				CallFunction(delete.golf)
+			end if
+			break
+		case 7 // Clear Extras
+			temp0 = inputPress.buttonA
+			if temp0 == 1
+				delete.check = 1
+				PlaySfx(SfxName[Warn], 0)
+			end if
+			if delete.check == 2
+				CallFunction(delete.extras)
+			end if
+			break
+		case 8 // Clear Achieve
+			temp0 = inputPress.buttonA
+			if temp0 == 1
+				delete.check = 1
+				PlaySfx(SfxName[Warn], 0)
+			end if
+			if delete.check == 2
+				CallFunction(delete.achieve)
+			end if
+			break
+		case 9 // Clear Secret
+			temp0 = inputPress.buttonA
+			if temp0 == 1
+				delete.check = 1
+				PlaySfx(SfxName[Warn], 0)
+			end if
+			if delete.check == 2
+				CallFunction(delete.secret)
+			end if
+			break
+	end switch
+end function
+
+function options.exit
+	menu.vanishTimer++
+	if menu.vanishTimer >= 30
+		ResetObjectEntity(object.entityPos, TypeName[Blank Object], 0, 0, 0)
+	end if
+end function
+
+event ObjectMain
+	text.margin = sidebar.w
+	text.margin += 10
+	if object.state == 0
+		object.state = display.menu
+	end if
+	
+	if inputPress.buttonB == 1
+		delete.check = 0
+		object.state = options.exit
+		menu.state = 2
+		WriteSaveRAM()
+		CallFunction(options.exit)
+	else
+		CallFunction(object.state)
+	end if	
+	
+	if object.state != object.prevState	
+		object.prevState = object.state
+		if object.state == display.menu
+			object.drawState = display.draw
+		else
+			if object.state == gameplay.menu
+				object.drawState = gameplay.draw
+			else
+				if object.state == abilities.menu
+					object.drawState = abilities.draw
+				else
+					if object.state == visuals.menu
+						object.drawState = visuals.draw
+					else
+						if object.state == sound.menu
+							object.drawState = sound.draw
+						else
+							if object.state == datamang.menu
+								object.drawState = datamang.draw
+							end if
+					end if
+				end if
+			end if
+		end if
+	end if
+end event
+
+function header.back
+	DrawRect(51, 0, screen.xsize, 71, color7, color7, color7, 255)
+	if menu.highlight == 0
+		temp0 = text.margin
+		temp0 -= 4
+		DrawRect(temp0, 46, screen.xsize, 26, color5, color5, color7, 255)
+		DrawRect(temp0, 46, screen.xsize, 24, color1, color1, color1, 255)
+		temp0--
+		DrawRect(temp0, 47, 1, 24, color5, color5, color7, 255)
+		DrawRect(temp0, 47, 1, 22, color1, color1, color1, 255)
+	end if
+		
+		
+end function
+
+function header.length
+	GetTextInfo(temp0, 1, TEXTINFO_TEXTSIZE, text.drawline, 0)
+	temp1 = 0
+	temp3 = 0
+	while temp1 < temp0
+		GetTextInfo(temp2, 1, TEXTINFO_TEXTDATA, text.drawline, temp1)
+		if temp2 > 64
+			temp2 -= 65
+			GetTableValue(temp6, temp2, headerspace)
+			if temp5 == 0 //Y following an A
+				if temp2 == 24
+					temp3 -= 4
+				end if
+			end if
+			temp5 = temp2
+			temp3 += temp6
+		else
+			temp3 += 4
+		end if
+		temp1++
+	loop
+end function
+
+function header.text
+	switch text.headercolor
+		case 0 //GREY
+			CopyPalette(0, 218, 0, 240, 5)
+			break
+		case 1 //BLUE
+			CopyPalette(0, 213, 0, 240, 5)
+			break
+		case 2 //GOLD
+			CopyPalette(0, 208, 0, 240, 5)
+			break
+	end switch
+	temp5 = 1
+	if text.drawalign == TEXT_LEFT_ALIGN
+		GetTextInfo(temp0, 1, TEXTINFO_TEXTSIZE, text.drawline, 0)
+		temp1 = 0
+		temp3 = text.xpos
+		while temp1 < temp0
+			GetTextInfo(temp2, 1, TEXTINFO_TEXTDATA, text.drawline, temp1)
+			if temp2 > 64
+				temp2 -= 65
+				GetTableValue(temp6, temp2, headerspace)
+				if temp5 == 0 //Y following an A
+					if temp2 == 24
+						temp3 -= 4
+					end if
+				end if
+				temp5 = temp2
+				temp2 += 277
+				DrawSpriteScreenXY(temp2, temp3, text.ypos)
+				temp3 += temp6
+			else
+				temp3 += 4
+			end if
+			temp1++
+		loop
+	else	
+		if text.drawalign == TEXT_RIGHT_ALIGN
+			GetTextInfo(temp0, 1, TEXTINFO_TEXTSIZE, text.drawline, 0)
+			temp1 = 0
+			temp3 = text.xpos
+			while temp0 > temp1
+				temp0--
+				GetTextInfo(temp2, 1, TEXTINFO_TEXTDATA, text.drawline, temp0)
+				if temp2 > 64
+					temp2 -= 65
+					GetTableValue(temp6, temp2, headerspace)
+					if temp5 == 24//Y following an A
+						if temp2 == 0
+							temp3 += 4
+						end if
+					end if
+					temp5 = temp2
+					temp3 -= temp6
+					temp2 += 277
+					DrawSpriteScreenXY(temp2, temp3, text.ypos)
+				else
+					temp3 -= 4
+				end if
+			loop
+		else
+			if text.drawalign == TEXT_CENTER_ALIGN
+				GetTextInfo(temp0, 1, TEXTINFO_TEXTSIZE, text.drawline, 0)
+				temp1 = 0
+				temp3 = 0
+				while temp1 < temp0
+					GetTextInfo(temp2, 1, TEXTINFO_TEXTDATA, text.drawline, temp1)
+					if temp2 > 64
+						temp2 -= 65
+						GetTableValue(temp6, temp2, headerspace)
+						if temp5 == 0 //Y following an A
+							if temp2 == 24
+								temp3 += 4
+							end if
+						end if
+						temp5 = temp2
+						temp3 -= temp6
+					else
+						temp3 -= 4
+					end if
+					temp1++
+				loop
+				temp1 = 0
+				temp3 >>= 1
+				temp3 += text.xpos
+				while temp1 < temp0
+					GetTextInfo(temp2, 1, TEXTINFO_TEXTDATA, text.drawline, temp1)
+					if temp2 > 64
+						temp2 -= 65
+						GetTableValue(temp6, temp2, headerspace)
+						if temp5 == 0 //Y following an A
+							if temp2 == 24
+								temp3 -= 4
+							end if
+						end if
+						temp5 = temp2
+						temp2 += 277
+						DrawSpriteScreenXY(temp2, temp3, text.ypos)
+						temp3 += temp6
+					else
+						temp3 += 4
+					end if
+					temp1++
+				loop
+			end if
+		end if
+	end if
+	CopyPalette(0, 218, 0, 240, 5)
+end function
+
+function option.text
+	if menu.line == menu.highlight
+		object.inkEffect = INK_NONE
+	else
+		object.inkEffect = INK_BLEND
+	end if
+	switch text.drawline
+		case 11 //Red
+		case 146 //Red
+			CopyPalette(0, 230, 0, 224, 3)
+			break
+		case 12 //Blue
+		case 147 //Blue
+			CopyPalette(0, 227, 0, 224, 3)
+			break
+		default //Grey
+			CopyPalette(0, 233, 0, 224, 3)
+			break
+	end switch
+	if text.drawalign == TEXT_LEFT_ALIGN
+		GetTextInfo(temp0, 1, TEXTINFO_TEXTSIZE, text.drawline, 0)
+		temp1 = 0
+		temp3 = text.xpos
+		while temp1 < temp0
+			GetTextInfo(temp2, 1, TEXTINFO_TEXTDATA, text.drawline, temp1)
+			if temp2 > 32
+				temp2 -= 33
+				GetTableValue(temp6, temp2, charspace)
+				temp2 += 176
+				DrawSpriteScreenFX(temp2, FX_INK, temp3, text.ypos)
+				temp3 += temp6
+			else
+				temp3 += 6
+			end if
+			temp1++
+		loop
+	else	
+		if text.drawalign == TEXT_RIGHT_ALIGN
+			GetTextInfo(temp0, 1, TEXTINFO_TEXTSIZE, text.drawline, 0)
+			temp1 = 0
+			temp3 = text.xpos
+			while temp0 > temp1
+				temp0--
+				GetTextInfo(temp2, 1, TEXTINFO_TEXTDATA, text.drawline, temp0)
+				if temp2 > 32
+					temp2 -= 33
+					GetTableValue(temp6, temp2, charspace)
+					temp3 -= temp6
+					temp2 += 176
+					DrawSpriteScreenFX(temp2, FX_INK, temp3, text.ypos)
+				else
+					temp3 -= 6
+				end if
+			loop
+		else
+			if text.drawalign == TEXT_CENTER_ALIGN
+				GetTextInfo(temp0, 1, TEXTINFO_TEXTSIZE, text.drawline, 0)
+				temp1 = 0
+				temp3 = 0
+				while temp1 < temp0
+					GetTextInfo(temp2, 1, TEXTINFO_TEXTDATA, text.drawline, temp1)
+					if temp2 > 32
+						temp2 -= 33
+						GetTableValue(temp6, temp2, charspace)
+						temp3 -= temp6
+					else
+						temp3 -= 6
+					end if
+					temp1++
+				loop
+				temp1 = 0
+				temp3 >>= 1
+				temp3 += text.xpos
+				while temp1 < temp0
+					GetTextInfo(temp2, 1, TEXTINFO_TEXTDATA, text.drawline, temp1)
+					if temp2 > 32
+						temp2 -= 33
+						GetTableValue(temp6, temp2, charspace)
+						temp2 += 176
+						DrawSpriteScreenFX(temp2, FX_INK, temp3, text.ypos)
+						temp3 += temp6
+					else
+						temp3 += 6
+					end if
+					temp1++
+				loop
+			end if
+		end if
+	end if
+	CopyPalette(0, 233, 0, 224, 3)
+end function
+
+function datamang.draw
+	//Restore Option Defaults
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	if delete.check == 1
+		if menu.highlight == 1
+			text.drawline = 146
+		else
+			text.drawline = 175
+		end if
+	else	
+		text.drawline = 175
+	end if	
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	if delete.check == 2
+		if menu.highlight == 1
+			text.drawline = 147
+		else
+			text.drawline = 155
+		end if
+	else	
+		text.drawline = 155
+	end if
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+
+	//Clear All Files
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	if delete.check == 1
+		if menu.highlight == 2
+			text.drawline = 146
+		else
+			text.drawline = 145
+		end if
+	else	
+		text.drawline = 145
+	end if	
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	if delete.check == 2
+		if menu.highlight == 2
+			text.drawline = 147
+		else
+			text.drawline = 155
+		end if
+	else	
+		text.drawline = 155
+	end if
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Clear Save Files
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	if delete.check == 1
+		if menu.highlight == 3
+			text.drawline = 146
+		else
+			text.drawline = 148
+		end if
+	else	
+		text.drawline = 148
+	end if		
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	if delete.check == 2
+		if menu.highlight == 3
+			text.drawline = 147
+		else
+			text.drawline = 155
+		end if
+	else	
+		text.drawline = 155
+	end if	
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Clear TA Files
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	if delete.check == 1
+		if menu.highlight == 4
+			text.drawline = 146
+		else
+			text.drawline = 149
+		end if
+	else	
+		text.drawline = 149
+	end if	
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	if delete.check == 2
+		if menu.highlight == 4
+			text.drawline = 147
+		else
+			text.drawline = 155
+		end if
+	else	
+		text.drawline = 155
+	end if	
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+
+	//Clear Arcade Files
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	if delete.check == 1
+		if menu.highlight == 5
+			text.drawline = 146
+		else
+			text.drawline = 150
+		end if
+	else	
+		text.drawline = 150
+	end if	
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	if delete.check == 2
+		if menu.highlight == 5
+			text.drawline = 147
+		else
+			text.drawline = 155
+		end if
+	else	
+		text.drawline = 155
+	end if	
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+
+	//Clear Golf Files
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	if delete.check == 1
+		if menu.highlight == 6
+			text.drawline = 146
+		else
+			text.drawline = 151
+		end if
+	else	
+		text.drawline = 151
+	end if	
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	if delete.check == 2
+		if menu.highlight == 6
+			text.drawline = 147
+		else
+			text.drawline = 155
+		end if
+	else	
+		text.drawline = 155
+	end if	
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+
+	//Clear Extras data
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	if delete.check == 1
+		if menu.highlight == 7
+			text.drawline = 146
+		else
+			text.drawline = 152
+		end if
+	else	
+		text.drawline = 152
+	end if	
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	if delete.check == 2
+		if menu.highlight == 7
+			text.drawline = 147
+		else
+			text.drawline = 155
+		end if
+	else	
+		text.drawline = 155
+	end if	
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+
+	//Clear Achievements data
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	if delete.check == 1
+		if menu.highlight == 8
+			text.drawline = 146
+		else
+			text.drawline = 153
+		end if
+	else	
+		text.drawline = 153
+	end if	
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	if delete.check == 2
+		if menu.highlight == 8
+			text.drawline = 147
+		else
+			text.drawline = 155
+		end if
+	else	
+		text.drawline = 155
+	end if	
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+
+	//Clear Secrets Data
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	if delete.check == 1
+		if menu.highlight == 9
+			text.drawline = 146
+		else
+			text.drawline = 154
+		end if
+	else	
+		text.drawline = 154
+	end if	
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	if delete.check == 2
+		if menu.highlight == 9
+			text.drawline = 147
+		else
+			text.drawline = 155
+		end if
+	else	
+		text.drawline = 155
+	end if	
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	CallFunction(header.back)
+	text.drawline = 144
+	text.headercolor = HEADER_TEXT_GREY
+	text.drawalign = TEXT_CENTER_ALIGN
+	text.ypos = 50
+	text.xpos = sidebar.w
+	text.xpos >>= 1
+	text.xpos += screen.xcenter
+	CallFunction(header.text)
+end function
+
+
+function display.draw
+	switch engine.platformID
+	case RETRO_WIN:
+	case RETRO_OSX:
+	case RETRO_XBOX_360:
+	case RETRO_PS3:
+		CallFunction(displaystndrd.draw)
+		break
+	case RETRO_iOS:
+	case RETRO_ANDROID:
+	case RETRO_WP7:
+		CallFunction(displaymob.draw)
+		break
+	case RETRO_UWP:
+	case RETRO_LINUX:
+		CallFunction(displaystndrd.draw)
+		break
+	case RETRO_SWITCH:
+		CallFunction(displaymob.draw)
+		break
+	end switch
+end function
+
+function displaystndrd.draw
+	//Fullscreen
+		text.xpos = text.margin
+		text.drawalign = TEXT_LEFT_ALIGN
+		text.drawline = 14	
+		CallFunction(option.text)
+		
+		text.xpos = screen.xsize
+		text.xpos -= text.margin.right
+		text.drawalign = TEXT_CENTER_ALIGN
+		switch saved.fullscreen
+		case 0
+			text.drawline = 11
+			break
+		case 1
+			text.drawline = 12
+			break
+		end switch
+		CallFunction(option.text)
+		text.ypos += 21
+		menu.line++
+		
+		//Aspect Ratio
+		text.xpos = text.margin
+		text.drawalign = TEXT_LEFT_ALIGN
+		text.drawline = 15	
+		CallFunction(option.text)
+		
+		text.xpos = screen.xsize
+		text.xpos -= text.margin.right
+		text.drawalign = TEXT_CENTER_ALIGN
+		switch screen.xsize
+		case 320
+			text.drawline = 16
+			break
+		case 384
+			text.drawline = 177
+			break
+		case 426
+			text.drawline = 17
+			break
+		default
+			text.drawline = 18
+			break
+		end switch
+		CallFunction(option.text)
+		text.ypos += 21
+		menu.line++
+		
+		//Window Scale
+		text.xpos = text.margin
+		text.drawalign = TEXT_LEFT_ALIGN
+		text.drawline = 19
+		CallFunction(option.text)
+		
+		text.xpos = screen.xsize
+		text.xpos -= text.margin.right
+		text.xpos -= 4
+		temp0 = saved.scale
+		temp0 += 191
+		//DrawNumbers(191, text.xpos, text.ypos, saved.scale, 2, 8, 0)
+		DrawSpriteScreenFX(temp0, FX_INK, text.xpos, text.ypos)
+		text.ypos += 21
+		menu.line++
+		
+		//Graphics Mode
+		text.xpos = text.margin
+		text.drawalign = TEXT_LEFT_ALIGN
+		text.drawline = 20
+		CallFunction(option.text)
+		
+		text.xpos = screen.xsize
+		text.xpos -= text.margin.right
+		text.drawalign = TEXT_CENTER_ALIGN
+		
+		switch saved.graphics
+		case 0
+			text.drawline = 21
+			break
+		case 1
+			text.drawline = 22
+			break
+		case 2
+			text.drawline = 23
+			break
+		end switch
+		CallFunction(option.text)
+		text.ypos += 21
+		menu.line++	
+		
+		//Language
+		text.xpos = text.margin
+		text.drawalign = TEXT_LEFT_ALIGN
+		text.drawline = 130
+		CallFunction(option.text)
+		
+		text.xpos = screen.xsize
+		text.xpos -= text.margin.right
+		text.drawalign = TEXT_CENTER_ALIGN
+		
+		text.drawline = 131
+		CallFunction(option.text)
+		text.ypos += 21
+		menu.line++
+
+		//VSync
+		text.xpos = text.margin
+		text.drawalign = TEXT_LEFT_ALIGN
+		text.drawline = 132
+		CallFunction(option.text)
+		
+		text.xpos = screen.xsize
+		text.xpos -= text.margin.right
+		text.drawalign = TEXT_CENTER_ALIGN
+		switch saved.vsync
+		case 0
+			text.drawline = 11
+			break
+		case 1
+			text.drawline = 12
+			break
+		end switch
+		CallFunction(option.text)
+		text.ypos += 21
+		menu.line++
+
+		//Scaling Mode
+		text.xpos = text.margin
+		text.drawalign = TEXT_LEFT_ALIGN
+		text.drawline = 133
+		CallFunction(option.text)
+		
+		text.xpos = screen.xsize
+		text.xpos -= text.margin.right
+		text.drawalign = TEXT_CENTER_ALIGN
+		switch saved.scalemode
+		case 0
+			text.drawline = 134
+			break
+		case 1
+			text.drawline = 135
+			break
+		case 2
+			text.drawline = 136
+			break
+		case 3
+			text.drawline = 137
+			break
+		end switch
+		CallFunction(option.text)
+		text.ypos += 21
+		menu.line++
+
+		//Refresh Rate
+		text.xpos = text.margin
+		text.drawalign = TEXT_LEFT_ALIGN
+		text.drawline = 178
+		CallFunction(option.text)
+		
+		text.xpos = screen.xsize
+		text.xpos -= text.margin.right
+		text.drawalign = TEXT_CENTER_ALIGN
+		switch saved.fps
+		case 50
+			text.drawline = 179
+			break
+		case 60
+			text.drawline = 180
+			break
+		end switch
+		CallFunction(option.text)
+		text.ypos += 21
+		menu.line++
+
+		if saved.mobile == 1
+			//Button Visability 
+			text.xpos = text.margin
+			text.drawalign = TEXT_LEFT_ALIGN
+			text.drawline = 138
+			CallFunction(option.text)
+		
+			text.xpos = screen.xsize
+			text.xpos -= text.margin.right
+			text.drawalign = TEXT_CENTER_ALIGN
+			switch saved.transmobile
+			case 0
+				text.drawline = 141
+				break
+			case 1
+				text.drawline = 142
+				break
+			case 2
+				text.drawline = 143
+				break
+			case 3
+				text.drawline = 139
+				break
+			case 4
+				text.drawline = 140
+				break
+			default
+				text.drawline = 141
+				break
+			end switch
+			CallFunction(option.text)
+			text.ypos += 21
+			menu.line++
+		end if
+		
+		CallFunction(header.back)
+		text.drawline = 13
+		text.headercolor = HEADER_TEXT_GREY
+		text.drawalign = TEXT_CENTER_ALIGN
+		text.ypos = 50
+		text.xpos = sidebar.w
+		text.xpos >>= 1
+		text.xpos += screen.xcenter
+		CallFunction(header.text)
+end function
+
+function displaymob.draw	
+	//Graphics Mode
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 20
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	
+	switch saved.graphics
+	case 0
+		text.drawline = 21
+		break
+	case 1
+		text.drawline = 22
+		break
+	case 2
+		text.drawline = 23
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++	
+	
+	//Language
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 130
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	
+	text.drawline = 131
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+
+	if saved.mobile == 1
+		//Button Visability 
+		text.xpos = text.margin
+		text.drawalign = TEXT_LEFT_ALIGN
+		text.drawline = 138
+		CallFunction(option.text)
+	
+		text.xpos = screen.xsize
+		text.xpos -= text.margin.right
+		text.drawalign = TEXT_CENTER_ALIGN
+		switch saved.transmobile
+		case 0
+			text.drawline = 141
+			break
+		case 1
+			text.drawline = 142
+			break
+		case 2
+			text.drawline = 143
+			break
+		case 3
+			text.drawline = 139
+			break
+		case 4
+			text.drawline = 140
+			break
+		default
+				text.drawline = 141
+				break
+		end switch
+		CallFunction(option.text)
+		text.ypos += 21
+		menu.line++
+	end if
+	
+	CallFunction(header.back)
+	text.drawline = 13
+	text.headercolor = HEADER_TEXT_GREY
+	text.drawalign = TEXT_CENTER_ALIGN
+	text.ypos = 50
+	text.xpos = sidebar.w
+	text.xpos >>= 1
+	text.xpos += screen.xcenter
+	CallFunction(header.text)
+end function
+
+
+function gameplay.draw
+	//Emeralds
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 25
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.superStates
+	case 0
+		text.drawline = 92
+		break
+	case 1
+		text.drawline = 93
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Special Stage Rotation
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 26
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.specialSpin
+	case 0
+		text.drawline = 28
+		break
+	case 1
+		text.drawline = 27
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Random Monitors
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 29
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.randomMonitor
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 12
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Infinite Lives
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 30
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.lives
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 12
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Time Limit
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 31
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.timeLimit
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 32
+		break
+	case 2
+		text.drawline = 33
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Ground Speed Cap
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 34
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.speedCap
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 12
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Air Speed Cap
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 35
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.airSpeedCap
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 12
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Rolljump Lock
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 36
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.Jumplock
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 12
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Spike Bug
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 37
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.spikeBehavior
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 12
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	CallFunction(header.back)
+	text.drawline = 24
+	text.headercolor = HEADER_TEXT_GREY
+	text.drawalign = TEXT_CENTER_ALIGN
+	text.ypos = 50
+	text.xpos = sidebar.w
+	text.xpos >>= 1
+	text.xpos += screen.xcenter
+	CallFunction(header.text)
+end function
+
+function abilities.draw
+	//Elemental Shields
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 39
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.elemental
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 12
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Spindash
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 40
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.Spindash
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 41
+		break
+	case 2
+		text.drawline = 42
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Insta-shield
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 43
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.Instashield
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 12
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Super Peelout
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 44
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.Peelout
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 12
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Dropdash
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 45
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.Dropdash
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 12
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Bubble Shield
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 46
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.bubble
+	case 0
+		text.drawline = 48
+		break
+	case 1
+		text.drawline = 47
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Flight Cancel
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 49
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.FlightCancel
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 12
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Super Cancel
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 50
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.Supercancel
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 12
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+
+	//Amy Moveset
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 162
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.AmyMoveset
+	case 0
+		text.drawline = 69
+		break
+	case 1
+		text.drawline = 163
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	if saveRAM[417] == 1	
+		//GoGoPlus
+		text.xpos = text.margin
+		text.drawalign = TEXT_LEFT_ALIGN
+		text.drawline = 51
+		CallFunction(option.text)
+		
+		text.xpos = screen.xsize
+		text.xpos -= text.margin.right
+		text.drawalign = TEXT_CENTER_ALIGN
+		switch saved.gogoplus
+		case 0
+			text.drawline = 11
+			break
+		case 1
+			text.drawline = 12
+			break
+		end switch
+		CallFunction(option.text)
+		text.ypos += 21
+		menu.line++
+	end if
+	
+	CallFunction(header.back)
+	text.drawline = 38
+	text.headercolor = HEADER_TEXT_GREY
+	text.drawalign = TEXT_CENTER_ALIGN
+	text.ypos = 50
+	text.xpos = sidebar.w
+	text.xpos >>= 1
+	text.xpos += screen.xcenter
+	CallFunction(header.text)
+end function
+
+function visuals.draw	
+	//CD Spring Twirl
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 53
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.Speen
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 12
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Mania Rotation
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 54
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.rotate
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 12
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Blue Shield
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 58
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.shieldType
+	case 0
+		text.drawline = 59
+		break
+	case 1
+		text.drawline = 41
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Invincibility
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 60
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.invincibilityType
+	case 0
+		text.drawline = 59
+		break
+	case 1
+		text.drawline = 41
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Extended Timer
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 61
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.Timer
+	case 0
+		text.drawline = 63
+		break
+	case 1
+		text.drawline = 62
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Region
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 64
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.region
+	case 0
+		text.drawline = 66
+		break
+	case 1
+		text.drawline = 65
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Green Hill Water
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 67
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.GHZwater
+	case 0
+		text.drawline = 28
+		break
+	case 1
+		text.drawline = 69
+		break
+	case 2
+		text.drawline = 68
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//UFOs
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 70
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.UFO
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 21
+		break
+	case 2
+		text.drawline = 71
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+
+	//Sonic Max Dash
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 55
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.SonicMaxDash
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 57
+		break
+	case 2
+		text.drawline = 56
+		break
+	case 3
+		text.drawline = 47
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+
+	//Tails Max Dash
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	switch saved.region
+	case 0
+		text.drawline = 156
+		break
+	case 1
+		text.drawline = 176
+		break
+	end switch
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.TailsMaxDash
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 41
+		break
+	case 2
+		text.drawline = 69
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+
+	//Knuckles Max Dash
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 157
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.KnuxMaxDash
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 159
+		break
+	case 2
+		text.drawline = 47
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+
+	//Amy Max Dash
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 158
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.AmyMaxDash
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 174
+		break
+	case 2
+		text.drawline = 69
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+
+	//Super Max Dash
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 160
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.SuperMaxDash
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 159
+		break
+	case 2
+		text.drawline = 47
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	CallFunction(header.back)
+	text.drawline = 52
+	text.headercolor = HEADER_TEXT_GREY
+	text.drawalign = TEXT_CENTER_ALIGN
+	text.ypos = 50
+	text.xpos = sidebar.w
+	text.xpos >>= 1
+	text.xpos += screen.xcenter
+	CallFunction(header.text)
+end function
+
+function sound.draw	
+	//Music Volume
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 73
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.xpos += 4
+	if Engine.BGMVolume == 100
+		text.xpos += 4
+	end if
+	DrawSpriteScreenFX(180, FX_INK, text.xpos, text.ypos)
+	text.xpos -= 8
+	temp0 = Engine.BGMVolume
+	temp0 %= 10
+	temp0 += 191
+	DrawSpriteScreenFX(temp0, FX_INK, text.xpos, text.ypos)
+	text.xpos -= 8	
+	temp0 = Engine.BGMVolume
+	temp0 /= 10
+	temp0 %= 10
+	temp0 += 191
+	DrawSpriteScreenFX(temp0, FX_INK, text.xpos, text.ypos)
+	if Engine.BGMVolume == 100
+		text.xpos -= 8
+		DrawSpriteScreenFX(192, FX_INK, text.xpos, text.ypos)
+	end if	
+	text.ypos += 21
+	menu.line++	
+	
+	//SFX Volume
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 74
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.xpos += 4
+	if Engine.SFXVolume == 100
+		text.xpos += 4
+	end if
+	DrawSpriteScreenFX(180, FX_INK, text.xpos, text.ypos)
+	text.xpos -= 8
+	temp0 = Engine.SFXVolume
+	temp0 %= 10
+	temp0 += 191
+	DrawSpriteScreenFX(temp0, FX_INK, text.xpos, text.ypos)
+	text.xpos -= 8	
+	temp0 = Engine.SFXVolume
+	temp0 /= 10
+	temp0 %= 10
+	temp0 += 191
+	DrawSpriteScreenFX(temp0, FX_INK, text.xpos, text.ypos)
+	if Engine.SFXVolume == 100
+		text.xpos -= 8
+		DrawSpriteScreenFX(192, FX_INK, text.xpos, text.ypos)
+	end if	
+	text.ypos += 21
+	menu.line++	
+	
+	//Drowning Music
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 75
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.Drowning
+	case 0
+		text.drawline = 59
+		break
+	case 1
+		text.drawline = 76
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	//Super Music
+	text.xpos = text.margin
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.drawline = 77
+	CallFunction(option.text)
+	
+	text.xpos = screen.xsize
+	text.xpos -= text.margin.right
+	text.drawalign = TEXT_CENTER_ALIGN
+	switch saved.Supermusic
+	case 0
+		text.drawline = 11
+		break
+	case 1
+		text.drawline = 41
+		break
+	case 2
+		text.drawline = 48
+		break
+	case 3
+		text.drawline = 79
+		break
+	case 4
+		text.drawline = 80
+		break
+	case 5
+		text.drawline = 47
+		break
+	case 6
+		text.drawline = 81
+		break
+	case 7
+		text.drawline = 78
+		break
+	end switch
+	CallFunction(option.text)
+	text.ypos += 21
+	menu.line++
+	
+	CallFunction(header.back)
+	text.drawline = 72
+	text.headercolor = HEADER_TEXT_GREY
+	text.drawalign = TEXT_CENTER_ALIGN
+	text.ypos = 50
+	text.xpos = sidebar.w
+	text.xpos >>= 1
+	text.xpos += screen.xcenter
+	CallFunction(header.text)
+end function
+
+
+event ObjectDraw
+	//Background Elements
+	//White Background
+	DrawRect(0, 0, screen.xsize, screen.ysize, color7, color7, color7, 255)
+	
+	//Blue Tiles
+	temp0 = sidebar.w
+	DrawRect(0, 0, temp0, screen.ysize, color5, color5, color7, 255)	
+	temp0 -= 3
+	DrawRect(temp0, 0, 1, screen.ysize, color7, color7, color7, 255)
+	temp0++
+	DrawRect(temp0, 0, 2, screen.ysize, 0, 0, 0, 255)
+	temp0 += 2
+	DrawRect(temp0, 0, 1, screen.ysize, color5, color5, color7, 255)
+	
+	//Stars
+	temp7 = 0
+	while temp7 < 45			
+		GetTableValue(temp2, temp7, StarList)
+		temp7++
+		temp2 += 64
+		GetTableValue(temp3, temp7, StarList)
+		temp7++
+		temp3 += 45
+		GetTableValue(temp4, temp7, StarList)
+		temp7++
+		DrawSpriteScreenXY(temp4, temp2, temp3)		
+	loop
+
+	//Blue Circle
+	DrawRect(sidebar.w, 235, screen.xsize, 5, color5, color5, color7, 255)
+	DrawSpriteScreenXY(270, screen.xsize, screen.ysize)
+	
+	//Scroller
+	if menu.highlight == 0
+		scroll.max = 0
+		scroll.min = 0
+	else
+		temp0 = menu.highlight
+		temp0--
+		temp0 *= 21
+		scroll.max = temp0
+		scroll.min = temp0
+		scroll.min -= 147
+	end if
+	
+	if scroll.current < scroll.min
+		scroll.current += 3
+	else
+		if scroll.current > scroll.max
+			scroll.current -= 3
+		end if
+	end if
+	
+	
+	
+	//Highlighter
+	if menu.highlight > 0		
+		temp0 = text.margin
+		temp0 -=  3
+		temp2 = menu.highlight
+		temp2 *= 21
+		temp2 += 53
+		temp2 -= scroll.current
+		temp1 = screen.xsize
+		temp1 -= 110
+		DrawRect(temp0, temp2, screen.xsize, 19, color5, color5, color7, 255)
+		DrawRect(temp1, temp2, 110, 17, color6, color6, color6, 255) // light grey part
+
+	//Delete Highlight
+	if delete.check == 1
+		if inputDown.buttonA == 1
+			temp3 = 0
+				if delete.ticker != 110
+					if delete.ticker <= 110
+							delete.ticker++
+					end if
+				end if	
+			temp3 += delete.ticker
+			DrawRect(temp1, temp2, temp3, 17, 255,0,0, 255) // RED
+			if temp3 == 110
+				StopSfx(SfxName[Warn], 0)
+				delete.check = 2
+				PlaySfx(SfxName[Cleared], 0)
+
+				temp3 = 0
+				delete.ticker = 0
+			end if
+		else
+			StopSfx(SfxName[Warn], 0)
+			temp3 = 0
+			delete.ticker = 0
+			delete.check = 0
+		end if
+	end if
+	temp4 = inputPress.up
+	temp4 |= inputPress.down
+	if temp4 == 1
+		StopSfx(SfxName[Warn], 0)
+		temp3 = 0
+		delete.ticker = 0
+		delete.check = 0
+	end if
+	//Delete Highlight Ended
+
+		temp1 -= text.margin
+		temp1 ++
+		DrawRect(temp0, temp2, temp1, 17, color1, color1, color1, 255)
+		temp2++
+		temp0--
+		DrawRect(temp0, temp2, 1, 17, color5, color5, color7, 255)
+		DrawRect(temp0, temp2, 1, 15, color1, color1, color1, 255)
+	end if	
+	
+	//Menu text
+	menu.line = 1
+	text.ypos = 78
+	text.ypos -= scroll.current
+	CallFunction(object.drawState)
+	
+	//Subheader arrows
+	if menu.highlight == 0
+		arrow.move++
+		arrow.move &= 63
+	else
+		arrow.move = 0
+	end if
+	
+	temp1 = arrow.move
+	temp1 >>= 4
+	temp1 *= 5
+	temp0 = sidebar.w
+	temp0 += 60
+	temp0 -= temp1
+	DrawSpriteScreenXY(275, temp0, 52)
+	temp0 = screen.xsize
+	temp0 -= 60
+	temp0 += temp1
+	DrawSpriteScreenXY(276, temp0, 52)
+
+	//Black Tiles	
+	DrawRect(0, 0, screen.xsize, 28, 0, 0, 0, 255)
+	DrawRect(0, 25, screen.xsize, 1, color7, 0, 0, 255)
+	temp0 = sidebar.w
+	temp0 -= 3
+	DrawRect(0, 28, temp0, 1, color7, color7, color7, 255)
+	temp0 += 4
+	DrawRect(temp0, 28, screen.xsize, 1, color5, color5, color7, 255)
+	
+	text.drawline = 10
+	DrawSpriteScreenXY(303, 50, 25)
+	CallFunction(header.length)
+	temp0 = 50
+	temp1 = temp0
+	temp0 += temp3
+	while temp1 < temp0
+		DrawSpriteScreenXY(305, temp1, 25)
+		temp1++
+	loop
+	DrawSpriteScreenXY(304, temp0, 25)
+	
+	text.headercolor = HEADER_TEXT_BLUE
+	text.drawalign = TEXT_LEFT_ALIGN
+	text.ypos = 20
+	text.xpos = 50
+	CallFunction(header.text)
+	
+	temp3 = 32
+	if saved.mobile == 1
+		temp3 += 48
+		DrawSpriteScreenXY(306, temp3, 50)
+		DrawSpriteScreenXY(307, temp3, 190)
+	end if
+end event
+
+
+event ObjectStartup
+	delete.check = 0	
+	CallNativeFunction(GetWindowScale)
+	saved.scale = checkResult
+	CallNativeFunction(GetWindowFullScreen)
+	saved.fullscreen = checkResult
+	CallNativeFunction(GetWindowVSync)
+	saved.vsync = checkResult
+	CallNativeFunction(GetWindowScaleMode)
+	saved.scalemode = checkResult
+	CallNativeFunction(GetFrameRate)
+	saved.fps = checkResult
+	
+	LoadSpriteSheet("Menus/Options.gif")
+
+	//Load font sprites
+	temp0 = 0
+	temp1 = 0
+	while temp0 < 88
+		while temp1 < 128
+			SpriteFrame(0, 0, 8, 8, temp1, temp0)
+			temp1 += 8
+		loop
+		temp1 = 0
+		temp0 += 8
+	loop
+	
+	//Start second font at 176
+	SpriteFrame(0, 0, 3, 12, 129, 1)
+	SpriteFrame(0, 0, 6, 12, 133, 1)
+	SpriteFrame(0, 0, 10, 12, 140, 1)
+	SpriteFrame(0, 0, 9, 12, 151, 1)	
+	SpriteFrame(0, 0, 9, 12, 161, 1)
+	SpriteFrame(0, 0, 9, 12, 171, 1)
+	SpriteFrame(0, 0, 3, 12, 181, 1)
+	SpriteFrame(0, 0, 4, 12, 185, 1)
+	SpriteFrame(0, 0, 4, 12, 190, 1)
+	SpriteFrame(0, 0, 7, 12, 195, 1)
+	SpriteFrame(0, 0, 9, 12, 203, 1)
+	SpriteFrame(0, 0, 3, 12, 213, 1)
+	SpriteFrame(0, 0, 7, 12, 217, 1)
+	SpriteFrame(0, 0, 3, 12, 225, 1)
+	SpriteFrame(0, 0, 11, 12, 229, 1)
+	SpriteFrame(0, 0, 7, 12, 241, 1) //191
+	SpriteFrame(0, 0, 5, 12, 249, 1)
+	SpriteFrame(0, 0, 7, 12, 129, 14)	
+	SpriteFrame(0, 0, 7, 12, 137, 14)
+	SpriteFrame(0, 0, 7, 12, 145, 14)
+	SpriteFrame(0, 0, 7, 12, 153, 14)
+	SpriteFrame(0, 0, 7, 12, 161, 14)
+	SpriteFrame(0, 0, 7, 12, 169, 14)
+	SpriteFrame(0, 0, 7, 12, 177, 14)
+	SpriteFrame(0, 0, 7, 12, 185, 14) //200
+	SpriteFrame(0, 0, 3, 12, 193, 14)
+	SpriteFrame(0, 0, 3, 12, 197, 14)
+	SpriteFrame(0, 0, 6, 12, 201, 14)
+	SpriteFrame(0, 0, 6, 12, 208, 14)
+	SpriteFrame(0, 0, 6, 12, 215, 14)
+	SpriteFrame(0, 0, 6, 12, 222, 14)
+	SpriteFrame(0, 0, 10, 12, 229, 14)	
+	SpriteFrame(0, 0, 9, 12, 240, 14)
+	SpriteFrame(0, 0, 8, 12, 129, 27)
+	SpriteFrame(0, 0, 9, 12, 138, 27)
+	SpriteFrame(0, 0, 9, 12, 148, 27)
+	SpriteFrame(0, 0, 7, 12, 158, 27)
+	SpriteFrame(0, 0, 7, 12, 166, 27)
+	SpriteFrame(0, 0, 9, 12, 174, 27)
+	SpriteFrame(0, 0, 11, 12, 184, 27)
+	SpriteFrame(0, 0, 5, 12, 196, 27)
+	SpriteFrame(0, 0, 8, 12, 202, 27)
+	SpriteFrame(0, 0, 9, 12, 211, 27)
+	SpriteFrame(0, 0, 6, 12, 221, 27)
+	SpriteFrame(0, 0, 11, 12, 228, 27) //220
+	SpriteFrame(0, 0, 9, 12, 240, 27)
+	SpriteFrame(0, 0, 10, 12, 129, 40)
+	SpriteFrame(0, 0, 7, 12, 140, 40)
+	SpriteFrame(0, 0, 10, 12, 148, 40)
+	SpriteFrame(0, 0, 7, 12, 159, 40)
+	SpriteFrame(0, 0, 7, 12, 167, 40)
+	SpriteFrame(0, 0, 9, 12, 175, 40)
+	SpriteFrame(0, 0, 10, 12, 185, 40)
+	SpriteFrame(0, 0, 9, 12, 196, 40)
+	SpriteFrame(0, 0, 15, 12, 206, 40)
+	SpriteFrame(0, 0, 9, 12, 222, 40)
+	SpriteFrame(0, 0, 11, 12, 232, 40)
+	SpriteFrame(0, 0, 9, 12, 244, 40)	
+	SpriteFrame(0, 0, 4, 12, 129, 53)
+	SpriteFrame(0, 0, 11, 12, 134, 53)
+	SpriteFrame(0, 0, 4, 12, 146, 53)
+	SpriteFrame(0, 0, 5, 12, 151, 53)
+	SpriteFrame(0, 0, 7, 12, 157, 53)
+	SpriteFrame(0, 0, 4, 12, 165, 53)	
+	SpriteFrame(0, 0, 9, 12, 240, 14) //240
+	SpriteFrame(0, 0, 8, 12, 129, 27)
+	SpriteFrame(0, 0, 9, 12, 138, 27)
+	SpriteFrame(0, 0, 9, 12, 148, 27)
+	SpriteFrame(0, 0, 7, 12, 158, 27)
+	SpriteFrame(0, 0, 7, 12, 166, 27)
+	SpriteFrame(0, 0, 9, 12, 174, 27)
+	SpriteFrame(0, 0, 11, 12, 184, 27)
+	SpriteFrame(0, 0, 5, 12, 196, 27)
+	SpriteFrame(0, 0, 8, 12, 202, 27)
+	SpriteFrame(0, 0, 9, 12, 211, 27)
+	SpriteFrame(0, 0, 6, 12, 221, 27)
+	SpriteFrame(0, 0, 11, 12, 228, 27)
+	SpriteFrame(0, 0, 9, 12, 240, 27)
+	SpriteFrame(0, 0, 10, 12, 129, 40)
+	SpriteFrame(0, 0, 7, 12, 140, 40)
+	SpriteFrame(0, 0, 10, 12, 148, 40)
+	SpriteFrame(0, 0, 7, 12, 159, 40)
+	SpriteFrame(0, 0, 7, 12, 167, 40)
+	SpriteFrame(0, 0, 9, 12, 175, 40)
+	SpriteFrame(0, 0, 10, 12, 185, 40) //260
+	SpriteFrame(0, 0, 9, 12, 196, 40)
+	SpriteFrame(0, 0, 15, 12, 206, 40)
+	SpriteFrame(0, 0, 9, 12, 222, 40)
+	SpriteFrame(0, 0, 11, 12, 232, 40)
+	SpriteFrame(0, 0, 9, 12, 244, 40)	
+	SpriteFrame(0, 0, 5, 12, 170, 53)
+	SpriteFrame(0, 0, 3, 12, 176, 53)
+	SpriteFrame(0, 0, 5, 12, 180, 53)
+	SpriteFrame(0, 0, 9, 12, 186, 53) //269
+	
+	
+	SpriteFrame(-307, -100, 307, 100, 1, 157) //270 Big Circle
+	SpriteFrame(0, 0, 1, 1, 59, 142) //271 Star 1
+	SpriteFrame(-1, -1, 3, 3, 55, 142) //272 Star 2
+	SpriteFrame(-2, -3, 5, 7, 63, 132) //273 Star 3
+	SpriteFrame(-3, -4, 7, 9, 55, 132) //274 Star 4
+	SpriteFrame(-11, -1, 14, 14, 69, 132) //275 Submenu Arrow Left
+	SpriteFrame(-1, -1, 14, 14, 84, 132) //276 Submenu Arrow Left
+	
+	
+	SpriteFrame(0, 0, 17, 18, 138, 110) //277 A Header Alphabet
+	SpriteFrame(0, 0, 17, 18, 156, 110)
+	SpriteFrame(0, 0, 17, 18, 174, 110)
+	SpriteFrame(0, 0, 17, 18, 192, 110)
+	SpriteFrame(0, 0, 16, 18, 210, 110) //281 E
+	SpriteFrame(0, 0, 16, 18, 227, 110)	
+	SpriteFrame(0, 0, 18, 18, 244, 110)
+	SpriteFrame(0, 0, 17, 18, 263, 110)
+	SpriteFrame(0, 0, 8, 18, 281, 110) // I
+	SpriteFrame(0, 0, 16, 18, 290, 110)
+	SpriteFrame(0, 0, 18, 18, 307, 110)
+	SpriteFrame(0, 0, 17, 18, 326, 110)
+	SpriteFrame(0, 0, 18, 18, 344, 110) //289 M
+	SpriteFrame(0, 0, 17, 18, 363, 110)
+	SpriteFrame(0, 0, 18, 18, 138, 129)
+	SpriteFrame(0, 0, 17, 18, 157, 129)
+	SpriteFrame(0, 0, 18, 18, 175, 129)
+	SpriteFrame(0, 0, 18, 18, 194, 129) // R
+	SpriteFrame(0, 0, 16, 18, 213, 129)
+	SpriteFrame(0, 0, 16, 18, 230, 129)
+	SpriteFrame(0, 0, 17, 18, 247, 129)
+	SpriteFrame(0, 0, 17, 18, 265, 129)
+	SpriteFrame(0, 0, 24, 18, 283, 129)
+	SpriteFrame(0, 0, 17, 18, 308, 129)
+	SpriteFrame(0, 0, 17, 18, 326, 129)
+	SpriteFrame(0, 0, 17, 18, 344, 129) //302 Z
+	
+	SpriteFrame(-17, 0, 17, 19, 129, 66) //303
+	SpriteFrame(0, 0, 17, 19, 147, 66) //304
+	SpriteFrame(0, 0, 1, 19, 147, 66) //305
+
+	SpriteFrame(-48, 0, 14, 14, 113, 125) //306 Up Arrow
+	SpriteFrame(-48, 0, 14, 14, 113, 140) //307 Down Arrow
+	
+end event

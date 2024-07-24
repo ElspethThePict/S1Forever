@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="door">
+  <Images>
+    <ImageFromSheet id="door" sheet="LZ/Objects.gif" sourcex="206" sourcey="142" width="16" height="64">
+      <Offset X="-8" Y="-32" />
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Behaviour" description="How this Door should behave." type="types" startbit="0" length="8" />
+  </Properties>
+  <Enums>
+    <Enum name="types">
+      <EnumMember name="Stay Opened" />
+      <EnumMember name="Open Then Close" />
+      <EnumMember name="Current" />
+    </Enum>
+  </Enums>
+  <Subtypes>
+    <Subtype id="00" name="Stay Opened" image="door" />
+    <Subtype id="01" name="Open Then Close" image="door" />
+    <Subtype id="02" name="Current" image="door" />
+  </Subtypes>
+</ObjDef>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="zone1">
+  <Images>
+    <ImageFromSheet id="zone1" sheet="Special/Objects.gif" sourcex="326" sourcey="176" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="zone2" sheet="Special/Objects.gif" sourcex="351" sourcey="176" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="zone3" sheet="Special/Objects.gif" sourcex="376" sourcey="176" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="zone4" sheet="Special/Objects.gif" sourcex="426" sourcey="176" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="zone5" sheet="Special/Objects.gif" sourcex="451" sourcey="176" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="zone6" sheet="Special/Objects.gif" sourcex="476" sourcey="176" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="zone7" sheet="Special/Objects.gif" sourcex="476" sourcey="276" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Zone ID" description="The Zone number to be displayed on the Block." type="zones" startbit="0" length="4" />
+  </Properties>
+  <Enums>
+    <Enum name="zones">
+      <EnumMember name="Zone 1" />
+      <EnumMember name="Zone 2" />
+      <EnumMember name="Zone 3" />
+      <EnumMember name="Zone 4" />
+      <EnumMember name="Zone 5" />
+      <EnumMember name="Zone 6" />
+      <EnumMember name="Zone 7" />
+    </Enum>
+  </Enums>
+  <Subtypes>
+    <Subtype id="00" name="Zone 1" image="zone1" />
+    <Subtype id="01" name="Zone 2" image="zone2" />
+    <Subtype id="02" name="Zone 3" image="zone3" />
+    <Subtype id="03" name="Zone 4" image="zone4" />
+    <Subtype id="04" name="Zone 5" image="zone5" />
+    <Subtype id="05" name="Zone 6" image="zone6" />
+    <Subtype id="06" name="Zone 7" image="zone7" />
+  </Subtypes>
+</ObjDef>

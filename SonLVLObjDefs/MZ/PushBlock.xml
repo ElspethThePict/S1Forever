@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="small">
+  <Images>
+    <ImageFromSheet id="small" sheet="MZ/Objects.gif" sourcex="159" sourcey="322" width="32" height="32">
+      <Offset X="-16" Y="-16"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="large" sheet="MZ/Objects.gif" sourcex="159" sourcey="322" width="128" height="32">
+      <Offset X="-64" Y="-16"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Size" description="What size this Push Block should be." type="sizes" startbit="0" length="1" />
+  </Properties>
+  <Enums>
+    <Enum name="sizes">
+      <EnumMember name="Small" />
+      <EnumMember name="Large" />
+    </Enum>
+  </Enums>
+  <Subtypes>
+    <Subtype id="00" name="Small Block" image="small" />
+    <Subtype id="01" name="Large Block" image="large" />
+  </Subtypes>
+</ObjDef>

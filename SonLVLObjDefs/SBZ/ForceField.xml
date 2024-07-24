@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="ffield">
+  <Images>
+    <ImageFromSheet id="ffield" sheet="SBZ/Objects.gif" sourcex="382" sourcey="266" width="16" height="144">
+      <Offset X="-8" Y="-72"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Behaviour" description="How this Force Field should behave." type="behaviours" startbit="0" length="8" />
+  </Properties>
+  <Enums>
+    <Enum name="behaviours">
+      <EnumMember name="Always Active" />
+      <EnumMember name="Activate On Enter" />
+    </Enum>
+  </Enums>
+  <Subtypes>
+    <Subtype id="00" name="Always Active" image="ffield" />
+    <Subtype id="01" name="Activate On Enter" image="ffield" />
+  </Subtypes>
+</ObjDef>

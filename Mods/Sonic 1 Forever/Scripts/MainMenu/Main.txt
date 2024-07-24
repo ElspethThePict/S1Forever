@@ -1,0 +1,1325 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Sonic Team Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+public alias object[9].value0 : menu.state
+public alias object[9].value1 : target.xoffset
+public alias object[9].value2 : current.xoffset
+public alias object[9].value4 : fade.control
+public alias object[9].value5 : fade.effect
+
+public alias object[9].value7 : frame.count
+public alias object[9].value8 : 3min.count
+public alias object[9].value9 : spawn.timer
+public alias object[9].value10 : spawn.x
+public alias object[9].value11 : sidebar.w
+
+
+public alias object[9].value13 : reset.done
+
+public alias object[9].value6 : main.color
+public alias object[9].value14 : main.drawline
+public alias object[9].value15 : main.xpos
+public alias object[9].value16 : main.ypos
+
+public alias object[9].value17 : touch.delay
+public alias object[9].value18 : touch.fade
+public alias object[9].value19 : touch.inputReset
+public alias object[9].value20 : touch.X1Pos
+public alias object[9].value21 : touch.X2Pos
+public alias object[9].value22 : touch.Y1Pos
+public alias object[9].value23 : touch.Y2Pos
+public alias object[9].value24 : touch.confirm
+
+private alias object[30].value1 : modMenu.modhighlight
+private alias object[30].value2 : modMenu.modtodraw
+private alias object[30].value6 : modMenu.scroll
+
+private alias object[30].value0  : options.highlight
+private alias object[30].value10 : scroll.current
+private alias object[30].value14 : delete.check
+private alias object[30].value15 : delete.ticker
+private alias object[30].value16 : options.curMenu
+private alias object[30].value17 : options.maxSel
+
+private alias object[30].value3  : modes.highlight
+
+private alias object[30].value0  : row.highlight
+private alias object[30].value1  : column.highlight
+private alias object[30].value3  : char.highlight
+private alias object[30].value12 : menu.charSelBool
+private alias object[30].value13 : menu.curSub
+
+public alias object[9].value25 : hold.time
+
+private alias 0 : TEXT_LEFT_ALIGN
+private alias 1 : TEXT_RIGHT_ALIGN
+private alias 2 : TEXT_CENTER_ALIGN
+private alias 0 : HEADER_TEXT_GREY
+private alias 1 : HEADER_TEXT_BLUE
+private alias 2 : HEADER_TEXT_GOLD
+
+
+private alias 20 : speed.xoffset
+
+public alias saveRAM[257] : saved.spindash
+public alias saveRAM[258] : saved.speedCap
+public alias saveRAM[259] : saved.airSpeedCap
+public alias saveRAM[260] : saved.spikeBehavior
+public alias saveRAM[261] : saved.shieldType
+public alias saveRAM[262] : saved.superStates
+public alias saveRAM[263] : saved.Jumplock
+public alias saveRAM[264] : saved.Supermusic
+public alias saveRAM[265] : saved.Dropdash
+public alias saveRAM[266] : saved.Instashield
+public alias saveRAM[267] : saved.Peelout
+public alias saveRAM[268] : saved.FlightCancel
+public alias saveRAM[269] : saved.SonicMaxDash
+public alias saveRAM[270] : saved.Speen
+public alias saveRAM[271] : saved.Supercancel
+public alias saveRAM[272] : saved.Drowning
+public alias saveRAM[273] : saved.Timer
+public alias saveRAM[274] : saved.region
+public alias saveRAM[275] : saved.UFO
+public alias saveRAM[276] : saved.rotate
+public alias saveRAM[277] : saved.invincibilityType
+public alias saveRAM[280] : saved.gogoplus
+public alias saveRAM[281] : saved.lives
+public alias saveRAM[282] : saved.bubble
+public alias saveRAM[283] : saved.specialSpin
+public alias saveRAM[284] : saved.timeLimit
+public alias saveRAM[285] : saved.GHZwater
+public alias saveRAM[286] : saved.language
+public alias saveRAM[287] : saved.elemental
+
+
+public alias saveRAM[290] : saved.randomMonitor
+
+
+
+public alias saveRAM[294] : saved.graphics
+public alias saveRAM[295] : saved.mobile
+public alias saveRAM[296] : saved.transmobile
+
+public alias saveRAM[297] : saved.TailsMaxDash
+public alias saveRAM[298] : saved.KnuxMaxDash
+public alias saveRAM[299] : saved.AmyMaxDash
+public alias saveRAM[300] : saved.SuperMaxDash
+
+public alias saveRAM[301] : saved.AmyMoveset
+
+
+// Function declarations
+reserve function main.control
+reserve function main.exit
+reserve function main.close
+reserve function main.load
+reserve function main.entry
+reserve function Lang_Init
+reserve function main.sound
+reserve function main.soundconf
+reserve function sidebar.adj
+reserve function touch.controls
+reserve function emerald_color
+reserve function menu.holdmovement
+
+// Static Values
+public value color.emerald = 0;
+public value modcount = 0;
+
+public table headerspace
+	16, 16, 16, 16, 15, 15, 17, 16, 7, 15, 17, 16, 17, 16, 17, 16, 17, 17, 15, 15, 16, 16, 23, 16, 16, 16
+end table
+
+private table MainNames
+	2, 3, 10, 82, 89, 91
+end table
+
+
+//MENU STATES
+//000 - Save Select Highlighed
+//001 - Game Modes Highlighted
+//002 - Options Highlighted
+//003 - Extras Highlighted
+//004 - Mods Highlihted
+//005 - Exit Hightlighted
+
+function emerald_color
+	LoadPalette("MenuEms.act", 1, 0, 0, 256)
+	if color.emerald == 0
+		rand(color.emerald, 8)
+		if color.emerald == 5
+			rand(color.emerald, 8)
+		end if
+		color.emerald++
+	end if
+	if color.emerald > 6
+		temp0 = 0
+	else
+		temp0 = color.emerald		
+		temp0 *= 6
+	end if
+	CopyPalette(1, temp0, 0, 192, 6)
+end function
+
+function main.offsetting
+	if menu.state < 10
+		target.xoffset = 0
+	else
+		target.xoffset = screen.xsize
+		target.xoffset += 100
+		if screen.xsize < 400
+			target.xoffset += 100
+		end if
+	end if	
+	
+	temp1 = current.xoffset
+	temp1 -= target.xoffset
+	Abs(temp1)
+	if temp1 <= speed.xoffset
+		current.xoffset = target.xoffset
+	end if
+
+	if current.xoffset > target.xoffset
+		current.xoffset -= speed.xoffset
+	end if
+	if current.xoffset < target.xoffset
+		current.xoffset += speed.xoffset
+	end if	
+end function
+
+function touch.controls
+	touch.delay++
+	if touch.delay >= 15
+
+		if menu.state < 10
+			touch.x1Pos  = screen.xsize
+			touch.x1Pos -= 200
+			CheckTouchRect(Touch.X1Pos, 40, screen.xsize, 64)
+			if CheckResult > -1
+				touch.inputReset = true
+				if menu.state != 0
+					menu.state = 0
+					PlaySfx(SfxName[Score Add], 0)
+				else
+					inputPress[0].start = true
+				end if
+			end if
+
+			touch.x1Pos += 10
+			CheckTouchRect(Touch.X1Pos, 70, screen.xsize, 94)
+			if CheckResult > -1
+				touch.inputReset = true
+				if menu.state!= 1
+					menu.state = 1
+					PlaySfx(SfxName[Score Add], 0)
+				else
+					inputPress[0].start = true
+				end if
+			end if	
+			
+			touch.x1Pos += 40
+			CheckTouchRect(Touch.X1Pos, 100, screen.xsize, 124)
+			if CheckResult > -1
+				touch.inputReset = true
+				if menu.state != 2
+					menu.state = 2
+					PlaySfx(SfxName[Score Add], 0)
+				else
+					inputPress[0].start = true
+				end if
+			endif		
+
+			touch.x1Pos += 20
+			CheckTouchRect(Touch.X1Pos, 130, screen.xsize, 154)
+			if CheckResult > -1
+				touch.inputReset = true
+				if menu.state != 3
+					menu.state = 3
+					PlaySfx(SfxName[Score Add], 0)
+				else
+					inputPress[0].start = true
+				end if
+			endif
+			
+			touch.x1Pos += 20
+			CheckTouchRect(Touch.X1Pos, 160, screen.xsize, 184)
+			if CheckResult > -1
+				touch.inputReset = true
+				if menu.state != 4
+					menu.state = 4
+					PlaySfx(SfxName[Score Add], 0)
+				else
+					inputPress[0].start = true
+				end if
+			endif
+
+			touch.x1Pos += 10
+			CheckTouchRect(Touch.X1Pos, 190, screen.xsize, 214)
+			if CheckResult > -1
+				touch.inputReset = true
+				if menu.state != 5
+					menu.state = 5
+					PlaySfx(SfxName[Score Add], 0)
+				else
+					inputPress[0].start = true
+				end if
+			endif
+		else
+			if object[30].type == TypeName[Mod Menu]
+				CheckTouchRect(48, 34, 64, 48)
+				if checkResult > -1
+					touch.inputReset = true
+					inputDown.buttonA = 1
+					inputPress[0].up = true
+					PlaySfx(SfxName[Score Add], 0)
+				end if
+				CheckTouchRect(48, 180, 64, 194)
+				if checkResult > -1
+					touch.inputReset = true
+					inputDown.buttonA = 1
+					inputPress[0].down = true
+					PlaySfx(SfxName[Score Add], 0)
+				end if
+
+				touch.y1pos = 50
+				touch.y1pos -= modMenu.scroll
+				touch.x1pos = screen.xsize
+				touch.x1pos -= 60
+				temp0 = 0
+				while temp0 < modcount
+					temp7 = touch.y1pos
+					temp7 += 35
+					CheckTouchRect(touch.x1pos, touch.y1pos, screen.xsize, temp7)
+					if checkResult > -1
+						modMenu.modhighlight = temp0
+						touch.inputReset = true
+						CallNativeFunction2(GetModActive, temp0, 0)
+						checkResult ^= 1
+						CallNativeFunction2(SetModActive, temp0, checkResult)
+						PlaySfx(SfxName[Score Add], 0)
+					else
+						CheckTouchRect(100, touch.y1pos, touch.x1pos, temp7)
+						if checkResult > -1
+							modMenu.modhighlight = temp0
+							touch.inputReset = true
+							PlaySfx(SfxName[Score Add], 0)
+						end if	
+					end if
+					temp0++
+					touch.y1pos += 36
+				loop
+			end if
+
+			if object[30].type == TypeName[Options Menu]	
+				touch.X1Pos = 30
+				touch.X2Pos = 50
+				touch.Y1Pos = 50
+				touch.Y2Pos = 70
+				CheckTouchRect(touch.X1Pos, touch.Y1Pos, touch.X2Pos, touch.Y2Pos)
+				if checkResult > -1
+					touch.inputReset = true
+					inputPress.up = true
+				end if
+
+				touch.Y1Pos = 190
+				touch.Y2Pos = 210
+				CheckTouchRect(touch.X1Pos, touch.Y1Pos, touch.X2Pos, touch.Y2Pos)
+				if checkResult > -1
+					touch.inputReset = true
+					inputPress.down = true
+				end if
+
+
+				options.maxSel = 0
+				switch options.curMenu
+				case 0
+					options.maxSel = 8
+					break
+				case 2
+					options.maxSel = 9
+					break
+				case 3
+					options.maxSel  = 9
+					options.maxSel += saveRAM[417]
+					break
+				case 4
+					options.maxSel = 13
+					break
+				case 5
+					options.maxSel = 4
+					break
+				case 6
+					options.maxSel = 8
+					break
+				end switch
+
+				temp0 = 1
+				touch.Y1Pos  = 1
+				touch.Y1Pos *= 21
+				touch.Y1Pos += 53
+				touch.Y1Pos -= scroll.current
+				touch.Y2Pos  = touch.Y1Pos
+				touch.Y2Pos += 18
+
+
+
+		
+				while temp0 <= options.maxSel
+					touch.X1Pos = 60
+					touch.X2Pos = screen.xsize
+					if options.highlight != temp0
+						CheckTouchRect(touch.X1Pos, touch.Y1Pos, touch.X2Pos, touch.Y2Pos)
+						if checkResult > -1
+							touch.inputReset = true
+							options.highlight = temp0
+						end if
+					else
+						if options.curMenu != 6
+							touch.X1Pos  = screen.xsize
+							touch.X1Pos -= 32
+							touch.X2Pos  = touch.X1Pos
+							touch.X2Pos += 32
+							CheckTouchRect(touch.X1Pos, touch.Y1Pos, touch.X2Pos, touch.Y2Pos)
+							if checkResult > -1
+								touch.inputReset = true
+								inputPress.right = true
+							end if
+							touch.X1Pos -= 80
+							touch.X2Pos  = touch.X1Pos
+							touch.X2Pos += 32
+							CheckTouchRect(touch.X1Pos, touch.Y1Pos, touch.X2Pos, touch.Y2Pos)
+							if checkResult > -1
+								touch.inputReset = true
+								inputPress.left = true
+							end if
+						else
+							touch.X1Pos  = screen.xsize
+							touch.X1Pos -= 128
+							touch.X2Pos  = touch.X1Pos
+							touch.X2Pos += 128
+							CheckTouchRect(touch.X1Pos, touch.Y1Pos, touch.X2Pos, touch.Y2Pos)
+							if checkResult > -1
+								delete.check = true
+								inputDown.buttonA = true
+								delete.ticker++
+							end if
+						end if
+					end if
+
+					touch.Y1Pos += 21
+					touch.Y2Pos += 21
+					temp0++
+				loop
+				
+				touch.Y1Pos  = 53
+				touch.Y1Pos -= 6
+				touch.Y2Pos  = touch.Y1Pos
+				touch.Y2Pos += 21
+				if options.highlight == 0
+					touch.X1Pos  = 80
+					touch.X2Pos  = touch.X1Pos
+					touch.X2Pos += 64
+					CheckTouchRect(touch.X1Pos, touch.Y1Pos, touch.X2Pos, touch.Y2Pos)
+					if checkResult > -1
+						touch.inputReset = true
+						inputPress.left = true
+					end if
+					touch.X1Pos += screen.xsize
+					touch.X1Pos -= 170
+					touch.X2Pos  = touch.X1Pos
+					touch.X2Pos += 64
+					CheckTouchRect(touch.X1Pos, touch.Y1Pos, touch.X2Pos, touch.Y2Pos)
+					if checkResult > -1
+						touch.inputReset = true
+						inputPress.right = true
+					end if
+					touch.Y1Pos += 16
+				else
+					touch.X1Pos  = 60
+					touch.X2Pos  = touch.X1Pos
+					touch.X2Pos += screen.xsize
+					CheckTouchRect(touch.X1Pos, 0, touch.X2Pos, touch.Y2Pos)
+					if checkResult > -1
+						touch.inputReset = true
+						options.highlight = 0
+					end if
+				end if
+			end if
+
+			if object[30].type == TypeName[Game Modes Menu]
+				touch.x1Pos = 50
+				touch.x2Pos = screen.xsize
+				CheckTouchRect(Touch.X1Pos, 0, screen.xsize, 110)
+				if CheckResult > -1
+					touch.inputReset = true
+
+					if modes.highlight != 0
+						modes.highlight = 0
+						PlaySfx(SfxName[Score Add], 0)
+					else
+						inputPress[0].start = true
+					end if
+				end if
+				CheckTouchRect(Touch.X1Pos, 110, screen.xsize, 170)
+				if CheckResult > -1
+					touch.inputReset = true
+
+					if modes.highlight != 1
+						modes.highlight = 1
+						PlaySfx(SfxName[Score Add], 0)
+					else
+						inputPress[0].start = true
+					end if
+				end if
+				CheckTouchRect(Touch.X1Pos, 170, screen.xsize, 330)
+				if CheckResult > -1
+					touch.inputReset = true
+
+					if modes.highlight != 2
+						modes.highlight = 2
+						PlaySfx(SfxName[Score Add], 0)
+					else
+						inputPress[0].start = true
+					end if
+				end if
+			end if
+
+			if object[30].type == TypeName[Extras Menu]
+				if menu.curSub == 0
+					if menu.charSelBool == false
+						CheckTouchRect(80, 50, 200, 80)
+						if checkResult > -1
+							CheckEqual(row.highlight, 0)
+							temp0  = checkResult
+							CheckEqual(column.highlight, 0)
+							temp0 &= checkResult
+
+							if temp0 == false
+								touch.inputReset = true
+								row.highlight = 0
+								column.highlight = 0
+								PlaySfx(SfxName[Score Add], 0)
+							else
+								touch.inputReset = true
+								inputPress[0].start = true
+							end if
+						end if
+
+						touch.X1Pos  = screen.xsize
+						touch.X1Pos -= 150
+						touch.X2Pos  = touch.X1Pos
+						touch.X2Pos += 120
+						CheckTouchRect(touch.X1Pos, 50, touch.X2Pos, 80)
+						if checkResult > -1
+							CheckEqual(row.highlight, 0)
+							temp0  = checkResult
+							CheckEqual(column.highlight, 1)
+							temp0 &= checkResult
+
+							if temp0 == false
+								touch.inputReset = true
+								row.highlight = 0
+								column.highlight = 1
+								PlaySfx(SfxName[Score Add], 0)
+							else
+								touch.inputReset = true
+								inputPress[0].start = true
+							end if
+						end if
+						
+						CheckTouchRect(80, 100, 200, 130)
+						if checkResult > -1
+							CheckEqual(row.highlight, 1)
+							temp0  = checkResult
+							CheckEqual(column.highlight, 0)
+							temp0 &= checkResult
+
+							if temp0 == false
+								touch.inputReset = true
+								row.highlight = 1
+								column.highlight = 0
+								PlaySfx(SfxName[Score Add], 0)
+							else
+								touch.inputReset = true
+								inputPress[0].start = true
+							end if
+						end if
+						Touch.X1Pos  = Screen.xsize
+						Touch.X1Pos -= 240
+						CheckTouchRect(Touch.X1Pos, 200, screen.xsize, 240)
+						if checkResult > -1
+							PlaySfx(SfxName[Score Add], 0)
+							row.highlight = 2
+							column.highlight = 0
+							touch.inputReset = true
+							inputPress[0].start = true
+						end if
+					else
+						Touch.X1Pos  = 194
+						Touch.X2Pos  = Touch.X1Pos
+						Touch.X2Pos += 36
+						temp0 = 0
+						while temp0 < 4
+							CheckTouchRect(Touch.X1Pos, 100, Touch.X2Pos, 130)
+							if checkResult > -1
+								if char.highlight != temp0
+									touch.inputReset = true
+									char.highlight = temp0
+								else
+									touch.inputReset = true
+									inputPress[0].start = true
+								end if
+							end if
+							Touch.X1Pos += 40
+							Touch.X2Pos  = Touch.X1Pos
+							Touch.X2Pos += 36
+							temp0++
+						loop
+
+					end if
+				else
+					ArrayPos0 = 0
+					temp0 = 0
+					temp1 = 0
+					Touch.X1Pos = screen.xcenter
+					Touch.X1Pos -= 108
+					Touch.Y1Pos = 57
+					if row.highlight == 3
+						ArrayPos0 = 5
+						temp0 = 1
+					end if
+
+					while ArrayPos0 < 19
+						Touch.X2Pos  = Touch.X1Pos
+						Touch.X2Pos += 50
+						Touch.Y2Pos  = Touch.Y1Pos
+						Touch.Y2Pos += 35
+						CheckTouchRect(Touch.X1Pos, Touch.Y1Pos, Touch.X2Pos, Touch.Y2Pos)
+						if checkResult > -1
+							touch.inputReset = true
+							column.highlight = temp1
+							row.highlight    = temp0
+							PlaySfx(SfxName[Score Add], 0)
+						endif
+						temp1++
+						temp1 %= 5
+
+						switch ArrayPos0
+						case 4
+						case 9
+						case 14
+							Touch.X1Pos = screen.xcenter
+							Touch.X1Pos -= 108
+							Touch.Y1Pos += 40
+							temp0++
+							break
+						default
+							Touch.X1Pos += 55
+							end switch
+						ArrayPos0++
+					loop
+					CheckTouchRect(90, 0, screen.xcenter, 40)
+					if checkResult > -1
+						row.highlight = -1
+						column.highlight = 0
+						touch.inputReset = true
+						inputPress[0].start = true
+						PlaySfx(SfxName[Score Add], 0)
+					end if
+				end if
+			end if
+		end if
+
+		CheckTouchRect(0, 0, 40, 40)
+		if checkResult > -1
+			touch.delay = 0
+			touch.inputReset = true
+			inputPress.buttonB = 1
+		end if
+	end if
+end function
+
+function main.exit
+	fade.effect += 16
+	music.volume -= 2
+	SetScreenFade(0, 0, 0, fade.effect)
+	if fade.effect >= 384
+		StopMusic()
+		stage.playerListPos = 0
+		stage.activeList = PRESENTATION_STAGE
+		stage.listPos = 0
+		LoadStage()
+	end if
+end function
+
+function main.close
+	fade.effect += 16
+	music.volume -= 4
+	SetScreenFade(0, 0, 0, fade.effect)
+	if fade.effect >= 384
+		CallNativeFunction(ExitGame)
+	end if
+end function
+
+function main.load
+	fade.effect += 16
+	music.volume -= 4
+	SetScreenFade(0, 0, 0, fade.effect)
+	if fade.effect >= 384
+		options.gameMode = 0
+		stage.playerListPos = 0
+
+		options.attractMode = 0
+		player.lives = 3
+		player.continues = 0
+		player.score = 0
+		player.scoreBonus = 0xC350
+		lampPostID = 0
+		specialStage.listPos = 0
+		specialStage.emeralds = 0
+		specialStage.nextZone = 0
+		stage.activeList = PRESENTATION_STAGE
+		stage.listPos = 7
+	
+		LoadStage()
+	end if
+end function
+
+function menu.holdmovement
+		if inputDown.up == 1
+			hold.time++
+			if hold.time >= 20
+				inputPress.up = 1
+				hold.time = 12
+			end if
+		else	
+			if inputDown.down == 1
+				hold.time++
+				if hold.time >= 20
+					inputPress.down = 1
+					hold.time = 12
+				end if
+			else
+				if inputDown.right == 1
+					hold.time++
+					if hold.time >= 20
+						inputPress.right = 1
+						hold.time = 12
+					end if		
+				else
+					if inputDown.left == 1
+						hold.time++
+						if hold.time >= 20
+							inputPress.left = 1
+							hold.time = 12
+						end if		
+					else
+						if inputDown.buttonL == 1
+							hold.time++
+							if hold.time >= 20
+								inputPress.buttonL = 1
+								hold.time = 12
+							end if		
+						else
+							if inputDown.buttonR == 1
+								hold.time++
+								if hold.time >= 20
+									inputPress.buttonR = 1
+									hold.time = 12
+								end if		
+							else
+								hold.time = 0
+							end if
+						end if
+					end if
+				end if
+			end if
+		end if
+end function 
+
+function main.control
+	CallFunction(menu.holdmovement)
+	if saved.mobile == 1
+		if touch.inputReset == false
+			CallFunction(touch.controls)
+		end if
+	end if
+
+	if menu.state < 10
+		if inputPress.up == 1		
+			menu.state--
+			CallFunction(main.sound)
+			while menu.state < 0
+				menu.state += 6
+			loop
+		else
+			if inputPress.down == 1
+				menu.state++
+				CallFunction(main.sound)
+				menu.state %= 6
+			else
+				temp0 = inputPress.buttonA
+				temp0 |= inputPress.start
+				if temp0 == 1
+					if object[30].type == TypeName[Blank Object]					
+						CallFunction(main.soundconf)
+						switch menu.state
+							case 0 //Load Save Select
+								object.state = main.load
+								fade.control = 1
+								break
+							case 1 //Game Modes
+								ResetObjectEntity(30, TypeName[Game Modes Menu], 0, 0, 0)
+								menu.state = 10
+								break
+							case 2 //Options
+								ResetObjectEntity(30, TypeName[Options Menu], 0, 0, 0)
+								menu.state = 11
+								break
+							case 3 //Extras
+								ResetObjectEntity(30, TypeName[Extras Menu], 0, 0, 0)
+								menu.state = 10
+								break
+							case 4 //Mods
+								ResetObjectEntity(30, TypeName[Mod Menu], 0, 0, 0)
+								menu.state = 10
+								break
+							case 5 //Exit
+								fade.control = 1
+								object.state = main.close
+								break
+							case 10 //Busy
+								break							
+						end switch
+					end if
+				else
+					if inputPress.buttonB == 1
+						fade.control = 1
+						object.state = main.exit
+					end if
+				end if
+			end if
+		end if
+	end if
+end function
+
+event ObjectMain
+	if saved.mobile == 1
+		CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+		if checkResult == -1
+			touch.inputReset = false
+		end if
+	end if
+
+	if fade.control == 0
+		fade.effect -= 16
+		if fade.effect <= 0
+			fade.effect = 0
+			fade.control = 1
+			PlayMusic(1)
+		end if
+		SetScreenFade(0, 0, 0, fade.effect)
+	end if
+	
+	if reset.done == 0
+		credits.screen = 0
+		stage.debugMode = 0
+		options.stageSelectFlag = 0
+		options.gameMode = 0
+		options.attractMode = 0
+		player.lives = 3
+		player.continues = 0
+		player.score = 0
+		player.scoreBonus = 0xC350
+		stage.player2Enabled = 0
+		lampPostID = 0
+		specialStage.listPos = 0
+		specialStage.emeralds = 0
+		specialStage.nextZone = 0
+		
+		
+		//Boss Rush Time
+		if saveRAM[650] < 100
+			saveRAm[650] = 59999
+			WriteSaveRam()
+		end if
+		if saveRAM[651] < 100
+			saveRAM[651] = 59999
+			WriteSaveRam()
+		end if
+		if saveRAM[652] < 100
+			saveRAM[652] = 59999
+			WriteSaveRam()
+		end if
+		object.state = main.control
+		reset.done = 1
+	end if
+	
+	frame.count++
+	if frame.count >= 10800
+		3min.count++
+		frame.count = 0
+	end if
+	CallFunction(object.state)
+
+	CallFunction(main.offsetting)
+end event
+
+
+
+//Drawing
+
+
+function main.entry
+	switch main.color
+		case 0 //GREY
+			CopyPalette(0, 218, 0, 240, 5)
+			break
+		case 1 //BLUE
+			CopyPalette(0, 213, 0, 240, 5)
+			break
+		case 2 //GOLD
+			CopyPalette(0, 208, 0, 240, 5)
+			break
+	end switch
+	
+	GetTextInfo(temp2, 1, TEXTINFO_TEXTSIZE, main.drawline, 0)
+	if main.color == HEADER_TEXT_BLUE
+		temp3 = temp2
+		temp4 = main.xpos
+		temp4 -= 5
+		while temp3 > 0
+			temp3--
+			GetTextInfo(temp7, 1, TEXTINFO_TEXTDATA, main.drawline, temp3)
+			if temp7 > 64
+				temp7 -= 65
+				GetTableValue(temp5, temp7, headerspace)
+				if temp6 == 24 //Y following an A
+					if temp7 == 0
+						temp4 += 4
+					end if
+				end if
+				if temp6 == 21 //V following an A
+					if temp7 == 0
+						temp4 += 4
+					end if
+				end if
+				temp6 = temp7
+				temp4 -= temp5
+			else
+				temp4 -= 4
+			end if
+		loop
+		temp5 = screen.xsize
+		temp5 -= current.xoffset
+		DrawSpriteScreenXY(214, temp4, main.ypos)
+		while temp4 < temp5
+			DrawSpriteScreenXY(215, temp4, main.ypos)
+			temp4 += 29
+		loop
+		DrawSpriteScreenXY(216, temp4, main.ypos)
+		temp4 = main.xpos
+		temp4 -= 5
+	else
+		temp4 = main.xpos
+	end if
+	
+	temp3 = temp2
+	while temp3 > 0
+		temp3--
+		GetTextInfo(temp7, 1, TEXTINFO_TEXTDATA, main.drawline, temp3)
+		if temp7 > 64
+			temp7 -= 65
+			GetTableValue(temp5, temp7, headerspace)
+			if temp6 == 24 //Y following an A
+				if temp7 == 0
+					temp4 += 4
+				end if
+			end if
+			if temp6 == 21 //V following an A
+				if temp7 == 0
+					temp4 += 4
+				end if
+			end if
+			temp6 = temp7
+			temp7 += 176
+			temp4 -= temp5
+			DrawSpriteScreenXY(temp7, temp4, main.ypos)
+		else
+			temp4 -= 4
+		end if
+	loop
+end function
+
+event ObjectDraw
+	//Monitor
+	if screen.xsize < 384
+		temp0 = -5
+	else
+		temp0 = 0
+	end if
+	temp0 -= current.xoffset
+	DrawSpriteScreenXY(202, temp0, 0)
+	temp0 += 60
+	if screen.xsize < 384
+		temp1 = 200
+	else
+		temp1 = 260
+	end if
+	temp1 -= current.xoffset
+	while temp0 < temp1
+		DrawSpriteScreenXY(203, temp0, 0)
+		temp0 +=20
+		if temp0 > temp1
+			temp0 = temp1
+		end if
+	loop
+	DrawSpriteScreenXY(204, temp0, 0)
+	//temp0 += 60
+	//DrawRect(temp0, 0, 76, 240, 0, 0, 0, 255)
+	
+	//Banner
+	temp0 = screen.xsize
+	if screen.xsize < 400
+		if screen.xsize == 384
+			temp0 -= 170
+		else
+			temp0 -= 160
+		end if
+	else
+		temp0 -= 200
+	end if
+	temp0 -= current.xoffset
+	temp1 = 0
+
+	while temp1 < screen.ysize
+		DrawSpriteScreenXY(205, temp0, temp1)
+		temp0 += 20
+		DrawSpriteScreenXY(206, temp0, temp1)
+		temp0 += 20
+		DrawSpriteScreenXY(206, temp0, temp1)
+		temp0 += 20
+		DrawSpriteScreenXY(207, temp0, temp1)
+		temp0 += 20
+		DrawSpriteScreenXY(208, temp0, temp1)
+		temp0 += 20
+		DrawSpriteScreenXY(208, temp0, temp1)
+		temp0 += 20
+		DrawSpriteScreenXY(208, temp0, temp1)
+		temp0 += 20
+		DrawSpriteScreenXY(209, temp0, temp1)
+		temp0 += 20
+		DrawSpriteScreenXY(210, temp0, temp1)
+		temp0 += 20
+		DrawSpriteScreenXY(206, temp0, temp1)
+		temp0 += 20
+		DrawSpriteScreenXY(206, temp0, temp1)
+		temp0 += 20
+		DrawSpriteScreenXY(211, temp0, temp1)
+		temp0 -=213
+		temp1 += 20
+	loop
+	
+	//Star
+	temp0 = screen.xsize
+	if screen.xsize < 400
+		if screen.xsize == 384
+			temp0 += 2
+		else
+			temp0 += 21
+		end if
+		temp0 += 1
+	else
+		temp0 -= 12
+	end if
+	temp0 -= current.xoffset
+	DrawSpriteScreenXY(212, temp0, 200)
+	
+	temp0 = screen.xsize
+	if screen.xsize < 400
+		temp0 -= 5
+	else
+		temp0 -= 20
+	end if
+	temp0 -= current.xoffset
+	DrawSpriteScreenXY(213, temp0, 5)
+	
+	//Version Number
+	temp7 = color2
+	temp7 <<= 8
+	temp7 += color2
+	temp7 <<= 8
+	temp7 += color2
+	SetPaletteEntry(0, 6, temp7)
+	
+	GetTextInfo(temp2, 1, TEXTINFO_TEXTSIZE, 1, 0)
+	temp3 = 0
+	temp4 = 44
+	temp4 -= current.xoffset
+	while temp3 < temp2
+		GetTextInfo(temp7, 1, TEXTINFO_TEXTDATA, 1, temp3)
+		DrawSpriteScreenXY(temp7, temp4, 198)
+		temp4 += 8
+		temp3++
+	loop	
+	
+	temp7 = color7
+	temp7 <<= 8
+	temp7 += color7
+	temp7 <<= 8
+	temp7 += color7
+	SetPaletteEntry(0, 6, temp7)
+
+	//Entries
+	main.ypos = 41
+	main.xpos = screen.xsize
+	main.xpos -= current.xoffset
+	main.xpos -= 10
+	temp0 = 0
+	while temp0 < 6
+		if temp0 == menu.state
+			main.color = HEADER_TEXT_BLUE
+		else
+			main.color = HEADER_TEXT_GOLD
+		end if
+		GetTableValue(main.drawline, temp0, MainNames)
+		CallFunction(main.entry)
+		main.ypos += 31
+		temp0++
+	loop
+	
+	if spawn.timer == 1
+		temp0 = spawn.x
+		temp0 -= 60
+		DrawSpriteScreenXY(217, temp0, screen.ycenter)
+		spawn.x += 8
+		temp0 -= 60
+		if temp0 > screen.xsize
+			spawn.timer = 0
+		end if
+	else
+		spawn.x = 0
+	end if
+	
+	//DrawNumbers(48, 100, 20, sidebar.w, 8, 8, 1)
+
+	if saved.mobile == 1
+		object.inkEffect = INK_ALPHA
+		CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+		if checkResult > -1
+			touch.fade = 0
+		else
+			touch.fade++
+		end if
+		if touch.fade >= 400
+			if object.alpha > 0
+	   			 object.alpha -= 15
+			end if
+		else
+			switch saved.transmobile
+				case 0
+					object.alpha = 191
+					break
+				case 1
+					object.alpha = 255
+					break
+				case 2
+					object.alpha = 0
+					break
+				case 3
+					object.alpha = 63
+					break
+				case 4
+					object.alpha = 127
+					break
+				default					
+					object.alpha = 191
+					break
+			end switch
+		end if
+
+		// temp0 = screen.xsize
+		// temp0 -= 44
+		// DrawSpriteScreenFX(218,FX_INK,26,149)
+		// temp0 -= screen.xsize
+		// temp0 += 55
+		   DrawSpriteScreenFX(225,0,temp0,8)	
+		// temp0 += screen.xsize
+		// temp0 -= 125
+		// 	if inputPress.Left==1
+		// 		DrawSpriteScreenFX(221,FX_INK,26,151)
+		// 	endif
+		// 	if inputPress.Down==1
+		// 		DrawSpriteScreenFX(220,FX_INK,26,189)
+		// 	end if
+		// 	if inputPress.Right==1
+		// 		DrawSpriteScreenFX(222,FX_INK,64,151)
+		// 	endif
+		// 	if inputPress.Up==1
+		// 		DrawSpriteScreenFX(219,FX_INK,26,151)
+		// 	endif
+		// 	temp0 += 32
+
+		// 	if inputDown.buttonA==1
+		// 		DrawSpriteScreenFX(224,FX_INK,temp0,163)
+		// 	else
+		// 		DrawSpriteScreenFX(223,FX_INK,temp0,163)
+		// 	endif
+	end if
+end event
+
+function main.sound	
+	temp0 = inputPress.left
+	temp0 |= inputPress.right
+	temp0 |= inputPress.up
+	temp0 |= inputPress.down
+	temp0 |= inputPress.buttonL
+	temp0 |= inputPress.buttonR
+	if temp0 == 1
+		PlaySfx(SfxName[Score Add], 0)
+	end if
+end function
+
+function main.soundconf
+	temp0 = inputPress.buttonA
+	temp0 |= inputPress.start
+	if temp0 == 1
+		PlaySfx(SfxName[Lamp Post], 0)
+	end if
+end function
+
+event ObjectStartup
+	CallFunction(Lang_Init)
+	LoadPalette("MainMenu.act", 0, 0, 0, 256)
+	CallFunction(emerald_color)
+	LoadSpriteSheet("Menus/Options.gif")
+	
+	//Load font sprites
+	temp0 = 0
+	temp1 = 0
+	while temp0 < 88
+		while temp1 < 128
+			SpriteFrame(0, 0, 8, 8, temp1, temp0)
+			temp1 += 8
+		loop
+		temp1 = 0
+		temp0 += 8
+	loop
+	
+	//Start second font at 176
+	SpriteFrame(0, 0, 17, 18, 138, 110) //176 A Header Alphabet
+	SpriteFrame(0, 0, 17, 18, 156, 110)
+	SpriteFrame(0, 0, 17, 18, 174, 110)
+	SpriteFrame(0, 0, 17, 18, 192, 110)
+	SpriteFrame(0, 0, 16, 18, 210, 110) //180 E
+	SpriteFrame(0, 0, 16, 18, 227, 110)	
+	SpriteFrame(0, 0, 18, 18, 244, 110)
+	SpriteFrame(0, 0, 17, 18, 263, 110)
+	SpriteFrame(0, 0, 8, 18, 281, 110) // I
+	SpriteFrame(0, 0, 16, 18, 290, 110)
+	SpriteFrame(0, 0, 18, 18, 307, 110)
+	SpriteFrame(0, 0, 17, 18, 326, 110)
+	SpriteFrame(0, 0, 18, 18, 344, 110) // M
+	SpriteFrame(0, 0, 17, 18, 363, 110)
+	SpriteFrame(0, 0, 18, 18, 138, 129) //190
+	SpriteFrame(0, 0, 17, 18, 157, 129)
+	SpriteFrame(0, 0, 18, 18, 175, 129)
+	SpriteFrame(0, 0, 18, 18, 194, 129) // R
+	SpriteFrame(0, 0, 16, 18, 213, 129)
+	SpriteFrame(0, 0, 16, 18, 230, 129)
+	SpriteFrame(0, 0, 17, 18, 247, 129)
+	SpriteFrame(0, 0, 17, 18, 265, 129)
+	SpriteFrame(0, 0, 24, 18, 283, 129)
+	SpriteFrame(0, 0, 17, 18, 308, 129)
+	SpriteFrame(0, 0, 17, 18, 326, 129)
+	SpriteFrame(0, 0, 17, 18, 344, 129) //201 Z	
+	
+	SpriteFrame(0, 0, 60, 242, 613, 1) //202 Monitor Left
+	SpriteFrame(0, 0, 20, 242, 674, 1) //203 Monitor Center
+	SpriteFrame(0, 0, 67, 242, 885, 1) //204 Monitor Right
+	
+	SpriteFrame(0, 0, 20, 21, 430, 177) //205 Banner1
+	SpriteFrame(0, 0, 20, 21, 430, 199) //206 Banner2
+	SpriteFrame(0, 0, 20, 21, 421, 228) //207 Banner3
+	SpriteFrame(0, 0, 20, 21, 442, 228) //208 Banner4
+	SpriteFrame(0, 0, 20, 21, 421, 250) //209 Banner5
+	SpriteFrame(0, 0, 20, 21, 442, 250) //210 Banner6
+	SpriteFrame(0, 0, 20, 21, 421, 272) //211 Banner7
+	SpriteFrame(-57, -57, 115, 113, 463, 148) //212 Banner Star
+	SpriteFrame(-136, 0, 136, 14, 1, 110) //213 Sonic Forever
+	SpriteFrame(-29, -5, 29, 29, 381, 306) //214 Entry Highlight Left
+	SpriteFrame(0, -5, 29, 29, 411, 306) //215 Entry Highlight
+	SpriteFrame(0, -5, 29, 29, 441, 306) //216 Entry Highlight Right
+	SpriteFrame(0, -5, 61, 11, 381, 294) //217
+
+	SpriteFrame(0,0,64,66,756,1) //218 DPAD
+	SpriteFrame(26,0,12,26,872,65) //219 DPAD up press
+	SpriteFrame(26,0,12,26,872,103) //220 DPAD down press
+	SpriteFrame(0,25,26,13,845,102) //221 DPAD left press
+	SpriteFrame(0,25,26,13,845,116) //222 DPAD right press
+	SpriteFrame(0,0,48,48,821,1) //223 A button
+	SpriteFrame(0,0,48,48,821,50) //224 A button down
+	SpriteFrame(0,0,16,16,828,112) // 225 Back Button
+	
+	SetMusicTrack("DreamsIntoReality.ogg", 1, 17661)
+	
+	//we only need one main menu object
+	foreach (TypeName[Main Menu], arrayPos0, ALL_ENTITIES)
+		object[arrayPos0].type = TypeName[Blank Object]
+		object[9].type = TypeName[Main Menu]
+		object[9].priority = PRIORITY_ACTIVE
+		object[9].drawOrder = 6	
+		fade.effect = 384
+		CallFunction(sidebar.adj)
+		touch[9].confirm = 0
+	next
+	recGoggles = 0
+		
+	ResetObjectEntity(10, TypeName[Menu Monitor Icon], 0, 0, 0)
+	object[10].drawOrder = 4
+end event
+
+function sidebar.adj
+	if screen.xsize < 400
+		sidebar.w = 5
+	else
+		sidebar.w = 50
+	end if
+end function
+
+function Lang_Init
+	switch saved.language
+		case 0 //English
+			LoadTextFile(1, "Data/Game/MenuTextEN.txt")
+			break
+		case 1 //Portuguese
+			LoadTextFile(1, "Data/Game/MenuTextPR.txt")
+			break
+		case 2 //Spanish
+			LoadTextFile(1, "Data/Game/MenuTextSP.txt")
+			break
+		case 3 //French
+			LoadTextFile(1, "Data/Game/MenuTextFR.txt")
+			break
+		case 4 //German
+			LoadTextFile(1, "Data/Game/MenuTextDE.txt")
+			break
+	end switch
+	
+	EditMenuEntry(1, "1.5.0.023013100", 1, 0)
+end function
+
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+end event

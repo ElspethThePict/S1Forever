@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="frame0x1">
+  <Images>
+    <ImageFromSheet id="frame0x1" sheet="LZ/Objects.gif" sourcex="191" sourcey="140" width="13" height="32">
+      <Offset X="-5" Y="-16" />
+    </ImageFromSheet>
+    <ImageFromSheet id="frame0x2" sheet="LZ/Objects.gif" sourcex="61" sourcey="38" width="22" height="12">
+      <Offset X="-10" Y="-4" />
+    </ImageFromSheet>
+    <ImageFromSheet id="frame0x3" sheet="LZ/Objects.gif" sourcex="117" sourcey="90" width="14" height="12">
+      <Offset X="-6" Y="-4" />
+    </ImageFromSheet>
+    <ImageFromSheet id="frame0x4" sheet="LZ/Objects.gif" sourcex="132" sourcey="90" width="8" height="12">
+      <Offset X="0" Y="-4" />
+    </ImageFromSheet>
+    <ImageFromSheet id="frame0x5" sheet="LZ/Objects.gif" sourcex="117" sourcey="103" width="14" height="12">
+      <Offset X="-6" Y="-4" />
+    </ImageFromSheet>
+    <ImageFromSheet id="frame0x6" sheet="LZ/Objects.gif" sourcex="132" sourcey="103" width="8" height="12">
+      <Offset X="0" Y="-4" />
+    </ImageFromSheet>
+    <ImageFromSheet id="frame0x7" sheet="LZ/Objects.gif" sourcex="191" sourcey="76" width="8" height="12">
+      <Offset X="0" Y="-4" />
+    </ImageFromSheet>
+    <ImageFromSheet id="frame0x8" sheet="LZ/Objects.gif" sourcex="240" sourcey="223" width="16" height="32">
+      <Offset X="-8" Y="-16" />
+    </ImageFromSheet>
+    <ImageFromSheet id="frame0x9" sheet="LZ/Objects.gif" sourcex="158" sourcey="173" width="46" height="16">
+      <Offset X="-24" Y="-8" />
+    </ImageFromSheet>
+    <ImageFromSheet id="frame0xa" sheet="LZ/Objects.gif" sourcex="118" sourcey="161" width="39" height="32">
+      <Offset X="-20" Y="-16" />
+    </ImageFromSheet>
+    <ImageFromSheet id="frame0xb" sheet="LZ/Objects.gif" sourcex="117" sourcey="194" width="41" height="28">
+      <Offset X="-22" Y="-12" />
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Frame ID" description="The sprite this Waterfall should use." type="frameids" startbit="0" length="8" />
+  </Properties>
+  <Enums>
+    <Enum name="frameids">
+      <EnumMember name="Frame 1" />
+      <EnumMember name="Frame 2" />
+      <EnumMember name="Frame 3" />
+      <EnumMember name="Frame 4" />
+      <EnumMember name="Frame 5" />
+      <EnumMember name="Frame 6" />
+      <EnumMember name="Frame 7" />
+      <EnumMember name="Frame 8" />
+      <EnumMember name="Frame 9" />
+      <EnumMember name="Frame 10" />
+      <EnumMember name="Splash" />
+    </Enum>
+  </Enums>
+  <Subtypes>
+    <Subtype id="00" name="Frame 1"  image="frame0x1" />
+    <Subtype id="01" name="Frame 2"  image="frame0x2" />
+    <Subtype id="02" name="Frame 3"  image="frame0x3" />
+    <Subtype id="03" name="Frame 4"  image="frame0x4" />
+    <Subtype id="04" name="Frame 5"  image="frame0x5" />
+    <Subtype id="05" name="Frame 6"  image="frame0x6" />
+    <Subtype id="06" name="Frame 7"  image="frame0x7" />
+    <Subtype id="07" name="Frame 8"  image="frame0x8" />
+    <Subtype id="08" name="Frame 9"  image="frame0x9" />
+    <Subtype id="09" name="Frame 10" image="frame0xa" />
+    <Subtype id="0a" name="Splash"   image="frame0xb" />
+  </Subtypes>
+</ObjDef>

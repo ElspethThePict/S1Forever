@@ -1,0 +1,112 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Gargoyle Shot Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias 54 : TYPE_GARGOYLESHOT
+
+
+// Static Values
+
+// Tables
+
+event ObjectMain
+	object.xpos += object.xvel
+	if object.xvel < 0
+		ObjectTileCollision(CSIDE_RWALL, -8, 4, 0)
+	else
+		ObjectTileCollision(CSIDE_LWALL, 8, 4, 0)
+	end if
+	if checkResult == 1
+		object.type = TypeName[Blank Object]
+		CreateTempObject(TypeName[Explosion], 0, object.xpos, object.ypos)
+		PlaySfx(SfxName[Explosion], 0)
+	else
+		if object.value0 < 16
+			object.value0++
+		else
+			object.drawOrder = 3
+		end if
+		object.frame = oscillation
+		object.frame >>= 1
+		object.frame %= 6
+		foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+			BoxCollisionTest(C_TOUCH, object.entityPos, -4, -4, 4, 4, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
+			if checkResult == 1
+				object.type = TypeName[Blank Object]
+				CallFunction(PlayerObject_FireHit)
+				CreateTempObject(TypeName[Explosion], 0, object.xpos, object.ypos)
+				PlaySfx(SfxName[Explosion], 0)			
+			end if
+		next
+		object.value20++
+		if object.value20 > object.value21
+			object.value20 = 0
+			Rand(object.value21, 3)
+			object.value21 += 2
+			temp0 = stage.waterLevel
+			temp0 <<= 16
+			if object.ypos > temp0
+				Rand(temp0, 4)
+				temp0++
+				CreateTempObject(TypeName[Air Bubble], temp0, object.xpos, object.ypos)
+				object[tempObjectPos].drawOrder = 4
+				object[tempObjectPos].yvel = -0x8800
+				object[tempObjectPos].value2 = object.entityPos
+				Rand(temp1, 9)
+				temp1 -= 4
+				temp1 <<= 16
+				object[tempObjectPos].ypos += temp1
+				if object.direction == FLIP_NONE
+					object[tempObjectPos].xpos += 0x60000
+					object[tempObjectPos].xvel = 0x60000
+				else
+					object[tempObjectPos].xpos -= 0x60000
+					object[tempObjectPos].xvel = -0x60000
+					object[tempObjectPos].angle = 256
+				end if
+				object[tempObjectPos].value1 = object[tempObjectPos].xpos
+			end if
+		end if
+	end if
+end event
+
+
+event ObjectDraw
+	DrawSpriteFX(object.frame, FX_FLIP, object.xpos, object.ypos)
+	temp0 = stage.waterLevel
+	temp0 <<= 16
+	if object.ypos <= temp0
+		temp1 = object.frame
+		temp1 &= 1
+		temp1 += 6
+		DrawSpriteFX(temp1, FX_FLIP, object.xpos, object.ypos)
+	end if
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("MBZ/Objects.gif")
+	SpriteFrame(-4, -5, 11, 9, 211, 145) //0
+	SpriteFrame(-4, -4, 11, 8, 211, 155) //1
+	SpriteFrame(-4, -4, 11, 8, 211, 164) //2
+	SpriteFrame(-4, -4, 11, 8, 211, 173) //3
+	SpriteFrame(-4, -6, 11, 11, 211, 182) //4
+	SpriteFrame(-4, -7, 11, 14, 211, 194) //5
+	
+	//Rocket Fire
+	SpriteFrame(7, -4, 14, 8, 223, 145) //6
+	SpriteFrame(7, -4, 14, 8, 223, 154) //7
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+end event

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="button">
+  <Images>
+    <ImageFromSheet id="button" sheet="SBZ/Objects.gif" sourcex="92" sourcey="1" width="32" height="16">
+      <Offset X="-16" Y="-8"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Mode" description="What type this button is. Note that Cutscene buttons should have an Eggman in object[+1]." type="modes" startbit="0" length="8" />
+  </Properties>
+  <Enums>
+    <Enum name="modes">
+      <EnumMember name="Normal" />
+      <EnumMember name="Cutscene" />
+    </Enum>
+  </Enums>
+  <Subtypes>
+    <Subtype id="00" name="Normal Button" image="button" />
+    <Subtype id="01" name="Cutscene Button" image="button" />
+  </Subtypes>
+</ObjDef>

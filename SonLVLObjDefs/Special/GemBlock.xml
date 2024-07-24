@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="blue">
+  <Images>
+    <ImageFromSheet id="blue" sheet="Special/Objects.gif" sourcex="301" sourcey="76" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="green" sheet="Special/Objects.gif" sourcex="326" sourcey="76" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="yellow" sheet="Special/Objects.gif" sourcex="351" sourcey="76" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="pink" sheet="Special/Objects.gif" sourcex="376" sourcey="76" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Colour" description="The Colour of this Block." type="colours" startbit="0" length="2" />
+  </Properties>
+  <Enums>
+    <Enum name="colours">
+      <EnumMember name="Blue" />
+      <EnumMember name="Green" />
+      <EnumMember name="Yellow" />
+      <EnumMember name="Pink" />
+    </Enum>
+  </Enums>
+  <Subtypes>
+    <Subtype id="00" name="Blue" image="blue" />
+    <Subtype id="01" name="Green" image="green" />
+    <Subtype id="02" name="Yellow" image="yellow" />
+    <Subtype id="03" name="Pink" image="pink" />
+  </Subtypes>
+</ObjDef>

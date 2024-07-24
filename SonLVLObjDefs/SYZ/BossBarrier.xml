@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org">
+  <Images>
+    <ImageFromSheet id="base" sheet="SYZ/Objects.gif" sourcex="110" sourcey="223" width="32" height="32">
+      <Offset X="-16" Y="-16" />
+    </ImageFromSheet>
+    <ImageFromSheet id="barrier" sheet="SYZ/Objects.gif" sourcex="110" sourcey="190" width="32" height="32">
+      <Offset X="-16" Y="-16" />
+    </ImageFromSheet>
+  </Images>
+  <ImageSets>
+    <ImageSet id="bossbarrier">
+      <ImageRef image="barrier" >
+        <Offset Y="-32" />
+      </ImageRef>
+      <ImageRef image="barrier" >
+        <Offset Y="-64" />
+      </ImageRef>
+      <ImageRef image="barrier" >
+        <Offset Y="-96" />
+      </ImageRef>
+      <ImageRef image="barrier" >
+        <Offset Y="-128" />
+      </ImageRef>
+      <ImageRef image="barrier" >
+        <Offset Y="-160" />
+      </ImageRef>
+      <ImageRef image="barrier" >
+        <Offset Y="-192" />
+      </ImageRef>
+      <ImageRef image="barrier" >
+        <Offset Y="-224" />
+      </ImageRef>
+      <ImageRef image="base" />
+    </ImageSet>
+  </ImageSets>
+  <DefaultImage>
+    <ImageSetRef set="bossbarrier" />
+  </DefaultImage>
+</ObjDef>

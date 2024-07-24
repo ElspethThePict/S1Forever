@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="juggling">
+  <Images>
+    <ImageFromSheet id="juggling" sheet="Ending/Credits.gif" sourcex="1" sourcey="1" width="60" height="50">
+      <Offset X="-29" Y="-23" />
+    </ImageFromSheet>
+    <ImageFromSheet id="tantrum" sheet="Ending/Credits.gif" sourcex="1" sourcey="53" width="58" height="55">
+      <Offset X="-29" Y="-19" />
+    </ImageFromSheet>
+    <ImageFromSheet id="emerald1" sheet="Ending/Credits.gif" sourcex="14" sourcey="109" width="12" height="12">
+      <Offset X="-6" Y="-6" />
+    </ImageFromSheet>
+    <ImageFromSheet id="emerald2" sheet="Ending/Credits.gif" sourcex="27" sourcey="109" width="12" height="12">
+      <Offset X="-6" Y="-6" />
+    </ImageFromSheet>
+    <ImageFromSheet id="emerald3" sheet="Ending/Credits.gif" sourcex="40" sourcey="109" width="12" height="12">
+      <Offset X="-6" Y="-6" />
+    </ImageFromSheet>
+    <ImageFromSheet id="emerald4" sheet="Ending/Credits.gif" sourcex="1" sourcey="122" width="12" height="12">
+      <Offset X="-6" Y="-6" />
+    </ImageFromSheet>
+    <ImageFromSheet id="emerald5" sheet="Ending/Credits.gif" sourcex="14" sourcey="122" width="12" height="12">
+      <Offset X="-6" Y="-6" />
+    </ImageFromSheet>
+    <ImageFromSheet id="emerald6" sheet="Ending/Credits.gif" sourcex="27" sourcey="122" width="12" height="12">
+      <Offset X="-6" Y="-6" />
+    </ImageFromSheet>
+    <ImageFromSheet id="emerald7" sheet="Ending/Credits.gif" sourcex="1" sourcey="135" width="12" height="12">
+      <Offset X="-6" Y="-6" />
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Frame" description="Which sprite this object will use." type="frameids" startbit="0" length="8" />
+  </Properties>
+  <Enums>
+    <Enum name="frameids">
+      <EnumMember name="Eggman - Juggling" />
+      <EnumMember name="Eggman - Tantrum" />
+      <EnumMember name="Emerald 1" />
+      <EnumMember name="Emerald 2" />
+      <EnumMember name="Emerald 3" />
+      <EnumMember name="Emerald 4" />
+      <EnumMember name="Emerald 5" />
+      <EnumMember name="Emerald 6" />
+      <EnumMember name="Emerald 7" />
+    </Enum>
+  </Enums>
+  <Subtypes>
+    <Subtype id="00" name="Eggman - Juggling" image="juggling" />
+    <Subtype id="01" name="Eggman - Tantrum" image="tantrum" />
+    <Subtype id="02" name="Emerald 1" image="emerald1" />
+    <Subtype id="03" name="Emerald 2" image="emerald2" />
+    <Subtype id="04" name="Emerald 3" image="emerald3" />
+    <Subtype id="05" name="Emerald 4" image="emerald4" />
+    <Subtype id="06" name="Emerald 5" image="emerald5" />
+    <Subtype id="07" name="Emerald 6" image="emerald6" />
+    <Subtype id="08" name="Emerald 7" image="emerald7" />
+  </Subtypes>
+</ObjDef>

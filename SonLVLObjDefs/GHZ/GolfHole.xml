@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org">
+  <Images>
+    <ImageFromSheet id="pole" sheet="Global/KnuxGreyShield.gif" sourcex="99" sourcey="191" width="29" height="64">
+      <Offset X="-8" Y="-44" />
+    </ImageFromSheet>
+    <ImageFromSheet id="flag" sheet="Global/KnuxGreyShield.gif" sourcex="129" sourcey="195" width="19" height="20">
+      <Offset X="2" Y="-14" />
+    </ImageFromSheet>
+  </Images>
+  <ImageSets>
+    <ImageSet id="golfhole">
+      <ImageRef image="pole" />
+      <ImageRef image="flag">
+        <Offset Y="-27" />
+      </ImageRef>
+    </ImageSet>
+  </ImageSets>
+  <DefaultImage>
+    <ImageSetRef set="golfhole" />
+  </DefaultImage>
+</ObjDef>

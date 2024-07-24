@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="vplatform">
+  <Images>
+    <ImageFromSheet id="vplatform" sheet="SBZ/Objects.gif" sourcex="457" sourcey="231" width="32" height="32">
+      <Offset X="-16" Y="-8"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Interval" description="What interval this platform should appear at." type="intervals" startbit="4" length="4" />
+    <Property name="Interval Offset" description="How offset this platform's appearance should be through its interval. 0% is at the start of the interval, 50% is halfway through, etc." type="offsets" startbit="0" length="4" />
+  </Properties>
+  <Enums>
+    <Enum name="intervals">
+      <EnumMember name="Every 128 Frames" />
+      <EnumMember name="Every 256 Frames" />
+      <EnumMember name="Every 384 Frames" />
+      <EnumMember name="Every 512 Frames" />
+      <EnumMember name="Every 640 Frames" />
+      <EnumMember name="Every 768 Frames" />
+      <EnumMember name="Every 896 Frames" />
+      <EnumMember name="Every 1024 Frames" />
+      <EnumMember name="Every 1152 Frames" />
+      <EnumMember name="Every 1280 Frames" />
+      <EnumMember name="Every 1408 Frames" />
+      <EnumMember name="Every 1536 Frames" />
+      <EnumMember name="Every 1664 Frames" />
+      <EnumMember name="Every 1792 Frames" />
+      <EnumMember name="Every 1920 Frames" />
+      <EnumMember name="Every 2048 Frames" />
+    </Enum>
+    <Enum name="offsets">
+      <EnumMember name="0%" />
+      <EnumMember name="6.25%" />
+      <EnumMember name="12.5%" />
+      <EnumMember name="18.75%" />
+      <EnumMember name="25%" />
+      <EnumMember name="31.25%" />
+      <EnumMember name="37.5%" />
+      <EnumMember name="43.75%" />
+      <EnumMember name="50%" />
+      <EnumMember name="56.25%" />
+      <EnumMember name="62.5%" />
+      <EnumMember name="68.75%" />
+      <EnumMember name="75%" />
+      <EnumMember name="81.25%" />
+      <EnumMember name="87.5%" />
+      <EnumMember name="93.75%" />
+    </Enum>
+  </Enums>
+</ObjDef>

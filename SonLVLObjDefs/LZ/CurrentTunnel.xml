@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="wcon">
+  <Images>
+    <ImageFromSheet id="wcon" sheet="Global/Display.gif" sourcex="165" sourcey="141" width="16" height="16">
+      <Offset X="-8" Y="-8" />
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Marker Type" description="Which type of marker this object is." type="markers" startbit="0" length="8" />
+  </Properties>
+  <Enums>
+    <Enum name="markers">
+      <EnumMember name="Start Marker" />
+      <EnumMember name="End Marker" />
+    </Enum>
+  </Enums>
+  <Subtypes>
+    <Subtype id="00" name="Start Marker" image="wcon" />
+    <Subtype id="01" name="End Marker" image="wcon" />
+  </Subtypes>
+</ObjDef>

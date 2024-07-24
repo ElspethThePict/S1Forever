@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="signpost">
+  <Images>
+    <ImageFromSheet id="signpost" sheet="Global/Items2.gif" sourcex="34" sourcey="182" width="48" height="48">
+      <Offset X="-24" Y="-16"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Mode" description="How this Signpost should behave." type="modes" startbit="0" length="8" />
+  </Properties>
+  <Enums>
+    <Enum name="modes">
+      <EnumMember name="Normal" />
+      <EnumMember name="Follow Bounds" value="3" />
+    </Enum>
+  </Enums>
+  <Subtypes>
+    <Subtype id="00" name="Normal" image="signpost" />
+    <Subtype id="03" name="Follow Bounds" image="signpost" />
+  </Subtypes>
+</ObjDef>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="spinplatform">
+  <Images>
+    <ImageFromSheet id="spinplatform" sheet="SBZ/Objects.gif" sourcex="413" sourcey="166" width="32" height="14">
+      <Offset X="-16" Y="-7"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Interval Offset" description="How offset this platform's spin should be within its interval." type="offsets" startbit="0" length="4" />
+    <Property name="Interval" description="What interval thie platform should spin at." type="intervals" startbit="4" length="3" />
+  </Properties>
+  <Enums>
+    <Enum name="offsets">
+      <EnumMember name="0 Frames" />
+      <EnumMember name="6 Frames" />
+      <EnumMember name="12 Frames" />
+      <EnumMember name="18 Frames" />
+      <EnumMember name="24 Frames" />
+      <EnumMember name="30 Frames" />
+      <EnumMember name="36 Frames" />
+      <EnumMember name="42 Frames" />
+      <EnumMember name="48 Frames" />
+      <EnumMember name="54 Frames" />
+      <EnumMember name="60 Frames" />
+      <EnumMember name="66 Frames" />
+      <EnumMember name="72 Frames" />
+      <EnumMember name="78 Frames" />
+      <EnumMember name="84 Frames" />
+      <EnumMember name="90 Frames" />
+    </Enum>
+    <Enum name="intervals">
+      <EnumMember name="Every 64 Frames" />
+      <EnumMember name="Every 128 Frames" />
+      <EnumMember name="Every 192 Frames" />
+      <EnumMember name="Every 256 Frames" />
+      <EnumMember name="Every 320 Frames" />
+      <EnumMember name="Every 384 Frames" />
+      <EnumMember name="Every 448 Frames" />
+      <EnumMember name="Every 512 Frames" />
+    </Enum>
+  </Enums>
+</ObjDef>

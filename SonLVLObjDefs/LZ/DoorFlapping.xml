@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="door">
+  <Images>
+    <ImageFromSheet id="door" sheet="LZ/Objects.gif" sourcex="1" sourcey="191" width="16" height="64">
+      <Offset X="-8" Y="-32" />
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Interval" description="The interval, in seconds, this Flapping Door should follow." type="int" startbit="0" length="8" />
+  </Properties>
+</ObjDef>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="bubl">
+  <Images>
+    <ImageFromSheet id="bubl" sheet="LZ/Objects.gif" sourcex="61" sourcey="51" width="16" height="16">
+      <Offset X="-8" Y="-8" />
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Num Duds" description="How many small bubbles should spawn before a breathable bubble."  type="int" startbit="0" length="8" />
+  </Properties>
+</ObjDef>

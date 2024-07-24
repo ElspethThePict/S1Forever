@@ -1,0 +1,829 @@
+
+private alias 0xC00 : GolfRollSlw //default was 0x600
+private alias 12 : GolfCircle
+
+
+reserve function Golf_Ready
+reserve function Golf_Air
+reserve function Golf_Ground
+reserve function Golf_HandleAirMovement
+reserve function Golf_Power
+reserve function Golf_Wall
+reserve function Golf_Hitting
+reserve function Golf_FloorStrike
+reserve function Golf_Strike
+reserve function Golf_Stooge
+reserve function Golf_Balance
+reserve function Golf_Cam
+reserve function Golf_Priority
+reserve function Golf_Return
+reserve function Golf_Bounce
+
+public value start.xpos = 0;
+public value start.ypos = 0;
+public value start.collisionPlane = 0;
+public value golf.oscill = 0;
+public value golf.angle = 0;
+public value golf.power = 0;
+public value golf.bar = 0;
+public value golf.frame = 0;
+public value golf.stop = 0;
+public value golf.strength = 0;
+public value golf.control = 0;
+public value golf.accuracy = 0;
+public value golf.swinging = 0;
+public value golf.camMode = 0;
+public value golf.storeYbound = 0;
+public value golf.nextHole = 0;
+public value golf.holeScore = 0;
+public value golf.loop = 0;
+
+
+private table sonic.golf.frames
+	8, 8, 8, 9, 9, 9, 10, 10, 10, 10, 10, 9, 8, 7, 11, 12, 13
+end table
+
+private table sonic.putt.frames
+	8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 11, 11, 11
+end table
+
+public table Golf_Numbers
+	//Strength, Control, Accuracy
+		24,			1,		2	//Sonic
+		22,			1,		0	//Tails
+		27,			2,		2	//Knuckles
+		0, 0, 0
+		0, 0, 0
+		30,			1,		5	//Amy
+end table
+
+event ObjectMain	
+	CallFunction(Golf_Balance)
+	CallFunction(PlayerObject_ProcessPlayer)
+	if object.gravity == GRAVITY_GROUND
+		object.value35 = 0
+	end if
+	CallFunction(object.state)
+	ProcessAnimation()	
+	ProcessObjectMovement()
+	CallFunction(Golf_Cam)
+end event
+
+function Golf_Bounce
+	FlipSign(temp1)
+	object.gravity = GRAVITY_AIR
+	Sin256(object.xvel, object.angle)
+	object.xvel *= temp1
+	Cos256(temp0, object.angle)
+	temp0 *= object.speed
+	object.xvel += temp0
+	object.xvel >>= 8
+	Sin256(object.yvel, object.angle)
+	object.yvel *= object.speed
+	Cos256(temp0, object.angle)
+	temp0 *= temp1
+	object.yvel = temp0
+	object.yvel >>= 8
+	object.speed = object.xvel
+	object.scrollTracking = 1
+	object.angle = 0
+	object.collisionMode = CMODE_FLOOR
+end function
+
+function Golf_Cam
+	switch golf.camMode
+		case 0 //focus on ball
+			screen.cameraTarget = 0
+			break
+		case 1 //cam switch
+			foreach (TypeName[Golf Hole], arrayPos0, ALL_ENTITIES)
+				if object[arrayPos0].state == 0
+					golf.nextHole = arrayPos0
+				end if						
+			next
+			if inputDown.buttonY == 1
+				arrayPos0 = golf.nextHole
+				screen.cameraTarget = arrayPos0
+				if object[arrayPos0].iypos > stage.curYBoundary2							
+					golf.storeYbound = stage.curYBoundary2
+					stage.newYBoundary2 = tileLayer[0].ysize
+					stage.newYBoundary2 <<= 7
+					stage.curYBoundary2 = stage.newYBoundary2
+				end if
+			else
+				screen.cameraTarget = 0
+				if golf.storeYbound > 0
+					stage.newYBoundary2 = golf.storeYbound
+					golf.storeYbound = 0
+				end if
+			end if
+			break
+	end switch
+	if screen.xoffset < 0
+		screen.xoffset = 0
+	end if			
+	if screen.yoffset < 0
+		screen.yoffset = 0
+	end if
+end function
+
+function Golf_Balance
+	if object.angle == 0
+		temp4 = 0
+		if object.floorSensorC == 0
+			temp4 = 2
+			if object.floorSensorL == 0
+				if object.floorSensorR == 1
+					temp4 = 1
+				end if
+			else
+				if object.floorSensorR == 0
+					temp4 = 1
+				end if	
+			end if
+		end if
+		
+		switch temp4
+			case 0
+				object.animation = 0
+				break
+			case 1
+				object.animation = 1
+				break
+			case 2
+				break
+		end switch
+	else
+		object.animation = 0
+	end if
+	
+end function
+
+
+function Golf_Strike
+	temp1 = 0
+	if object.collisionMode == CMODE_FLOOR
+		temp6 = object.xpos
+		temp7 = object.ypos
+		temp0 = object.collisionTop
+		temp0 -= 2
+		ObjectTileCollision(CSIDE_ROOF, 0, temp0, object.collisionPlane)
+		temp1 = checkResult
+		object.xpos = temp6
+		object.ypos = temp7
+		temp0 = object.collisionBottom
+		ObjectTileCollision(CSIDE_FLOOR, 0, temp0, object.collisionPlane)
+	end if
+	if temp1 == 0
+		object.controlLock = 0
+		object.gravity = GRAVITY_AIR
+		object.scrollTracking = 1
+		object.angle = 0
+		object.collisionMode = CMODE_FLOOR
+		object.value1 = 1
+		object.state = Golf_Air
+		player.score++
+		golf.holeScore++
+	end if
+end function
+
+function Golf_FloorStrike
+	temp1 = 0
+	if object.collisionMode == CMODE_FLOOR
+		temp6 = object.xpos
+		temp7 = object.ypos
+		temp0 = object.collisionTop
+		temp0 -= 2
+		ObjectTileCollision(CSIDE_ROOF, 0, temp0, object.collisionPlane)
+		temp1 = checkResult
+		object.xpos = temp6
+		object.ypos = temp7
+		temp0 = object.collisionBottom
+		if object.animation != ANI_JUMPING
+			if stage.playerListPos != 5
+				object.iypos -= object.value30
+				temp0 += object.value30
+			end if
+		end if
+		ObjectTileCollision(CSIDE_FLOOR, 0, temp0, object.collisionPlane)
+	end if
+	if temp1 == 0
+		object.controlLock = 0
+		object.scrollTracking = 1
+		object.gravity = GRAVITY_GROUND
+		object.collisionMode = CMODE_FLOOR
+		object.value1 = 1
+		object.state = Golf_Ground
+		player.score++
+		golf.holeScore++
+	end if
+end function
+
+function Golf_Ready
+	if screen.cameraTarget == 0
+		object.direction &= 1
+		golf.oscill += golf.control
+		golf.oscill &= 127
+		golf.angle = golf.oscill
+		if golf.angle > 64
+			golf.angle -= 128
+			FlipSign(golf.angle)
+		end if	
+		
+		if object.direction == FLIP_NONE
+			golf.angle += 192
+			if inputDown.left == 1
+				object.direction = FLIP_X
+			end if
+		else	
+			if object.direction == FLIP_X
+				golf.angle -= 192
+				FlipSign(golf.angle)
+				if object.right == 1
+					object.direction = FLIP_NONE
+				end if
+			end if
+		end if	
+		
+		if inputDown.down == 1
+			//golf.angle++
+		else
+			if inputDown.up == 1
+				//golf.angle--
+			end if
+		end if
+		golf.angle &= 255
+		if object.jumpPress == 1
+			object.state = Golf_Power
+			golf.oscill = 64
+			golf.power = 0
+			golf.bar = 0
+			golf.camMode = 0
+		end if
+		
+		if object.gravity == GRAVITY_AIR
+			object.state = Golf_Air		
+			golf.camMode = 0
+		end if
+	end if
+end function
+
+function Golf_Power
+	golf.oscill++
+	golf.oscill &= 255
+	sin256(temp0, golf.oscill)
+	Abs(temp0)
+	if stage.playerListPos== 2
+		golf.power = temp0
+	else
+		golf.power = 256
+		golf.power -= temp0
+	end if
+	if object.jumpPress == 1
+		object.state = Golf_Hitting
+		golf.frame = 0
+		golf.stop = 0		
+		golf.swinging = 1
+		start.xpos = object.xpos
+		start.ypos = object.ypos
+		start.collisionPlane = object.collisionPlane
+	end if
+	golf.bar = golf.power
+	//golf.bar >>= 2
+	
+	if object.gravity == GRAVITY_AIR
+		object.state = Golf_Air		
+		golf.camMode = 0
+	end if	
+end function
+
+function Golf_Hitting
+		if object[1].value0 == 7
+			temp0 = 0
+			if object.direction == FLIP_NONE
+				if object.angle >= 128
+					temp1 = object.angle
+					if temp1 == 0
+						temp1 += 256
+					end if
+					if golf.angle >= temp1
+						temp0 = 1
+					end if
+				end if
+			end if
+			if object.direction == FLIP_X
+				if object.angle <= 128
+					temp1 = golf.angle
+					temp1 -= 128
+					if temp1 <= object.angle
+						temp0 = 1
+					end if
+				end if
+			end if
+			
+			Rand(temp1, 11)
+			temp1 -= 5
+			temp1 *= golf.accuracy
+						
+			if temp0 == 0				
+				CallFunction(Golf_Strike)
+				cos256(object.xvel, golf.angle)
+				sin256(object.yvel, golf.angle)
+				object.xvel *= golf.strength
+				object.yvel *= golf.strength
+				object.xvel += temp1
+				object.yvel += temp1
+				object.xvel *= golf.power
+				object.yvel *= golf.power
+				object.speed = object.xvel
+			else
+				CallFunction(Golf_FloorStrike)
+				object.speed = 256
+				if object.direction == FLIP_X
+					FlipSign(object.speed)
+				end if
+				object.speed += temp1
+				object.speed *= golf.strength				
+				object.speed *= golf.power
+				object.state = Golf_Ground
+			end if
+			
+		end if
+end function
+
+
+function Golf_Air
+	CallFunction(Golf_Wall)
+	object.xvel = object.speed
+	if object.yvel > -0x40000
+		if object.yvel < 0
+			temp0 = object.speed
+			temp0 >>= 5
+			object.speed -= temp0
+		end if
+	end if
+	if object.gravity == GRAVITY_AIR
+		CallFunction(Golf_HandleAirMovement)
+		object.value44 = object.yvel
+		if object.yvel < 0 //moving up
+			temp1 = object.yvel
+			abs(temp1)
+			temp2 = object.xvel
+			abs(temp2)
+			temp2 >>= 1
+			if temp2 > temp1
+				//ObjectTileCollision(CMODE_FLOOR, 0, -15, object.collisionPlane)
+				ObjectTileCollision(CMODE_FLOOR, 0, 3, object.collisionPlane)
+				ObjectTileCollision(CMODE_FLOOR, 0, 12, object.collisionPlane)
+			end if
+		end if
+	else		
+		temp1 = object.value44
+		temp1 >>= 2
+		if temp1 < 0x10000
+			object.state = Golf_Ground
+		else
+			//bounce
+			CallFunction(Golf_Bounce)
+		end if
+	end if
+	
+	temp1 = stage.curYBoundary2
+	temp1 <<= 16
+	if temp1 < stage.deathBoundary
+		if object.ypos > stage.deathBoundary
+			CallFunction(Golf_Return)
+		end if
+	else
+		if object.ypos > temp1
+			CallFunction(Golf_Return)
+		end if
+	end if
+end function
+
+function Golf_Return
+	if object.xpos == start.xpos
+		start.ypos -= 0x50000
+	end if
+	object.xpos = start.xpos
+	object.ypos = start.ypos
+	object.xvel = 0
+	object.speed = 0
+	object.yvel = 0
+	object.value44 = 0
+	object.value43 = 0
+	object.collisionPlane = start.collisionPlane
+	object.state = Golf_Air
+end function
+
+function Golf_HandleAirMovement
+	object.scrollTracking = 1
+	object.yvel += object.value25
+	object.xvel = object.speed
+	object.collisionMode = CMODE_FLOOR
+end function
+
+function Golf_Wall
+	temp1 = tileLayer[0].xsize
+	temp1 <<= 23
+	if object.xpos > temp1
+		object.xpos = temp1
+		object.speed = 0
+	end if
+	
+	if object.speed == 0
+		temp1 = object.value43
+		Abs(temp1)
+		if temp1 < 0x10000 //slow enough to just stop
+		else
+			object.speed = object.value43
+			object.speed >>= 2
+			FlipSign(object.speed)
+		end if
+	else
+		temp0 = object.speed
+		Abs(temp0)
+		temp1 = object.yvel
+		Abs(temp1)	
+		temp0 -= temp1
+		Abs(temp0)
+		if temp0 < 0x10000
+			object.value43 = 0
+		else
+			object.value43 = object.speed		
+		end if
+	end if	
+end function
+
+function Golf_Ground	
+	CallFunction(Golf_Wall)
+	
+	temp1 = object.speed
+	if object.speed > 0
+		object.speed -= GolfRollSlw
+		Sin256(temp0, object.angle)
+		if temp0 > 0
+			Sin256(temp0, object.angle)
+			temp0 *= 0x5000
+		else
+			Sin256(temp0, object.angle)
+			temp0 *= 0x1400
+		end if
+		temp0 >>= 8
+		object.speed += temp0
+		if object.speed > 0x120000
+			object.speed = 0x120000
+		end if
+	else
+		object.speed += GolfRollSlw
+		Sin256(temp0, object.angle)
+		if temp0 < 0
+			Sin256(temp0, object.angle)
+			temp0 *= 0x5000
+		else
+			Sin256(temp0, object.angle)
+			temp0 *= 0x1400
+		end if
+		temp0 >>= 8
+		object.speed += temp0
+		if object.speed < -0x120000
+			object.speed = -0x120000
+		end if
+	end if
+	switch object.collisionMode
+	case 0
+	case 2
+		temp0 = 0
+		if temp1 > 0
+			if object.speed < 0
+				object.speed = 0
+				golf.stop++
+				temp0 = 1
+			end if
+		else
+			if object.speed > 0
+				object.speed = 0
+				golf.stop++
+				temp0 = 1
+			else
+				if temp1 == 0
+					golf.stop++
+					temp0 = 1
+				end if
+			end if
+		end if
+		
+		if temp0 == 0
+			golf.stop = 0
+		end if
+				
+		if golf.stop >= 60
+			golf.stop = 0
+			object.state = Golf_Ready
+			golf.camMode = 1
+			golf.oscill = 0
+			object[1].state = Golf_Stooge
+			object[1].value43 = 16
+		end if
+		break
+	case 1
+		if object.angle < 193
+			if temp1 > 0
+				if object.speed < 0x20000
+					object.gravity = GRAVITY_AIR
+					object.xvel = 0
+					object.speed = 0
+				end if
+			end if
+		end if
+		break
+	case 3
+		if object.angle > 63
+			if temp1 < 0
+				if object.speed > -0x20000
+					object.gravity = GRAVITY_AIR
+					object.xvel = 0
+					object.speed = 0
+				end if
+			end if
+		end if
+		break
+	end switch
+	if object.gravity == GRAVITY_AIR
+		object.state = Golf_Air
+		object.value1 = 0
+		CallFunction(Golf_HandleAirMovement)
+	else
+		CallFunction(PlayerObject_ResetOnFloor)
+	end if
+end function
+
+function Golf_Stooge
+	object.direction = object[0].direction
+	switch object.value43
+		case 0			
+			break
+		case 16
+			temp0 = object[0].xpos
+			switch object.direction
+				case 0
+					temp0 -= 0x60000
+					break
+				case 1
+					temp0 += 0x60000
+					break
+			end switch		
+			temp1 = object[0].ypos
+			temp1 -= 0x70000
+			CreateTempObject(TypeName[Smoke Puff], 0, temp0, temp1)
+			object[tempObjectPos].drawOrder = 5
+			temp1 -= 0xA0000
+			CreateTempObject(TypeName[Smoke Puff], 0, temp0, temp1)
+			object[tempObjectPos].drawOrder = 5
+			
+			temp0 = object.xpos
+			switch object.direction
+				case 0
+					temp0 -= 0x60000
+					break
+				case 1
+					temp0 += 0x60000
+					break
+			end switch		
+			temp1 = object.ypos
+			temp1 += 0x30000
+			CreateTempObject(TypeName[Smoke Puff], 0, temp0, temp1)
+			object[tempObjectPos].drawOrder = 5
+			temp1 -= 0xA0000
+			CreateTempObject(TypeName[Smoke Puff], 0, temp0, temp1)
+			object[tempObjectPos].drawOrder = 5
+			
+			object.value43--
+			break
+		case 1
+			object.xpos = object[0].xpos
+			object.ypos = object[0].ypos	
+			object.collisionPlane = object[0].collisionPlane
+			object.xvel = 0
+			object.yvel = 0
+			golf.swinging = 0
+		default
+			object.value43--
+			break
+	end switch
+end function
+
+
+event ObjectDraw
+	//player.character
+	if object.state == Golf_Stooge
+		object.value0 = 0
+		temp0 = 0
+		
+		if golf.swinging == 0
+			object.value0 = 7
+			temp0 = 1
+		else
+			golf.frame++
+			temp1 = golf.frame
+			temp1 /= 4	
+			if temp1 > 16
+				temp1 = 16
+			end if
+			if golf.bar > 64
+				GetTableValue(object.value0, temp1, sonic.golf.frames)
+			else
+				GetTableValue(object.value0, temp1, sonic.putt.frames)
+			end if
+		end if		
+		
+		object.ypos += 0xA0000
+		if stage.playerListPos == 1
+			if object.value0 == 7
+				object.value12++
+				object.value12 %= 40
+				temp2 = object.value12
+				temp2 >>= 3
+				temp2 += 14
+				//DrawSpriteFX(temp2, FX_FLIP, object.xpos, object.ypos)
+			end if
+		end if		
+		DrawSpriteFX(object.value0, FX_FLIP, object.xpos, object.ypos)
+		
+		if temp0 == 1
+			golf.loop++
+			if golf.loop >= 20
+				Rand(golf.frame, 20)
+				golf.loop = 0
+			end if
+			switch golf.frame
+				case 5
+					golf.loop += 2
+				case 6
+					DrawSpriteFX(golf.frame, FX_FLIP, object.xpos, object.ypos)
+					break			
+			end switch			
+		end if		
+		object.ypos -= 0xA0000
+	else				
+		if object.state != PlayerObject_Blank
+			object.value1++
+			object.value1 &= 3
+			temp1 = object.value1
+			
+			if object.gravity == GRAVITY_GROUND
+				object.rotation = object.angle
+			end if
+			
+			cos256(temp0, object.rotation)
+			temp0 *= 3000
+			temp0 += object.ypos
+			
+			
+			sin256(temp2, object.rotation)
+			temp2 *= 3500
+			flipsign(temp2)
+			temp2 += object.xpos
+			DrawSpriteXY(temp1, temp2, temp0)
+		end if
+	end if
+end event
+
+function Golf_Priority
+	foreach (TypeName[Blank Object], arrayPos0, ALL_ENTITIES)
+		switch object[arrayPos0].type
+			case 43 //Rock
+			case 51 //Breakable Wall
+			case 44 //Bridge
+			case 16 //Yellow Spring
+			case 15 //Red Spring
+			case 47 //Fall Platform
+			case 48 //H Platform
+			case 49 //V Platform
+			case 50 //V Platform 2
+			case 46 //Swing Platform
+			case 52 //C Ledge Left
+			case 53 //C Ledge Right
+				object[arrayPos0].priority = PRIORITY_ACTIVE
+				break
+			default
+				break
+		end switch
+	next
+end function
+
+
+event ObjectStartup
+	if options.gameMode == 5
+			object[0].type = TypeName[Golf Ball]
+			object[0].state = Golf_Air
+			LoadAnimation("Golf.ani")
+			LoadSpriteSheet("Players/Golf.gif")	
+			//Golf
+			SpriteFrame(-5, -5, 9, 9, 19, 1) //0 Ball1
+			SpriteFrame(-5, -5, 9, 9, 28, 1) //1 Ball2
+			SpriteFrame(-5, -5, 9, 9, 37, 1) //2 Ball3
+			SpriteFrame(-5, -5, 9, 9, 46, 1) //3 Ball4
+			SpriteFrame(-9, -9, 17, 17, 1, 1) //4 BLANK
+			
+			switch stage.playerListPos
+				case 0
+					//Sonic
+					SpriteFrame(-13, -27, 14, 8, 19, 11) //5 Sonic blink
+					SpriteFrame(-13, -27, 14, 8, 34, 11) //6 Sonic look
+					
+					SpriteFrame(-17, -36, 23, 40, 1, 20) //7 Sonio mid
+					SpriteFrame(-26, -35, 34, 39, 25, 21) //8 Sonio prep 1
+					SpriteFrame(-22, -37, 31, 41, 60, 19) //9 Sonio prep 2
+					SpriteFrame(-20, -35, 30, 39, 92, 21) //10 Sonio prep 3
+					SpriteFrame(-20, -35, 34, 39, 132, 21) //11 Sonio shot 1
+					SpriteFrame(-21, -37, 31, 41, 167, 19) //12 Sonio shot 2
+					SpriteFrame(-21, -35, 31, 39, 199, 21) //13 Sonio shot 3
+					break
+				case 1
+					//Tails
+					SpriteFrame(-12, -20, 11, 5, 1, 97) //5 Tails blink
+					SpriteFrame(-12, -20, 11, 5, 14, 97) //6 Tails look
+					
+					SpriteFrame(-17, -27, 23, 31, 1, 65) //7 Tails mid
+					SpriteFrame(-20, -27, 26, 31, 25, 65) //8 Tails prep 1
+					SpriteFrame(-21, -28, 32, 32, 52, 64) //9 Tails prep 2
+					SpriteFrame(-21, -27, 32, 31, 85, 65) //10 Tails prep 3
+					SpriteFrame(-18, -27, 26, 31, 118, 65) //11 Tails shot 1
+					SpriteFrame(-23, -28, 32, 32, 145, 64) //12 Tails shot 2
+					SpriteFrame(-21, -27, 31, 31, 178, 65) //13 Tails shot 3
+					
+					//actual tails
+					SpriteFrame(-26, -21, 16, 24, 79, 207) //14 tails
+					SpriteFrame(-30, -21, 20, 24, 96, 207) //15 tails
+					SpriteFrame(-30, -21, 20, 24, 117, 207) //16 tails
+					SpriteFrame(-30, -21, 20, 24, 138, 207) //17 tails
+					SpriteFrame(-30, -21, 20, 24, 159, 207) //18 tails
+					break
+				case 2
+					//Knuckles
+					SpriteFrame(-13, -31, 15, 6, 1, 159) //5 Knuckles blink
+					SpriteFrame(-13, -31, 15, 6, 17, 159) //6 Knuckles look
+					
+					SpriteFrame(-17, -36, 23, 40, 1, 166) //7 Knuckles mid
+					SpriteFrame(-26, -36, 35, 40, 25, 166) //8 Knuckles prep 1
+					SpriteFrame(-20, -41, 27, 45, 61, 161) //9 Knuckles prep 2
+					SpriteFrame(-19, -35, 31, 39, 89, 167) //10 Knuckles prep 3
+					SpriteFrame(-23, -36, 35, 40, 130, 166) //11 Knuckles shot 1
+					SpriteFrame(-21, -41, 27, 45, 166, 161) //12 Knuckles shot 2
+					SpriteFrame(-25, -34, 30, 38, 194, 168) //13 Knuckles shot 3
+					break
+				case 5
+					//Amy
+					SpriteFrame(-12, -25, 15, 7, 213, 142) //5 Amy blink
+					SpriteFrame(-12, -25, 15, 7, 213, 134) //6 Amy look
+					
+					
+					SpriteFrame(-18, -32, 26, 41, 229, 97) //7 Amy mid
+					//SpriteFrame(-26, -33, 33, 41, 88, 97) //8 Amy prep idk
+					SpriteFrame(-27, -32, 33, 36, 52, 97) //8 Amy prep 1
+					SpriteFrame(-27, -32, 33, 36, 52, 97) //8 Amy prep 2
+					SpriteFrame(-17, -32, 24, 36, 27, 97) //8 Amy prep 3
+					SpriteFrame(-18, -33, 40, 36, 122, 97) //11 Amy shot 1
+					SpriteFrame(-18, -33, 37, 36, 163, 97) //12 Amy shot 2
+					SpriteFrame(-20, -33, 25, 36, 201, 97) //13 Amy shot 3
+
+					
+					break
+			end switch
+			
+			//Setup player numbers
+			temp0 = stage.playerListPos
+			temp0 *= 3
+			GetTableValue(golf.strength, temp0, Golf_Numbers)		
+			temp0++
+			GetTableValue(golf.control, temp0, Golf_Numbers)	
+			temp0++
+			GetTableValue(golf.accuracy, temp0, Golf_Numbers)	
+			
+			//Player Sprite
+			ResetObjectEntity(1, TypeName[Golf Ball], 0, 0, 0)
+			object[1].groupID = GROUP_PLAYERS
+			object[1].state = Golf_Stooge
+			object[1].priority = PRIORITY_ACTIVE
+			object[1].drawOrder = -1
+			object[1].value18 = 4
+			object[1].value31 = 0x2000	
+			
+			
+			object[0].groupID = GROUP_PLAYERS
+			object[1].groupID = GROUP_PLAYERS
+			playerCount = 2
+			
+			CallFunction(Golf_Priority)
+	end if
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+end event

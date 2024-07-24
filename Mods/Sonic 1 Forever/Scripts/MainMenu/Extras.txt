@@ -1,0 +1,1031 @@
+//-------Aliases-------//
+private alias object.value0 : row.highlight
+private alias object.value1 : column.highlight
+private alias object.value2 : menu.highlight
+private alias object.value3 : char.highlight
+private alias object.value4 : text.drawline
+private alias object.value5 : text.xpos
+private alias object.value6 : text.ypos
+private alias object.value7 : achieve.yoffset
+private alias object.value8 : achieve.xoffset
+private alias object.value9 : extras.exittime
+private alias object.value10 : extras.fade
+private alias object.value11 : text.align
+private alias object.value12 : menu.charSelBool
+private alias object.value13 : menu.curSub
+
+private alias 0 : TEXT_LEFT_ALIGN
+private alias 1 : TEXT_RIGHT_ALIGN
+private alias 2 : TEXT_CENTER_ALIGN
+private alias 0 : HEADER_TEXT_GREY
+private alias 1 : HEADER_TEXT_BLUE
+private alias 2 : HEADER_TEXT_GOLD
+private alias 90 : text.margin
+private alias 50 : text.margin.right
+private alias 94 : achieve.name
+private alias 109 : achieve.desc
+
+private alias 2 : columnsize_left
+private alias 1 : columnsize_right
+
+private alias 5 : achieve_rowlen
+private alias 4 : achieve_collen
+private alias 19 : achieve_cou
+private alias 64 : at.sym
+
+// Function declarations
+reserve function control.extras
+reserve function control.achieves
+reserve function chara.sel
+reserve function load.level
+reserve function extras.exit
+reserve function extra.text
+reserve function achieve.scroll
+reserve function extras.header
+reserve function achieve.header
+reserve function achieve.text
+reserve function achieve.center
+
+
+//Static Values
+private value extras.textlen = 0;
+private value extras.textc = 0;
+private value extras.textpos = 0;
+private value extras.textbrk = 0;
+private value extras.drawx = 0;
+
+
+//Tables
+private table ExtrasFrames
+	1, 1, 0
+end table
+
+private table ExtrasUnlock
+	408, 410, 0
+end table
+
+private table ExtrasNames
+	84, 86, 85
+end table
+
+private table ExtrasTimes
+	651, 650, 0
+end table
+
+private table ExtrasComp
+	996, 995, 0
+end table
+
+private table AchieveEarned
+	400, 405, 401, 402, 403, 415, 408, 404, 406, 416, 407, 409, 414, 410, 411, 418, 419, 420
+end table
+
+function achieve.center
+	temp1 = 55
+	temp1 *= achieve_rowlen
+	temp1 -= 5
+	flipsign(temp1)
+	temp1 += screen.xsize
+	temp1 += sidebar.w
+	temp1 >>= 1
+end function
+
+function achieve.header
+	CopyPalette(0, 208, 0, 240, 5)
+	GetTextInfo(extras.textlen, 1, TEXTINFO_TEXTSIZE, 124, 0)
+	extras.textpos = extras.textlen
+	extras.drawx = text.xpos
+	
+	temp1 = 0
+	while extras.textpos > 0
+		extras.textpos--
+		GetTextInfo(extras.textc, 1, TEXTINFO_TEXTDATA, 124, extras.textpos)
+		if extras.textc > 64
+			extras.textc -= 65
+			GetTableValue(temp0, extras.textc, headerspace)
+			temp1 += temp0
+		else
+			temp1 += 3
+		end if
+	loop
+	
+	DrawSpriteScreenXY(220, extras.drawx, text.ypos)
+	while temp1 > 0
+		extras.drawx--
+		temp1--
+		DrawSpriteScreenXY(221, extras.drawx, text.ypos)
+	loop
+	DrawSpriteScreenXY(219, extras.drawx, text.ypos)
+	
+	
+	extras.textpos = extras.textlen
+	extras.drawx = text.xpos
+	while extras.textpos > 0
+		extras.textpos--
+		GetTextInfo(extras.textc, 1, TEXTINFO_TEXTDATA, 124, extras.textpos)
+		if extras.textc > 64
+			extras.textc -= 65
+			GetTableValue(temp0, extras.textc, headerspace)
+			extras.drawx -= temp0
+			extras.textc += 176
+			DrawSpriteScreenXY(extras.textc, extras.drawx, text.ypos)
+		else
+			extras.drawx -= 3
+		end if
+	loop
+end function
+
+function extras.header
+	CopyPalette(0, 213, 0, 240, 5)82, 0)
+	GetTextInfo(extras.textlen, 1, TEXTINFO_TEXTSIZE, 82, 0)
+	extras.textpos = extras.textlen
+	extras.drawx = text.xpos
+	
+	temp1 = 0
+	while extras.textpos > 0
+		extras.textpos--
+		GetTextInfo(extras.textc, 1, TEXTINFO_TEXTDATA, 82, extras.textpos)
+		if extras.textc > 64
+			extras.textc -= 65
+			GetTableValue(temp0, extras.textc, headerspace)
+			temp1 += temp0
+		else
+			temp1 += 3
+		end if
+	loop
+	
+	DrawSpriteScreenXY(223, extras.drawx, text.ypos)
+	while temp1 > 0
+		DrawSpriteScreenXY(224, extras.drawx, text.ypos)
+		extras.drawx++
+		temp1--
+	loop
+	DrawSpriteScreenXY(224, extras.drawx, text.ypos)
+	
+	
+	extras.textpos = 0
+	extras.drawx = text.xpos
+	while extras.textpos < extras.textlen
+		GetTextInfo(extras.textc, 1, TEXTINFO_TEXTDATA, 82, extras.textpos)
+		if extras.textc > 64
+			extras.textc -= 65
+			GetTableValue(temp0, extras.textc, headerspace)
+			extras.textc += 176
+			DrawSpriteScreenXY(extras.textc, extras.drawx, text.ypos)
+			extras.drawx += temp0
+		else
+			extras.drawx += 3
+		end if
+		extras.textpos++
+	loop
+end function
+
+
+function achieve.scroll
+	if object.state == control.achieves
+		if achieve.yoffset > 32
+			achieve.yoffset -= 20
+		end if		
+		
+		if achieve.yoffset < 32
+			achieve.yoffset = 32
+		end if
+	else
+		if achieve.yoffset < 224
+			achieve.yoffset += 20
+		end if
+		
+		if achieve.yoffset > 224
+			achieve.yoffset = 224
+		end if
+	end if
+end function
+
+function achieve.text
+	switch text.align
+		case 0 //left
+			GetTextInfo(extras.textlen, 1, TEXTINFO_TEXTSIZE, text.drawline, 0)
+			extras.textpos = 0
+			extras.drawx = text.xpos
+			while extras.textpos < extras.textlen
+				GetTextInfo(extras.textc, 1, TEXTINFO_TEXTDATA, text.drawline, extras.textpos)
+				if extras.textc == at.sym
+					extras.drawx = text.xpos
+					text.ypos += 8
+				else
+					DrawSpriteScreenXY(extras.textc, extras.drawx, text.ypos)
+					extras.drawx += 8
+				end if
+				extras.textpos++
+			loop
+			break
+		case 1 //right
+			GetTextInfo(extras.textlen, 1, TEXTINFO_TEXTSIZE, text.drawline, 0)
+			extras.textpos = extras.textlen
+			extras.drawx = text.xpos
+			while extras.textpos > 0
+				extras.textpos--
+				GetTextInfo(extras.textc, 1, TEXTINFO_TEXTDATA, text.drawline, extras.textpos)
+				if extras.textc == at.sym
+					extras.drawx = text.xpos
+					text.ypos += 8
+				else
+					extras.drawx -= 8
+					DrawSpriteScreenXY(extras.textc, extras.drawx, text.ypos)
+				end if
+			loop
+			break
+	end switch
+end function
+
+function extra.text
+	GetTextInfo(extras.textlen, 1, TEXTINFO_TEXTSIZE, text.drawline, 0)
+	
+	extras.textpos = 0
+	extras.textbrk = 0
+	while extras.textpos < extras.textlen //get length of first line
+		GetTextInfo(extras.textc, 1, TEXTINFO_TEXTDATA, text.drawline, extras.textpos)
+		if extras.textc == at.sym
+			extras.textbrk = extras.textpos
+			text.ypos -= 4
+		end if
+		extras.textpos++
+	loop
+	
+	if extras.textbrk == 0
+		extras.textbrk = extras.textlen
+	end if
+	
+	extras.drawx = extras.textbrk
+	extras.drawx *= -4
+	extras.drawx += text.xpos
+	
+	extras.textpos = 0
+	while extras.textpos < extras.textbrk
+		GetTextInfo(extras.textc, 1, TEXTINFO_TEXTDATA, text.drawline, extras.textpos)
+		DrawSpriteScreenXY(extras.textc, extras.drawx, text.ypos)
+		extras.drawx += 8
+		extras.textpos++
+	loop
+	
+	text.ypos += 8
+	extras.drawx = extras.textlen
+	extras.drawx -= extras.textbrk
+	extras.drawx--
+	extras.drawx *= -4
+	extras.drawx += text.xpos
+	extras.textpos++
+	
+	while extras.textpos < extras.textlen
+		GetTextInfo(extras.textc, 1, TEXTINFO_TEXTDATA, text.drawline, extras.textpos)
+		DrawSpriteScreenXY(extras.textc, extras.drawx, text.ypos)
+		extras.drawx += 8
+		extras.textpos++
+	loop
+end function
+
+function extras.exit
+	extras.exittime++
+	if extras.exittime >= 30
+		ResetObjectEntity(object.entityPos, TypeName[Blank Object], 0, 0, 0)
+	end if	
+	
+end function
+
+function control.extras
+	if inputPress.up == 1
+		if row.highlight > 0
+			row.highlight--
+			CallFunction(main.sound)
+		end if
+	else		
+		CallFunction(main.sound)
+		if inputPress.down == 1
+			row.highlight++
+		end if
+	end if
+
+	temp0 = inputPress.left
+	temp0 |= inputPress.right
+	if temp0 == 1
+		column.highlight ^= 1
+	end if
+	
+	switch column.highlight
+		case 0
+			temp0 = columnsize_left
+			break
+		case 1
+			temp0 = columnsize_right
+			break
+	end switch
+		
+	if row.highlight >= temp0
+		if column.highlight == 0
+			object.state = control.achieves
+			row.highlight = 0
+			column.highlight = 0
+			menu.highlight = 0
+			menu.curSub = 1
+		else
+			column.highlight = 0
+		end if
+	else
+		menu.highlight = column.highlight
+		menu.highlight *= columnsize_left
+		menu.highlight += row.highlight
+		temp0 = inputPress.buttonA
+		temp0 |= inputPress.start
+		if temp0 == 1
+			GetTableValue(temp5, menu.highlight, ExtrasUnlock)
+			arrayPos0 = temp5
+			checkGreater(saveRAM[arrayPos0], 0)
+			temp6 = checkResult
+			checkEqual(temp5, 0)
+			temp6 |= checkResult
+			if temp6 == 1
+				CallFunction(main.soundconf)
+				if menu.highlight == 1
+					object.state = chara.sel
+					menu.charSelBool = true
+				else
+					object.state = load.level
+				end if
+			else
+				PlaySfx(SfxName[Bonus Points], 0)
+			end if
+		else
+			if inputPress.buttonB == 1
+				object.state = extras.exit
+				menu.state = 3
+			end if
+		end if
+	end if
+end function
+
+function control.achieves
+	CallFunction(main.sound)
+	if inputPress.up == 1
+		row.highlight--
+	else
+		if inputPress.down == 1
+			row.highlight++
+			row.highlight %= achieve_collen
+		end if
+	end if
+	
+	if inputPress.left == 1
+		column.highlight--
+		while column.highlight < 0
+			column.highlight += achieve_rowlen
+		loop
+	else
+		if inputPress.right == 1
+			column.highlight++
+			column.highlight %= achieve_rowlen
+		end if
+	end if
+	if inputPress.buttonB == 1
+		row.highlight = -1
+	end if
+	
+	if row.highlight < 0
+		object.state = control.extras
+		row.highlight = 1
+		column.highlight = 0
+		menu.highlight = 2
+		menu.curSub = 0
+	else	
+		//blank square
+		temp0 = achieve_collen
+		temp0--
+		if row.highlight == temp0
+			temp0 = achieve_rowlen
+			temp0--
+			if column.highlight == temp0
+				if inputPress.left == 1
+					column.highlight--
+				else
+					if inputPress.right == 1
+						column.highlight = 0
+					else
+						if inputPress.down == 1
+							column.highlight--
+						end if
+					end if
+				end if
+			end if
+		end if
+		
+		menu.highlight = row.highlight
+		menu.highlight *= achieve_rowlen
+		menu.highlight += column.highlight
+	end if
+end function
+
+
+function chara.sel
+	CallFunction(main.soundconf)
+	CallFunction(main.sound)
+	if inputPress.left == 1
+		char.highlight--
+		while char.highlight < 0
+			char.highlight += 4
+		loop
+	else
+		if inputPress.right == 1
+			char.highlight++
+			char.highlight %= 4
+		else
+			temp0 = inputPress.buttonA
+			temp0 |= inputPress.start
+			if temp0 == 1
+				object.state = load.level
+			else
+				if inputPress.buttonB == 1
+					object.state = control.extras
+					menu.charSelBool = false
+				end if
+			end if
+		end if
+	end if
+end function
+
+function load.level
+	switch menu.highlight
+		case 0 //Emerald Gauntlet
+			if extras.fade == 0
+				StopMusic()
+				PlaySfx(SfxName[Warp], 0)
+			end if
+			extras.fade += 8
+			SetScreenFade(color6, color7, color6, extras.fade)
+			if extras.fade >= 768			
+				fadeColor = color6
+				fadeColor <<= 16
+				temp0 = color7
+				temp0 <<= 8
+				fadeColor += temp0
+				fadeColor += color6
+				LoadPalette("SpecialStage.act", 0, 0, 0, 128)
+				options.gameMode = 4
+				stage.playerListPos = 0
+				stage.activeList = SPECIAL_STAGE
+				stage.listPos = 0
+				stage.debugMode = 0
+				LoadStage()
+			end if
+			break
+		case 1 //Boss Rush
+			extras.fade += 8
+			music.volume -= 10
+			SetScreenFade(0, 0, 0, extras.fade)
+			if extras.fade >= 384
+				StopMusic()
+				options.gameMode = 2
+				if char.highlight == 3
+					stage.playerListPos = 5
+				else
+					stage.playerListPos = char.highlight
+				end if
+				stage.activeList = BONUS_STAGE
+				stage.listPos = 0
+				stage.debugMode = 0
+				LoadStage()
+			end if
+			break
+		case 2 //Special Maker
+			if extras.fade == 0
+				StopMusic()
+				PlaySfx(SfxName[Warp], 0)
+			end if
+			extras.fade += 8
+			SetScreenFade(color6, color7, color6, extras.fade)
+			if extras.fade >= 768
+				fadeColor = color6
+				fadeColor <<= 16
+				temp0 = color7
+				temp0 <<= 8
+				fadeColor += temp0
+				fadeColor += color6	
+				LoadPalette("SpecialStage.act", 0, 0, 0, 128)
+				options.gameMode = 0
+				stage.playerListPos = 0
+				stage.activeList = SPECIAL_STAGE
+				stage.listPos = 7
+				stage.debugMode = 1
+				LoadStage()
+			end if
+			break
+	end switch
+end function
+
+event ObjectMain
+	if object.state == 0
+		object.inkEffect = INK_BLEND
+		object.state = control.extras
+		achieve.yoffset = 224
+	else
+		CallFunction(object.state)	
+	end if
+	CallFunction(achieve.scroll)
+end event
+
+event ObjectDraw
+	//Blue Tiles
+	temp0 = 0
+	temp1 = 0
+	while temp0 < screen.xsize
+		while temp1 < screen.ysize
+			DrawSpriteScreenXY(202, temp0, temp1)
+			temp1 += 32
+		loop
+		temp0 += 32
+		temp1 = 0
+	loop
+	
+	temp0 = 100
+	temp1 = screen.xsize
+	temp1 -= 20
+	DrawSpriteScreenXY(203, temp0, 200)
+	DrawSpriteScreenXY(204, temp1, 57)
+	temp0 += temp1
+	temp0 >>= 1
+	DrawSpriteScreenXY(205, temp0, 100)
+	
+	//Extras
+	temp0 = 0
+	//temp1 should equal total number of extras
+	temp1 = columnsize_left
+	temp1 += columnsize_right	
+	temp2 = sidebar.w
+	temp2 += 25
+	temp3 = 47
+	
+	while temp0 < temp1		
+		//Highlighter
+		CheckEqual(temp0, menu.highlight)
+		temp5 = checkResult
+		CheckNotEqual(object.state, control.achieves)
+		temp5 &= checkResult
+		if temp5 == 1
+			DrawSpriteScreenXY(208, temp2, temp3)
+		else
+			DrawSpriteScreenFX(209, FX_INK, temp2, temp3)
+		end if
+		
+		GetTableValue(temp5, temp0, ExtrasUnlock)
+		arrayPos0 = temp5
+		checkGreater(saveRAM[arrayPos0], 0)
+		temp6 = checkResult
+		checkEqual(temp5, 0)
+		temp6 |= checkResult
+		if temp6 == 1
+			GetTableValue(temp5, temp0, ExtrasFrames)
+			if temp5 == 1 //needs a star
+				DrawSpriteScreenFX(217, FX_INK, temp2, temp3)
+				DrawSpriteScreenXY(207, temp2, temp3)
+				GetTableValue(arrayPos0, temp0, ExtrasComp)
+				if saveRAM[arrayPos0] == 1
+					DrawSpriteScreenXY(218, temp2, temp3)
+				end if
+				
+				//Time or Character Sel
+				if saved.mobile == 0
+					CheckEqual(temp0, menu.highlight)
+					temp5 = checkResult
+					CheckEqual(object.state, chara.sel)
+					temp5 &= checkResult
+					if temp5 == 1
+						//character.sel
+						temp5 = temp2
+						temp5 += 44
+						temp6 = temp3
+						temp6 += 28
+						DrawSpriteScreenXY(250, temp5, temp6)
+						temp4 = char.highlight
+						temp4 += 251
+						DrawSpriteScreenXY(temp4, temp5, temp6)
+					else
+						//Time
+						GetTableValue(arrayPos0, temp0, ExtrasTimes)
+						
+						arrayPos1 = saveRAM[arrayPos0]
+						arrayPos2 = 0
+						arrayPos3 = 0
+						
+						while arrayPos1 >= 100
+							arrayPos1 -= 100
+							arrayPos2++
+						loop
+						
+						while arrayPos2 >= 60
+							arrayPos2 -= 60
+							arrayPos3++
+						loop
+						
+						temp5 = temp2
+						temp5 += 106
+						temp6 = temp3
+						temp6 += 32
+						DrawNumbers(48, temp5, temp6, arrayPos1, 2, 8, 1)
+						temp5 -= 13
+						DrawSpriteScreenXY(39, temp5, temp6)
+						temp5 -= 3
+						DrawSpriteScreenXY(39, temp5, temp6)
+						temp5 -= 7
+						DrawNumbers(48, temp5, temp6, arrayPos2, 2, 8, 1)
+						temp5 -= 13
+						DrawSpriteScreenXY(39, temp5, temp6)
+						temp5 -= 7
+						DrawNumbers(48, temp5, temp6, arrayPos3, 2, 8, 0)
+					end if
+				else
+					//Time
+					GetTableValue(arrayPos0, temp0, ExtrasTimes)
+					
+					arrayPos1 = saveRAM[arrayPos0]
+					arrayPos2 = 0
+					arrayPos3 = 0
+					
+					while arrayPos1 >= 100
+						arrayPos1 -= 100
+						arrayPos2++
+					loop
+					
+					while arrayPos2 >= 60
+						arrayPos2 -= 60
+						arrayPos3++
+					loop
+					
+					temp5 = temp2
+					temp5 += 106
+					temp6 = temp3
+					temp6 += 32
+					DrawNumbers(48, temp5, temp6, arrayPos1, 2, 8, 1)
+					temp5 -= 13
+					DrawSpriteScreenXY(39, temp5, temp6)
+					temp5 -= 3
+					DrawSpriteScreenXY(39, temp5, temp6)
+					temp5 -= 7
+					DrawNumbers(48, temp5, temp6, arrayPos2, 2, 8, 1)
+					temp5 -= 13
+					DrawSpriteScreenXY(39, temp5, temp6)
+					temp5 -= 7
+					DrawNumbers(48, temp5, temp6, arrayPos3, 2, 8, 0)
+
+					CheckEqual(temp0, menu.highlight)
+					temp5 = checkResult
+					CheckEqual(object.state, chara.sel)
+					temp5 &= checkResult
+					if temp5 == 1
+						//character.sel
+						temp5 = temp2
+						temp5 += 119
+						temp6 = temp3
+						DrawSpriteScreenXY(255, temp5, temp6)
+						temp4 = char.highlight
+						temp4 += 256
+						DrawSpriteScreenXY(temp4, temp5, temp6)
+					end if
+				end if
+			else //no star
+				DrawSpriteScreenXY(206, temp2, temp3)
+			end if
+			
+			//Extra name
+			text.xpos = temp2
+			text.xpos += 76
+			text.ypos = temp3
+			text.ypos += 11
+			GetTableValue(text.drawline, temp0, ExtrasNames)
+			CallFunction(extra.text)
+			
+			//Icons
+			temp5 = 210
+			temp5 += temp0
+			DrawSpriteScreenXY(temp5, temp2, temp3)
+		else
+			//draw locked
+			DrawSpriteScreenXY(206, temp2, temp3)
+			//'Locked'
+			text.xpos = temp2
+			text.xpos += 76
+			text.ypos = temp3
+			text.ypos += 11
+			text.drawline = 83
+			CallFunction(extra.text)
+			//Icon
+			DrawSpriteScreenXY(216, temp2, temp3)		
+		end if
+		
+		temp0++
+		if temp0 == columnsize_left
+			temp2 = screen.xsize
+			temp2 -= 155
+			temp3 = 47
+		else
+			temp3 += 50
+		end if
+	loop
+	
+	
+	//Achievements
+	temp0 = achieve.yoffset
+	temp1 = 0
+	
+	while temp0 < screen.ysize
+		while temp1 < screen.xsize
+			DrawSpriteScreenXY(222, temp1, temp0)
+			temp1 += 32
+		loop	
+		temp0 += 32
+		temp1 = 0
+	loop
+	
+	temp0 = achieve.yoffset
+	temp0 += 23
+		if row.highlight == 3
+			temp0 -= 40
+		end if
+	CallFunction(achieve.center)	
+	temp2 = 0
+	temp3 = achieve_rowlen
+	temp3 *= achieve_collen
+	temp4 = 0
+	
+	while temp2 < temp3
+		if temp2 < achieve_cou
+			arrayPos1 = temp2
+			arrayPos1 += 226
+			checkEqual(temp2, menu.highlight)
+			temp5 = checkResult
+			checkEqual(object.state, control.achieves)
+			temp5 &= checkResult
+			if temp5 == 1
+				temp6 = frame.count
+				temp6 /= 8
+				temp6 &= 1
+				switch temp6
+				case 0
+					temp5 = temp0
+					temp6 = temp1
+					DrawRect(temp6, temp5, 54, 39, color7, color7, 0, 225)
+					temp6++
+					temp5++
+					DrawRect(temp6, temp5, 52, 37, color7, color5, 0, 225)
+					break
+				case 1
+					temp5 = temp0
+					temp6 = temp1
+					DrawRect(temp6, temp5, 54, 39, color7, 0, 0, 225)
+					temp6++
+					temp5++
+					DrawRect(temp6, temp5, 52, 37, color5, 0, 0, 225)
+					break
+				end switch				
+			end if
+			if temp0 > 20
+				DrawSpriteScreenXY(arrayPos1, temp1, temp0)
+				GetTableValue(arrayPos0, temp2, AchieveEarned)
+				if saveRAM[arrayPos0] == 0
+					temp5 = temp0
+					temp6 = temp1
+					temp5 += 2
+					temp6 += 2
+					DrawRect(temp6, temp5, 50, 35, 0, 0, 0, 128)
+				end if
+			end if
+			temp4++
+			if temp4 == achieve_rowlen
+				CallFunction(achieve.center)	
+				temp0 += 40
+				temp4 = 0
+			else
+				temp1 += 55
+			end if
+		end if
+		temp2++
+		
+	loop	
+	
+	//White Tiles
+	temp0 = sidebar.w
+	DrawRect(0, 0, temp0, screen.ysize, color7, color7, color7, 255)	
+	temp0 -= 4
+	DrawRect(temp0, 0, 1, screen.ysize, color5, color5, color7, 255)
+	temp0++
+	DrawRect(temp0, 0, 2, screen.ysize, 0, 0, 0, 255)	
+	temp0++
+	DrawRect(temp0, 0, 1, screen.ysize, color7, 0, 0, 255)	
+	
+	//Achievement text
+	temp0 = achieve.yoffset
+	temp0 += 145
+	
+	temp1 = sidebar.w
+	temp1 += 4
+	DrawRect(temp1, temp0, screen.xsize, 3, color7, color7, color7, 255)
+	temp0++
+	temp1--
+	temp1 -= 4
+	DrawRect(temp1, temp0, screen.xsize, 1, color7, 0, 0, 255)
+	temp0 += 2
+	temp1++
+	DrawRect(temp1, temp0, screen.xsize, 100, 0, 0, 0, 128)
+	
+	//Ring Chain
+	text.ypos = achieve.yoffset
+	text.ypos += 151
+	text.xpos = screen.xsize
+	text.xpos -= 100
+	text.align = TEXT_LEFT_ALIGN
+	text.drawline = 125
+	CallFunction(achieve.text)
+	text.ypos += 14
+	text.drawline = 126
+	CallFunction(achieve.text)
+	text.ypos += 8
+	text.xpos += 64
+	DrawNumbers(48, text.xpos, text.ypos, saveRAM[997], 5, 8, 0)
+	text.xpos -= 64
+	text.ypos += 8
+	text.drawline = 127
+	CallFunction(achieve.text)
+	text.ypos += 8
+	text.xpos += 64
+	DrawNumbers(48, text.xpos, text.ypos, saveRAM[998], 5, 8, 0)
+	
+	if object.state == control.achieves
+		//Achievements
+		text.ypos = achieve.yoffset
+		text.ypos += 151
+		text.xpos = sidebar.w
+		if saved.mobile == 1
+			text.xpos += 35
+		else
+			text.xpos += 20
+		end if
+		text.drawline = menu.highlight
+		text.drawline += achieve.name
+		if menu.highlight >= 15
+			text.drawline += 55
+		end if
+		text.align = TEXT_LEFT_ALIGN
+		CallFunction(achieve.text)
+		text.ypos += 15		
+		text.drawline = menu.highlight
+		text.drawline += achieve.desc
+		if menu.highlight >= 15
+			text.drawline += 45
+		end if
+		CallFunction(achieve.text)
+	end if
+	
+	
+	//Achievements Header
+	temp0 = achieve.yoffset
+	temp1 = sidebar.w
+	temp2 = screen.xsize
+	temp2 <<= 1
+	DrawRect(temp1, temp0, temp2, 21, color7, color7, color7, 255)
+	temp0++	
+	temp1--
+	DrawRect(temp1, temp0, temp2, 19, 0, 0, 0, 255)
+	temp0++	
+	DrawRect(temp1, temp0, temp2, 1, color7, 0, 0, 255)
+	temp0 += 16
+	DrawRect(temp1, temp0, temp2, 1, color7, 0, 0, 255)
+	
+	text.xpos = screen.xsize
+	text.xpos -= 25
+	text.ypos = achieve.yoffset
+	text.ypos -= 8
+	CallFunction(achieve.header)
+	
+	//Extras Header
+	DrawRect(0, 0, screen.xsize, 14, 0, 0, 0, 255)
+	DrawRect(0, 12, screen.xsize, 1, color7, 0, 0, 255)
+	temp0 = sidebar.w
+	temp0 -= 3
+	DrawRect(0, 14, temp0, 1, color5, color5, color7, 255)
+	temp0 += 3
+	DrawRect(temp0, 14, screen.xsize, 1, color7, color7, color7, 255)
+	
+	text.xpos = 105
+	text.ypos = 8
+	CallFunction(extras.header)	
+end event
+
+
+event ObjectStartup	
+	LoadSpriteSheet("Menus/Options.gif")
+	
+	//Load font sprites
+	temp0 = 0
+	temp1 = 0
+	while temp0 < 88
+		while temp1 < 128
+			SpriteFrame(0, 0, 8, 8, temp1, temp0)
+			temp1 += 8
+		loop
+		temp1 = 0
+		temp0 += 8
+	loop
+	
+	//Start second font at 176
+	SpriteFrame(0, 0, 17, 18, 138, 110) //176 A Header Alphabet
+	SpriteFrame(0, 0, 17, 18, 156, 110)
+	SpriteFrame(0, 0, 17, 18, 174, 110)
+	SpriteFrame(0, 0, 17, 18, 192, 110)
+	SpriteFrame(0, 0, 16, 18, 210, 110) //180 E
+	SpriteFrame(0, 0, 16, 18, 227, 110)	
+	SpriteFrame(0, 0, 18, 18, 244, 110)
+	SpriteFrame(0, 0, 17, 18, 263, 110)
+	SpriteFrame(0, 0, 8, 18, 281, 110) // I
+	SpriteFrame(0, 0, 16, 18, 290, 110)
+	SpriteFrame(0, 0, 18, 18, 307, 110)
+	SpriteFrame(0, 0, 17, 18, 326, 110)
+	SpriteFrame(0, 0, 18, 18, 344, 110) // M
+	SpriteFrame(0, 0, 17, 18, 363, 110)
+	SpriteFrame(0, 0, 18, 18, 138, 129) //190
+	SpriteFrame(0, 0, 17, 18, 157, 129)
+	SpriteFrame(0, 0, 18, 18, 175, 129)
+	SpriteFrame(0, 0, 18, 18, 194, 129) // R
+	SpriteFrame(0, 0, 16, 18, 213, 129)
+	SpriteFrame(0, 0, 16, 18, 230, 129)
+	SpriteFrame(0, 0, 17, 18, 247, 129)
+	SpriteFrame(0, 0, 17, 18, 265, 129)
+	SpriteFrame(0, 0, 24, 18, 283, 129)
+	SpriteFrame(0, 0, 17, 18, 308, 129)
+	SpriteFrame(0, 0, 17, 18, 326, 129)
+	SpriteFrame(0, 0, 17, 18, 344, 129) //201 Z
+	
+	SpriteFrame(0, 0, 32, 32, 165, 66) //202 Blue Tiles BG
+	SpriteFrame(-35, -44, 69, 87, 255, 1) //203 Extras Pocky
+	SpriteFrame(-32, -42, 63, 83, 325, 1) //204 Extras Flicky
+	SpriteFrame(-50, -71, 99, 142, 389, 1) //205 Extras Eggman
+	
+	SpriteFrame(0, 0, 120, 31, 309, 148) //206 Extra starless
+	SpriteFrame(0, 0, 120, 47, 309, 180) //207 Extra starred
+	SpriteFrame(5, 3, 111, 22, 309, 228) //208 Extra highlight
+	SpriteFrame(5, 3, 111, 22, 309, 251) //209 Extra greyBG
+	
+	//Extras icons
+	SpriteFrame(9, 5, 26, 18, 198, 53) //210 Em Gauntlet
+	SpriteFrame(9, 5, 26, 18, 198, 72) //211 Boss Rush
+	SpriteFrame(9, 5, 26, 18, 225, 53) //212 Special Maker
+	SpriteFrame(9, 5, 26, 18, 198, 91) //213 
+	SpriteFrame(9, 5, 26, 18, 225, 72) //214 
+	SpriteFrame(9, 5, 26, 18, 198, 72) //215 Boss Rush
+	SpriteFrame(9, 5, 26, 18, 225, 91) //216 Locked
+	
+	SpriteFrame(16, 28, 99, 14, 309, 274) //217 little grey bois
+	SpriteFrame(25, 28, 12, 11, 255, 89) //218 Extra Complete Star
+	SpriteFrame(-17, -8, 17, 19, 268, 89) //219 Achieve Left Triangle
+	SpriteFrame(0, -8, 17, 19, 286, 89) //220 Achieve Right Triangle
+	SpriteFrame(0, -8, 1, 19, 286, 89) //221 Achieve Bar
+	SpriteFrame(0, 0, 32, 32, 430, 144) //222 Yellow Tiles BG	
+	SpriteFrame(-17, 4, 17, 19, 129, 66) //223 Extra Left Triangle
+	SpriteFrame(0, 4, 17, 19, 147, 66) //224 Extra Right Triangle
+	SpriteFrame(0, 4, 1, 19, 147, 66) //225 Extra Bar
+	
+	//Achievement Icons	
+	SpriteFrame(2, 2, 50, 35, 1, 258) //226 Blast Processing
+	SpriteFrame(2, 2, 50, 35, 52, 258) //227 Ring King
+	SpriteFrame(2, 2, 50, 35, 103, 258) //228 Ramp Ring Acrobatics
+	SpriteFrame(2, 2, 50, 35, 154, 258) //229 Secret of Marble Zone
+	SpriteFrame(2, 2, 50, 35, 205, 258) //230 Block Buster
+	SpriteFrame(2, 2, 50, 35, 256, 258) //231 Rooftop Run
+	SpriteFrame(2, 2, 50, 35, 1, 294) //232 Chaos Connoisseur
+	SpriteFrame(2, 2, 50, 35, 52, 294) //233 Secret of Labyrinth Zone
+	SpriteFrame(2, 2, 50, 35, 103, 294) //234 Flawless Pursuit
+	SpriteFrame(2, 2, 50, 35, 154, 294) //235 Out of Order
+	SpriteFrame(2, 2, 50, 35, 205, 294) //236 Bombs Away
+	SpriteFrame(2, 2, 50, 35, 256, 294) //237 Hidden Transporter
+	SpriteFrame(2, 2, 50, 35, 1, 330) //238 Eye Protection
+	SpriteFrame(2, 2, 50, 35, 52, 330) //239 One for the Road
+	SpriteFrame(2, 2, 50, 35, 103, 330) //240 Beat the CLock
+	SpriteFrame(2, 2, 50, 35, 154, 330)  //241 Stairway To Heaven
+	SpriteFrame(2, 2, 50, 35, 205, 330) //242 Death Chamber
+	SpriteFrame(2, 2, 50, 35, 256, 330) //243 Get to the Points
+	SpriteFrame(2, 2, 50, 35, 1, 366) //244 Monitor Mania
+	SpriteFrame(2, 2, 50, 35, 52, 366) //245 Blank
+	SpriteFrame(2, 2, 50, 35, 1, 366) //246 Blank
+	SpriteFrame(2, 2, 50, 35, 1, 366) //247 Blank
+	SpriteFrame(2, 2, 50, 35, 1, 366) //248 Blank
+	SpriteFrame(2, 2, 50, 35, 1, 366) //249 Blank
+	
+	SpriteFrame(0, 0, 71, 14, 309, 304) //250 Chara Select bg
+	SpriteFrame(0, 0, 15, 14, 309, 289) //251 Chara Select Sonic
+	SpriteFrame(20, 0, 13, 14, 325, 289) //252 Chara Select Tails
+	SpriteFrame(36, 0, 16, 14, 339, 289) //253 Chara Select Knux
+	SpriteFrame(55, 0, 16, 14, 356, 289) //254 Chara Select Amy
+
+	SpriteFrame(0, 0, 158, 31, 309, 336) //250 mobile Chara Select bg
+	SpriteFrame(0, 0,  36, 28, 309, 368) //251 mobile Chara Select Sonic
+	SpriteFrame(40, 0, 36, 28, 346, 368) //252 mobile Chara Select Tails
+	SpriteFrame(80, 0, 36, 28, 383, 368) //253 mobile Chara Select Knux
+	SpriteFrame(120, 0, 36, 28, 420, 368) //254 mobile Chara Select Amy
+	
+end event

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org">
+  <Images>
+    <ImageFromSheet id="seat" sheet="Global/Eggman.gif" sourcex="131" sourcey="172" width="64" height="21">
+      <Offset X="-28" Y="-32" />
+    </ImageFromSheet>
+    <ImageFromSheet id="egg1" sheet="Global/Eggman.gif" sourcex="131" sourcey="172" width="27" height="21">
+      <Offset X="-28" Y="-32" />
+    </ImageFromSheet>
+    <ImageFromSheet id="egg2" sheet="Global/Eggman.gif" sourcex="131" sourcey="193" width="64" height="35">
+      <Offset X="-28" Y="-11" />
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Part" description="Which piece of the Eggmobile this object is." type="type" startbit="0" length="2" />
+  </Properties>
+  <Enums>
+    <Enum name="type">
+      <EnumMember name="Eggmobile" />
+      <EnumMember name="Seat" />
+    </Enum>
+  </Enums>
+  <ImageSets>
+    <ImageSet id="eggmobile">
+      <ImageRef image="egg1" xflip="AlwaysFlip" />
+      <ImageRef image="egg2" xflip="AlwaysFlip" />
+    </ImageSet>
+    <ImageSet id="seat">
+      <ImageRef image="seat" xflip="AlwaysFlip" />
+    </ImageSet>
+  </ImageSets>
+  <DefaultImage>
+    <ImageSetRef set="eggmobile" />
+  </DefaultImage>
+  <Subtypes>
+    <Subtype id="00" name="Eggmobile">
+      <ImageSetRef set="eggmobile" />
+    </Subtype>
+    <Subtype id="01" name="Seat">
+      <ImageSetRef set="seat" />
+    </Subtype>
+  </Subtypes>
+</ObjDef>

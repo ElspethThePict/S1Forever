@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org">
+  <Images>
+    <ImageFromSheet id="tbox" sheet="Global/Display.gif" sourcex="239" sourcey="239" width="16" height="16">
+      <Offset X="-8" Y="-8"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Trigger" description="Which effect this Tube Switch should apply." type="triggers" startbit="0" length="8" />
+  </Properties>
+  <Enums>
+    <Enum name="triggers">
+      <EnumMember name="Tunnel On Right" />
+      <EnumMember name="Tunnel On Left" />
+    </Enum>
+  </Enums>
+  <ImageSets>
+    <ImageSet id="tubeswitch">
+      <ImageRef image="tbox">
+        <Offset X="-8" Y="-8" />
+      </ImageRef>
+      <ImageRef image="tbox">
+        <Offset X="-8" Y="8" />
+      </ImageRef>
+      <ImageRef image="tbox">
+        <Offset X="8" Y="-8" />
+      </ImageRef>
+      <ImageRef image="tbox">
+        <Offset X="8" Y="8" />
+      </ImageRef>
+    </ImageSet>
+  </ImageSets>
+  <DefaultImage>
+    <ImageSetRef set="tubeswitch" />
+  </DefaultImage>
+  <Subtypes>
+    <Subtype id="00" name="Tunnel On Right">
+      <ImageSetRef set="tubeswitch" />
+    </Subtype>
+    <Subtype id="01" name="Tunnel On Left">
+      <ImageSetRef set="tubeswitch" />
+    </Subtype>
+  </Subtypes>
+</ObjDef>

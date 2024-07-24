@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="ring">
+  <Images>
+    <ImageFromSheet id="ring" sheet="Global/Items.gif" sourcex="1" sourcey="1" width="16" height="16">
+      <Offset X="-8" Y="-8"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Mode" description="How this Ring should behave." type="modes" startbit="0" length="8" /> <!-- #Forever - reworked this to add 2P exlcusive rings (btw perfect bonus looks at using the s2 system, but that system's kinda broken so let's not focus on that) -->
+  </Properties>
+  <Enums>
+    <Enum name="modes">
+      <EnumMember name="Normal" />
+      <EnumMember name="Achievement" />
+      <EnumMember name="2P Exclusive" />
+    </Enum>
+  </Enums>
+  <Subtypes>
+    <Subtype id="00" name="Normal" image="ring" />
+    <Subtype id="01" name="Award Achievement" image="ring" />
+    <Subtype id="02" name="2P Exclusive" image="ring" />
+  </Subtypes>
+</ObjDef>

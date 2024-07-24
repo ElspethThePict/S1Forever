@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org">
+  <Images>
+    <ImageFromSheet id="frame1" sheet="GHZ/Objects.gif" sourcex="167" sourcey="1" width="16" height="16">
+      <Offset X="-8" Y="-8" />
+    </ImageFromSheet>
+    <ImageFromSheet id="frame2" sheet="GHZ/Objects.gif" sourcex="115" sourcey="18" width="16" height="19">
+      <Offset X="8" Y="-8" />
+    </ImageFromSheet>
+    <ImageFromSheet id="frame3" sheet="GHZ/Objects.gif" sourcex="132" sourcey="18" width="16" height="24">
+      <Offset X="24" Y="-8" />
+    </ImageFromSheet>
+    <ImageFromSheet id="frame4" sheet="GHZ/Objects.gif" sourcex="149" sourcey="18" width="16" height="20">
+      <Offset X="40" Y="-8" />
+    </ImageFromSheet>
+    <ImageFromSheet id="frame5" sheet="GHZ/Objects.gif" sourcex="149" sourcey="18" width="0" height="0">
+      <Offset X="56" Y="-8" />
+    </ImageFromSheet>
+    <ImageFromSheet id="frame6" sheet="GHZ/Objects.gif" sourcex="166" sourcey="18" width="16" height="30">
+      <Offset X="72" Y="-24" />
+    </ImageFromSheet>
+    <ImageFromSheet id="frame7" sheet="GHZ/Objects.gif" sourcex="115" sourcey="38" width="16" height="30">
+      <Offset X="88" Y="-24" />
+    </ImageFromSheet>
+    <ImageFromSheet id="frame8" sheet="GHZ/Objects.gif" sourcex="132" sourcey="43" width="16" height="30">
+      <Offset X="104" Y="-24" />
+    </ImageFromSheet>
+  </Images>
+  <ImageSets>
+    <ImageSet id="spikeslogs">
+      <ImageRef image="frame1" />
+      <ImageRef image="frame2" />
+      <ImageRef image="frame3" />
+      <ImageRef image="frame4" />
+      <ImageRef image="frame5" />
+      <ImageRef image="frame6" />
+      <ImageRef image="frame7" />
+      <ImageRef image="frame8" />
+    </ImageSet>
+  </ImageSets>
+  <DefaultImage>
+    <ImageSetRef set="spikeslogs" />
+  </DefaultImage>
+</ObjDef>

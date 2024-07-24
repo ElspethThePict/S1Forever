@@ -1,0 +1,407 @@
+//-------Aliases-------//
+private alias object.value0 : modes.yoffset
+private alias object.value1 : modes.ymax
+private alias object.value2 : modes.ymin
+private alias object.value3 : modes.highlight
+private alias object.value4 : modes.drawline
+private alias object.value5 : modes.xpos
+private alias object.value6 : modes.ypos
+private alias object.value7 : modes.align
+private alias object.value8 : modes.color
+private alias object.value9 : modes.extime
+
+private alias 0 : TEXT_LEFT_ALIGN
+private alias 1 : TEXT_RIGHT_ALIGN
+private alias 2 : TEXT_CENTER_ALIGN
+private alias 0 : HEADER_TEXT_GREY
+private alias 1 : HEADER_TEXT_BLUE
+private alias 2 : HEADER_TEXT_GOLD
+private alias 90 : text.margin
+private alias 50 : text.margin.right
+private alias 94 : achieve.name
+private alias 109 : achieve.desc
+
+private alias 3 : modes.count
+
+private alias 3 : columnsize_left
+private alias 2 : columnsize_right
+
+private alias 5 : achieve_rowlen
+private alias 3 : achieve_collen
+private alias 64 : at.sym
+
+// Function declarations
+reserve function modes.control
+reserve function modes.offset
+reserve function modes.header
+reserve function modes.text
+reserve function modes.load
+reserve function modes.exit
+reserve function modes.desc
+
+//Static Values
+
+
+//Tables
+private table ModesNames
+	4, 6, 8, 128, 128, 128
+end table
+
+private table ModesDesc
+	5, 7, 9, 129, 129, 129
+end table
+
+
+
+function modes.offset
+	modes.ymin = modes.highlight
+	modes.ymin *= -73
+	modes.ymin += 32
+	modes.ymax = modes.ymin
+	modes.ymax += 135
+	
+	if modes.yoffset > modes.ymax
+		modes.yoffset -= 3
+		if modes.yoffset < modes.ymax
+			modes.yoffset = modes.ymax
+		end if
+	else
+		if modes.yoffset < modes.ymin
+			modes.yoffset += 3
+			if modes.yoffset > modes.ymin
+				modes.yoffset = modes.ymin
+			end if
+		end if
+	end if
+end function
+
+function modes.control
+	if inputPress.up == 1
+		CallFunction(main.sound)
+		modes.highlight--
+		while modes.highlight < 0
+			modes.highlight += modes.count
+		loop
+	else
+		if inputPress.down == 1
+			CallFunction(main.sound)
+			modes.highlight++
+			modes.highlight %= modes.count
+		else
+			if inputPress.buttonB == 1
+				object.state = modes.exit
+				menu.state = 1
+			else
+				CallFunction(main.soundconf)
+				temp0 = inputPress.buttonA
+				temp0 |= inputPress.start
+				if temp0 == 1
+					object.state = modes.load
+				end if
+			end if
+		end if
+	end if
+end function
+
+function modes.exit
+	modes.extime++
+	if modes.extime >= 30
+		ResetObjectEntity(object.entityPos, TypeName[Blank Object], 0, 0, 0)
+	end if
+end function
+
+function modes.load
+	modes.extime += 16
+	music.volume -= 4
+	SetScreenFade(0, 0, 0, modes.extime)
+	if modes.extime >= 384
+		StopMusic()
+		switch modes.highlight
+			case 0 //Time Attack
+				stage.activeList = PRESENTATION_STAGE
+				stage.listPos = 8
+				LoadStage()
+				break
+			case 1 //Arcade
+				stage.activeList = PRESENTATION_STAGE
+				stage.listPos = 3
+				LoadStage()
+				break
+			case 2 //Golf
+				stage.activeList = PRESENTATION_STAGE
+				stage.listPos = 11
+				LoadStage()
+				break
+		end switch
+	end if
+end function
+
+event ObjectMain
+	if object.state == 0
+		object.state = modes.control
+		modes.yoffset = 32
+	else
+		CallFunction(object.state)	
+	end if
+	CallFunction(modes.offset)
+end event
+
+function modes.header
+	switch modes.color
+		case 0 //GREY
+			CopyPalette(0, 218, 0, 240, 5)
+			break
+		case 1 //BLUE
+			CopyPalette(0, 213, 0, 240, 5)
+			break
+		case 2 //GOLD
+			CopyPalette(0, 208, 0, 240, 5)
+			break
+	end switch
+	
+	if modes.align == TEXT_LEFT_ALIGN
+		GetTextInfo(temp2, 1, TEXTINFO_TEXTSIZE, modes.drawline, 0)
+		temp3 = 0
+		temp4 = modes.xpos
+		while temp3 < temp2
+			GetTextInfo(temp7, 1, TEXTINFO_TEXTDATA, modes.drawline, temp3)
+			if temp7 > 64
+				temp7 -= 65
+				GetTableValue(temp5, temp7, headerspace)
+				if temp6 == 0 //Y following an A
+					if temp7 == 24
+						temp4 -= 4
+					end if
+				end if
+				temp6 = temp7
+				temp7 += 176
+				DrawSpriteScreenXY(temp7, temp4, modes.ypos)
+				temp4 += temp5
+			else
+				temp4 += 4
+			end if
+			temp3++
+		loop
+	else
+		if modes.align == TEXT_RIGHT_ALIGN
+			GetTextInfo(temp2, 1, TEXTINFO_TEXTSIZE, modes.drawline, 0)
+			temp3 = temp2
+			temp4 = modes.xpos
+			while temp3 > 0
+				temp3--
+				GetTextInfo(temp7, 1, TEXTINFO_TEXTDATA, modes.drawline, temp3)
+				if temp7 > 64
+					temp7 -= 65
+					GetTableValue(temp5, temp7, headerspace)
+					if temp6 == 24 //Y following an A
+						if temp7 == 0
+							temp4 -= 4
+						end if
+					end if
+					temp6 = temp7
+					temp4 -= temp5
+				else
+					temp4 -= 4
+				end if
+			loop
+			DrawSpriteScreenXY(202, temp4, modes.ypos)
+			while temp4 < screen.xsize
+				DrawSpriteScreenXY(203, temp4, modes.ypos)
+				temp4++
+			loop
+			
+			temp3 = temp2
+			temp4 = modes.xpos
+			while temp3 > 0
+				temp3--
+				GetTextInfo(temp7, 1, TEXTINFO_TEXTDATA, modes.drawline, temp3)
+				if temp7 > 64
+					temp7 -= 65
+					GetTableValue(temp5, temp7, headerspace)
+					if temp6 == 24 //Y following an A
+						if temp7 == 0
+							temp4 -= 4
+						end if
+					end if
+					temp6 = temp7
+					temp7 += 176
+					temp4 -= temp5
+					DrawSpriteScreenXY(temp7, temp4, modes.ypos)
+				else
+					temp4 -= 4
+				end if
+			loop
+		end if
+	end if
+end function
+
+function modes.desc
+	SetPaletteEntry(0, 6, 0)
+	
+	GetTextInfo(temp2, 1, TEXTINFO_TEXTSIZE, modes.drawline, 0)
+	temp3 = 0
+	temp4 = modes.xpos
+	while temp3 < temp2
+		GetTextInfo(temp7, 1, TEXTINFO_TEXTDATA, modes.drawline, temp3)
+		if temp7 == 64
+			temp4 = modes.xpos
+			modes.ypos += 8
+		else			
+			DrawSpriteScreenXY(temp7, temp4, modes.ypos)
+			temp4 += 8
+		end if
+		temp3++
+	loop	
+	
+	temp7 = color7
+	temp7 <<= 8
+	temp7 += color7
+	temp7 <<= 8
+	temp7 += color7
+	SetPaletteEntry(0, 6, temp7)
+end function
+
+event ObjectDraw
+	//Game Modes
+	DrawRect(0, 0, screen.xsize, screen.ysize, color7, color7, color7, 255)
+	temp0 = 0
+	temp1 = modes.yoffset
+	while temp0 < 6
+		if temp0 == modes.highlight
+			modes.color = HEADER_TEXT_BLUE
+			DrawRect(0, temp1, screen.xsize, 74, color5, color5, color7, 255)
+		else
+			modes.color = HEADER_TEXT_GREY
+		end if
+		DrawRect(0, temp1, screen.xsize, 9, 0, 0, 0, 255)
+		temp1 += 4
+		DrawRect(0, temp1, screen.xsize, 1, color5, color5, color7, 255)
+		temp1++
+		DrawRect(0, temp1, screen.xsize, 2, color7, 0, 0, 255)
+		temp1 -= 4
+		modes.xpos = screen.xsize
+		modes.xpos -= 2
+		modes.ypos = temp1
+		GetTableValue(modes.drawline, temp0, ModesNames)
+		modes.align = TEXT_RIGHT_ALIGN
+		CallFunction(modes.header)
+		temp1 += 28
+		
+		modes.xpos = screen.xsize
+		modes.xpos -= 172
+		modes.ypos = temp1
+		GetTableValue(modes.drawline, temp0, ModesDesc)
+		CallFunction(modes.desc)
+		
+		temp1 -= 12
+		temp2 = 204
+		temp2 += temp0
+		temp3 = sidebar.w
+		temp3 += 6
+
+		switch saved.GHZwater
+			case 0 //OG
+				EditFrame(204, 0, 0, 123, 48, 489, 1) //204 Time Attack Icon
+				break
+			case 1 //Forever
+				EditFrame(204, 0, 0, 123, 48, 613, 262) //204 Time Attack Icon
+				break
+			case 2 //Title
+				EditFrame(204, 0, 0, 123, 48, 489, 311) //204 Time Attack Icon
+				break
+		end switch
+
+		DrawSpriteScreenXY(temp2, temp3, temp1)
+		
+		temp1 += 56
+		temp0++
+	loop
+	
+	//Header
+	DrawRect(0, 0, screen.xsize, 32, 0, 0, 0, 255)
+	modes.color = HEADER_TEXT_GOLD
+	modes.xpos = sidebar.w
+	modes.xpos += 11
+	modes.ypos = 12
+	modes.drawline = 3
+	modes.align = TEXT_LEFT_ALIGN
+	CallFunction(modes.header)
+	
+	//Grey Tiles
+	temp0 = sidebar.w
+	temp0 -= 3
+	DrawRect(0, 0, temp0, screen.ysize, color1, color1, color1, 255)
+	DrawRect(temp0, 0, 1, screen.ysize, color7, color7, color7, 255)
+	temp0++
+	DrawRect(temp0, 0, 2, screen.ysize, color7, 0, 0, 255)
+	
+	temp0 = modes.yoffset
+	abs(temp0)
+	//DrawNumbers(48, 400, 20, temp0, 5, 8, 1)
+end event
+
+
+event ObjectStartup	
+	LoadSpriteSheet("Menus/Options.gif")
+	
+	//Load font sprites
+	temp0 = 0
+	temp1 = 0
+	while temp0 < 88
+		while temp1 < 128
+			SpriteFrame(0, 0, 8, 8, temp1, temp0)
+			temp1 += 8
+		loop
+		temp1 = 0
+		temp0 += 8
+	loop
+	
+	//Start second font at 176
+	SpriteFrame(0, 0, 17, 18, 138, 110) //176 A Header Alphabet
+	SpriteFrame(0, 0, 17, 18, 156, 110)
+	SpriteFrame(0, 0, 17, 18, 174, 110)
+	SpriteFrame(0, 0, 17, 18, 192, 110)
+	SpriteFrame(0, 0, 16, 18, 210, 110) //180 E
+	SpriteFrame(0, 0, 16, 18, 227, 110)	
+	SpriteFrame(0, 0, 18, 18, 244, 110)
+	SpriteFrame(0, 0, 17, 18, 263, 110)
+	SpriteFrame(0, 0, 8, 18, 281, 110) // I
+	SpriteFrame(0, 0, 16, 18, 290, 110)
+	SpriteFrame(0, 0, 18, 18, 307, 110)
+	SpriteFrame(0, 0, 17, 18, 326, 110)
+	SpriteFrame(0, 0, 18, 18, 344, 110) // M
+	SpriteFrame(0, 0, 17, 18, 363, 110)
+	SpriteFrame(0, 0, 18, 18, 138, 129) //190
+	SpriteFrame(0, 0, 17, 18, 157, 129)
+	SpriteFrame(0, 0, 18, 18, 175, 129)
+	SpriteFrame(0, 0, 18, 18, 194, 129) // R
+	SpriteFrame(0, 0, 16, 18, 213, 129)
+	SpriteFrame(0, 0, 16, 18, 230, 129)
+	SpriteFrame(0, 0, 17, 18, 247, 129)
+	SpriteFrame(0, 0, 17, 18, 265, 129)
+	SpriteFrame(0, 0, 24, 18, 283, 129)
+	SpriteFrame(0, 0, 17, 18, 308, 129)
+	SpriteFrame(0, 0, 17, 18, 326, 129)
+	SpriteFrame(0, 0, 17, 18, 344, 129) //201 Z	
+	
+	SpriteFrame(-21, 3, 21, 21, 340, 85) //202 Game Modes slope
+	SpriteFrame(0, 3, 1, 21, 360, 85) //203 Game Modes bar
+
+	switch saved.GHZwater
+		case 0 //OG
+			SpriteFrame(0, 0, 123, 48, 489, 1) //204 Time Attack Icon
+			break
+		case 1 //Forever
+			SpriteFrame(0, 0, 123, 48, 613, 262) //204 Time Attack Icon
+			break
+		case 2 //Title
+			SpriteFrame(0, 0, 123, 48, 489, 311) //204 Time Attack Icon
+			break
+	end switch
+	
+	SpriteFrame(0, 0, 123, 48, 489, 50) //205 Arcade Icon
+	SpriteFrame(0, 0, 123, 48, 489, 99) //206 Golf Icon
+	SpriteFrame(0, 0, 123, 48, 489, 148) //207 Blank Icon
+	SpriteFrame(0, 0, 123, 48, 489, 148) //208 Blank Icon
+	SpriteFrame(0, 0, 123, 48, 489, 148) //209 Blank Icon
+end event

@@ -1,0 +1,129 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Golf Sand Object
+// ----------------------------------
+
+//-------Aliases-------//
+
+// Function declarations
+reserve function GolfSand_DebugDraw
+reserve function GolfSand_DebugSpawn
+
+// Static Values
+
+// Tables
+
+function GolfSand_DebugDraw
+	DrawSprite(0)
+end function
+
+
+function GolfSand_DebugSpawn
+	CreateTempObject(TypeName[Golf Sand], 4, object.xpos, object.ypos)
+end function
+
+
+event ObjectMain
+	temp1 = object.propertyValue
+	temp1 <<= 4
+	if options.gameMode == 5
+		BoxCollisionTest(C_TOUCH, object.entityPos, 0, -5, temp1, 3, 0, -5, 6, 4, 15)
+		if checkResult == 1
+			object[0].xvel >>= 2
+			object[0].speed >>= 2
+			if object[0].yvel > 0
+				temp1 = object[0].value44
+				temp1 >>= 4
+				if temp1 < 0x10000
+					object[0].state = Golf_Ground
+				else
+					//bounce
+					FlipSign(temp1)
+					object[0].gravity = GRAVITY_AIR
+					Sin256(object[0].xvel, object[0].angle)
+					object[0].xvel *= temp1
+					Cos256(temp0, object[0].angle)
+					temp0 *= object[0].speed
+					object[0].xvel += temp0
+					object[0].xvel >>= 8
+					Sin256(object[0].yvel, object[0].angle)
+					object[0].yvel *= object[0].speed
+					Cos256(temp0, object[0].angle)
+					temp0 *= temp1
+					object[0].yvel = temp0
+					object[0].yvel >>= 8
+					object[0].speed = object.xvel
+					object[0].scrollTracking = 1
+					object[0].angle = 0
+					object[0].collisionMode = CMODE_FLOOR
+				end if
+			else
+				object[0].yvel >>= 2
+			end if
+		end if
+		BoxCollisionTest(C_BOX, object.entityPos, 0, 3, temp1, 30, 0, -5, 6, 4, 15)
+	else
+		foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+			BoxCollisionTest(C_PLATFORM, object.entityPos, 0, 3, temp1, 30, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
+		next
+	end if
+end event
+
+event ObjectDraw
+	temp0 = 0
+	temp1 = object.xpos
+	temp3 = object.ypos
+	temp4 = 0
+	while temp4 < 5
+		while temp0 < object.propertyValue
+			temp2 = temp0
+			temp2 &= 1
+			if temp3 > object.ypos
+				temp2 += 2
+			end if
+			DrawSpriteXY(temp2, temp1, temp3)
+			temp1 += 0x100000
+			temp0++
+		loop
+		temp0 = 0
+		temp1 = object.xpos
+		temp3 += 0x100000
+		temp4++
+	loop
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("GHZ/Objects2.gif")
+	SpriteFrame(0, 0, 16, 16, 135, 41) //Sand Left
+	SpriteFrame(0, 0, 16, 16, 151, 41) //Sand Right
+	SpriteFrame(0, 0, 16, 16, 135, 57) //Sand Bottom Left
+	SpriteFrame(0, 0, 16, 16, 151, 57) //Sand Bottom Right
+	
+	
+	SetTableValue(TypeName[Golf Sand], DebugMode_ObjCount, DebugMode_TypesTable)
+	SetTableValue(GolfSand_DebugDraw, DebugMode_ObjCount, DebugMode_DrawTable)
+	SetTableValue(GolfSand_DebugSpawn, DebugMode_ObjCount, DebugMode_SpawnTable)
+	DebugMode_ObjCount++
+	
+	temp0 = 0
+	foreach (TypeName[Golf Sand], arrayPos0, ALL_ENTITIES)			
+		object[arrayPos0].priority = PRIORITY_ACTIVE
+		object[arrayPos0].drawOrder = 3
+		temp0 = 1
+	next
+	if temp0 == 1
+		foreach (TypeName[V Platform 2], arrayPos0, ALL_ENTITIES)
+			object[arrayPos0].drawOrder = 2
+		next
+	end if
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Items.gif")
+	SpriteFrame(-8, -44, 16, 64, 1, 137)
+end event

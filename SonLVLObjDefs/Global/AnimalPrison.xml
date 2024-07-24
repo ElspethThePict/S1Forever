@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org">
+  <Images>
+    <ImageFromSheet id="main" sheet="Global/Items.gif" sourcex="109" sourcey="166" width="64" height="62">
+      <Offset X="-32" Y="-32"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="top" sheet="Global/Items.gif" sourcex="84" sourcey="166" width="22" height="16">
+      <Offset X="-11" Y="-48"/>
+    </ImageFromSheet>
+  </Images>
+  <ImageSets>
+    <ImageSet id="prison">
+      <ImageRef image="top" />
+      <ImageRef image="main" />
+    </ImageSet>
+  </ImageSets>
+  <DefaultImage>
+    <ImageSetRef set="prison" />
+  </DefaultImage>
+</ObjDef>

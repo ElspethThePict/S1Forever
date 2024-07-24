@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="frame">
+  <Images>
+    <ImageFromSheet id="frame" sheet="MZ/Objects.gif" sourcex="317" sourcey="363" width="64" height="32">
+      <Offset X="-32" Y="-16"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Collapse From" description="Which side this platform should collapse from upon contact." type="collfrom" startbit="0" length="1" />
+  </Properties>
+  <Enums>
+    <Enum name="collfrom">
+      <EnumMember name="Left" />
+      <EnumMember name="Bottom" />
+    </Enum>
+  </Enums>
+  <Subtypes>
+    <Subtype id="00" name="Collapse From Left" image="frame" />
+    <Subtype id="01" name="Collapse From Bottom" image="frame" />
+  </Subtypes>
+</ObjDef>

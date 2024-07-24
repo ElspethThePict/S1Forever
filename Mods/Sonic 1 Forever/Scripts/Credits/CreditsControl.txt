@@ -1,0 +1,253 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Credits Control Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias 1 : TYPE_CREDITSCONTROL
+public alias 256 : GROUP_PLAYERS
+public alias 65536 : HITBOX_AUTO
+public alias arrayPos6 : currentPlayer
+public alias arrayPos7 : playerCount
+
+public alias saveRAM[257] : saved.spindash
+public alias saveRAM[258] : saved.speedCap
+public alias saveRAM[259] : saved.airSpeedCap
+public alias saveRAM[260] : saved.spikeBehavior
+public alias saveRAM[261] : saved.shieldType
+public alias saveRAM[262] : saved.superStates
+public alias saveRAM[263] : saved.Jumplock
+public alias saveRAM[264] : saved.Supermusic
+public alias saveRAM[265] : saved.Dropdash
+public alias saveRAM[266] : saved.Instashield
+public alias saveRAM[267] : saved.Peelout
+public alias saveRAM[268] : saved.FlightCancel
+public alias saveRAM[269] : saved.SonicMaxDash
+public alias saveRAM[270] : saved.Speen
+public alias saveRAM[271] : saved.Supercancel
+public alias saveRAM[272] : saved.Drowning
+public alias saveRAM[273] : saved.Timer
+public alias saveRAM[274] : saved.region
+public alias saveRAM[275] : saved.UFO
+public alias saveRAM[276] : saved.rotate
+public alias saveRAM[277] : saved.invincibilityType
+public alias saveRAM[280] : saved.gogoplus
+public alias saveRAM[281] : saved.lives
+public alias saveRAM[282] : saved.bubble
+public alias saveRAM[283] : saved.specialSpin
+public alias saveRAM[295]: saved.mobile
+
+
+
+event ObjectMain
+	switch object.state
+	case 0
+		object.value0 = 320
+		SetScreenFade(0, 0, 0, object.value0)
+		object.state++
+		if credits.screen == 0
+			PlayMusic(0)
+		end if
+		break
+	case 1
+		if object.value0 > 0
+			object.value0 -= 8
+		else
+			object.alpha = 128
+			object.state++
+		end if
+		SetScreenFade(0, 0, 0, object.value0)
+		break
+	case 2
+		object.value0++
+		if object.value0 == 136
+			object.value0 = 0
+			object.state++
+		end if
+		break
+	case 3
+		if object.value0 < 256
+			object.value0 += 8
+			SetScreenFade(0, 0, 0, object.value0)
+		else
+			object.state = 0
+			credits.screen++
+			credits.screen %= 10
+			temp0 = credits.screen
+			temp0 <<= 8
+			screen.yoffset = temp0
+			options.attractMode = 1
+			switch credits.screen
+			case 9
+				object.state = 4
+				if saved.superStates == 0
+					if specialStage.emeralds >= 63
+						screen.yoffset = 0xA00
+						//stage.activeList = PRESENTATION_STAGE
+						//stage.listPos = 5
+						//LoadStage()
+					else
+						screen.yoffset = 0x900
+					end if
+				else
+					if specialStage.emeralds >= 127
+						screen.yoffset = 0xA00
+						//stage.activeList = PRESENTATION_STAGE
+						//stage.listPos = 5
+						//LoadStage()
+					else
+						screen.yoffset = 0x900
+					end if
+				end if
+				break
+			case 1
+			case 8
+				stage.activeList = REGULAR_STAGE
+				stage.listPos = 0
+				LoadStage()
+				break
+			case 2
+				stage.activeList = REGULAR_STAGE
+				stage.listPos = 4
+				LoadStage()
+				break
+			case 3
+				stage.activeList = REGULAR_STAGE
+				stage.listPos = 8
+				LoadStage()
+				break
+			case 4
+				stage.activeList = REGULAR_STAGE
+				stage.listPos = 11
+				LoadStage()
+				break
+			case 5
+				stage.activeList = REGULAR_STAGE
+				stage.listPos = 14
+				LoadStage()
+				break
+			case 6
+				stage.activeList = REGULAR_STAGE
+				stage.listPos = 15
+				LoadStage()
+				break
+			case 7
+				stage.activeList = REGULAR_STAGE
+				stage.listPos = 16
+				LoadStage()
+				break
+			end switch
+			SetScreenFade(0, 0, 0, 255)
+		end if
+		break
+	case 4
+		if object.value0 > 0
+			object.value0 -= 8
+		else
+			object.alpha = 128
+			object.state++
+		end if
+		SetScreenFade(0, 0, 0, object.value0)
+		break
+	case 5
+		object.value0++
+		if object.value0 == 0x4B0
+			object.value0 = 0
+			object.state++
+		end if
+		
+		if inputPress.start == 1
+			object.value0 = 0
+			object.state = 6
+		end if
+		if inputPress.buttonA == 1
+			object.value0 = 0
+			object.state = 6
+		end if
+		if inputPress.buttonB == 1
+			object.value0 = 0
+			object.state = 6
+		end if
+		if inputPress.buttonC == 1
+			object.value0 = 0
+			object.state = 6
+		end if
+		break
+	case 6
+		if object.value0 < 256
+			object.value0 += 8
+			SetScreenFade(0, 0, 0, object.value0)
+		else
+			stage.activeList = PRESENTATION_STAGE
+			stage.listPos = 0
+			StopMusic()
+			options.attractMode = 0
+			SetScreenFade(0, 0, 0, 255)
+			LoadStage()
+		end if
+		break
+	end switch
+	temp0 = screen.xcenter
+	FlipSign(temp0)
+	temp0 += 256
+	screen.xoffset = temp0
+	if saved.mobile == 1
+		CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+		if checkResult > -1
+			inputPress.start = 1
+		end if
+	end if
+	if inputPress.start == 1
+		if object.state < 6
+			object.state = 6
+		end if
+	end if
+end event
+
+event ObjectDraw
+	//temp0 = credits.screen
+	//temp0--
+	//if temp0 >= 0
+		DrawSpriteScreenXY(credits.screen, screen.xcenter, screen.ycenter)
+	//end if
+end event
+
+event ObjectStartup
+	SetMusicTrack("Credits.ogg", 0, 0)
+	temp0 = credits.screen
+	temp0 <<= 8
+	screen.yoffset = temp0
+	foreach (TypeName[Credits Control], arrayPos0, ALL_ENTITIES)
+		object[arrayPos0].priority = PRIORITY_ACTIVE
+	next
+	player.score = 0
+	
+	if stage.debugMode == 1
+		specialStage.emeralds = 0
+		credits.screen = 8
+	end if
+	
+	LoadSpriteSheet("Ending/CreditsText.gif")
+	SpriteFrame(-120, -8, 239, 16, 1, 1) //0
+	SpriteFrame(-128, -40, 210, 64, 1, 18) //1
+	SpriteFrame(-128, -40, 151, 64, 1, 83) //2
+	SpriteFrame(-120, -40, 239, 64, 1, 148) //3
+	SpriteFrame(-96, -48, 183, 96, 1, 213) //4
+	SpriteFrame(-120, -40, 244, 64, 1, 310) //5
+	SpriteFrame(-104, -48, 212, 96, 1, 375) //6
+	SpriteFrame(-128, -40, 252, 88, 257, 0) //7
+	SpriteFrame(-128, -7, 256, 16, 253, 89) //8
+	
+	SpriteFrame(0, 0, 0, 0, 0, 0) //9 Blank
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+end event

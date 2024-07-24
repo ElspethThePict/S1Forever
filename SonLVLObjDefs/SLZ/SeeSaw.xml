@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="seesaw">
+  <Images>
+    <ImageFromSheet id="seesaw" sheet="SLZ/Objects.gif" sourcex="84" sourcey="59" width="91" height="56">
+      <Offset X="-42" Y="-44"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="orb" sheet="SLZ/Objects.gif" sourcex="156" sourcey="1" width="24" height="22">
+      <Offset X="-12" Y="-11"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Has Orb" description="If this SeeSaw should have an orb or not." type="orbs" startbit="0" length="8" />
+  </Properties>
+  <Enums>
+    <Enum name="orbs">
+      <EnumMember name="True" />
+      <EnumMember name="False" value="255" /> <!-- all non-zero values are "no orb" but the scene uses 0xFF, so let's stick with that -->
+    </Enum>
+  </Enums>
+  <ImageSets>
+    <ImageSet id="hasorb">
+      <ImageRef image="seesaw" />
+      <ImageRef image="orb" >
+        <Offset X="40" Y="-8" />
+      </ImageRef>
+    </ImageSet>
+  </ImageSets>
+  <Subtypes>
+    <Subtype id="00" name="Has Orb">
+      <ImageSetRef set="hasorb" />
+    </Subtype>
+    <Subtype id="FF" name="No Orb" image="seesaw" />
+  </Subtypes>
+</ObjDef>

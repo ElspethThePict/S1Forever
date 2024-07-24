@@ -1,0 +1,156 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Sonic Team Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+
+
+// Function declarations
+
+// Static Values
+
+//Tables
+
+event ObjectStartup
+	LoadSpriteSheet("Menus/Options.gif")
+	
+	//System font starts at 0
+	//Load font sprites
+	temp0 = 0
+	temp1 = 0
+	while temp0 < 88
+		while temp1 < 128
+			SpriteFrame(0, 0, 8, 8, temp1, temp0)
+			temp1 += 8
+		loop
+		temp1 = 0
+		temp0 += 8
+	loop
+	
+	//Start Header font at 176
+	SpriteFrame(0, 0, 17, 18, 138, 110) //176 A Header Alphabet
+	SpriteFrame(0, 0, 17, 18, 156, 110)
+	SpriteFrame(0, 0, 17, 18, 174, 110)
+	SpriteFrame(0, 0, 17, 18, 192, 110)
+	SpriteFrame(0, 0, 16, 18, 210, 110) //180 E
+	SpriteFrame(0, 0, 16, 18, 227, 110)	
+	SpriteFrame(0, 0, 18, 18, 244, 110)
+	SpriteFrame(0, 0, 17, 18, 263, 110)
+	SpriteFrame(0, 0, 8, 18, 281, 110) // I
+	SpriteFrame(0, 0, 16, 18, 290, 110)
+	SpriteFrame(0, 0, 18, 18, 307, 110)
+	SpriteFrame(0, 0, 17, 18, 326, 110)
+	SpriteFrame(0, 0, 18, 18, 344, 110) // M
+	SpriteFrame(0, 0, 17, 18, 363, 110)
+	SpriteFrame(0, 0, 18, 18, 138, 129) //190
+	SpriteFrame(0, 0, 17, 18, 157, 129)
+	SpriteFrame(0, 0, 18, 18, 175, 129)
+	SpriteFrame(0, 0, 18, 18, 194, 129) // R
+	SpriteFrame(0, 0, 16, 18, 213, 129)
+	SpriteFrame(0, 0, 16, 18, 230, 129)
+	SpriteFrame(0, 0, 17, 18, 247, 129)
+	SpriteFrame(0, 0, 17, 18, 265, 129)
+	SpriteFrame(0, 0, 24, 18, 283, 129)
+	SpriteFrame(0, 0, 17, 18, 308, 129)
+	SpriteFrame(0, 0, 17, 18, 326, 129)
+	SpriteFrame(0, 0, 17, 18, 344, 129) //201 Z	
+	
+	//Start Options font at 202
+	SpriteFrame(0, 0, 3, 12, 129, 1) //202
+	SpriteFrame(0, 0, 6, 12, 133, 1)
+	SpriteFrame(0, 0, 10, 12, 140, 1)
+	SpriteFrame(0, 0, 9, 12, 151, 1)	
+	SpriteFrame(0, 0, 9, 12, 161, 1)
+	SpriteFrame(0, 0, 9, 12, 171, 1)
+	SpriteFrame(0, 0, 3, 12, 181, 1)
+	SpriteFrame(0, 0, 4, 12, 185, 1)
+	SpriteFrame(0, 0, 4, 12, 190, 1)
+	SpriteFrame(0, 0, 7, 12, 195, 1)
+	SpriteFrame(0, 0, 9, 12, 203, 1)
+	SpriteFrame(0, 0, 3, 12, 213, 1)
+	SpriteFrame(0, 0, 7, 12, 217, 1)
+	SpriteFrame(0, 0, 3, 12, 225, 1)
+	SpriteFrame(0, 0, 11, 12, 229, 1)
+	SpriteFrame(0, 0, 7, 12, 241, 1)
+	SpriteFrame(0, 0, 5, 12, 249, 1)
+	SpriteFrame(0, 0, 7, 12, 129, 14)	
+	SpriteFrame(0, 0, 7, 12, 137, 14) //220
+	SpriteFrame(0, 0, 7, 12, 145, 14)
+	SpriteFrame(0, 0, 7, 12, 153, 14)
+	SpriteFrame(0, 0, 7, 12, 161, 14)
+	SpriteFrame(0, 0, 7, 12, 169, 14)
+	SpriteFrame(0, 0, 7, 12, 177, 14)
+	SpriteFrame(0, 0, 7, 12, 185, 14)
+	SpriteFrame(0, 0, 3, 12, 193, 14)
+	SpriteFrame(0, 0, 3, 12, 197, 14)
+	SpriteFrame(0, 0, 6, 12, 201, 14)
+	SpriteFrame(0, 0, 6, 12, 208, 14)
+	SpriteFrame(0, 0, 6, 12, 215, 14)
+	SpriteFrame(0, 0, 6, 12, 222, 14)
+	SpriteFrame(0, 0, 10, 12, 229, 14)	
+	SpriteFrame(0, 0, 9, 12, 240, 14)
+	SpriteFrame(0, 0, 8, 12, 129, 27)
+	SpriteFrame(0, 0, 9, 12, 138, 27)
+	SpriteFrame(0, 0, 9, 12, 148, 27)
+	SpriteFrame(0, 0, 7, 12, 158, 27)
+	SpriteFrame(0, 0, 7, 12, 166, 27)
+	SpriteFrame(0, 0, 9, 12, 174, 27) //240
+	SpriteFrame(0, 0, 11, 12, 184, 27)
+	SpriteFrame(0, 0, 5, 12, 196, 27)
+	SpriteFrame(0, 0, 8, 12, 202, 27)
+	SpriteFrame(0, 0, 9, 12, 211, 27)
+	SpriteFrame(0, 0, 6, 12, 221, 27)
+	SpriteFrame(0, 0, 11, 12, 228, 27)
+	SpriteFrame(0, 0, 9, 12, 240, 27)
+	SpriteFrame(0, 0, 10, 12, 129, 40)
+	SpriteFrame(0, 0, 7, 12, 140, 40)
+	SpriteFrame(0, 0, 10, 12, 148, 40)
+	SpriteFrame(0, 0, 7, 12, 159, 40)
+	SpriteFrame(0, 0, 7, 12, 167, 40)
+	SpriteFrame(0, 0, 9, 12, 175, 40)
+	SpriteFrame(0, 0, 10, 12, 185, 40)
+	SpriteFrame(0, 0, 9, 12, 196, 40)
+	SpriteFrame(0, 0, 15, 12, 206, 40)
+	SpriteFrame(0, 0, 9, 12, 222, 40)
+	SpriteFrame(0, 0, 11, 12, 232, 40)
+	SpriteFrame(0, 0, 9, 12, 244, 40)	
+	SpriteFrame(0, 0, 4, 12, 129, 53) //260
+	SpriteFrame(0, 0, 11, 12, 134, 53)
+	SpriteFrame(0, 0, 4, 12, 146, 53)
+	SpriteFrame(0, 0, 5, 12, 151, 53)
+	SpriteFrame(0, 0, 7, 12, 157, 53)
+	SpriteFrame(0, 0, 4, 12, 165, 53)	
+	SpriteFrame(0, 0, 9, 12, 240, 14)
+	SpriteFrame(0, 0, 8, 12, 129, 27)
+	SpriteFrame(0, 0, 9, 12, 138, 27)
+	SpriteFrame(0, 0, 9, 12, 148, 27)
+	SpriteFrame(0, 0, 7, 12, 158, 27)
+	SpriteFrame(0, 0, 7, 12, 166, 27)
+	SpriteFrame(0, 0, 9, 12, 174, 27)
+	SpriteFrame(0, 0, 11, 12, 184, 27)
+	SpriteFrame(0, 0, 5, 12, 196, 27)
+	SpriteFrame(0, 0, 8, 12, 202, 27)
+	SpriteFrame(0, 0, 9, 12, 211, 27)
+	SpriteFrame(0, 0, 6, 12, 221, 27)
+	SpriteFrame(0, 0, 11, 12, 228, 27)
+	SpriteFrame(0, 0, 9, 12, 240, 27)
+	SpriteFrame(0, 0, 10, 12, 129, 40) //280
+	SpriteFrame(0, 0, 7, 12, 140, 40)
+	SpriteFrame(0, 0, 10, 12, 148, 40)
+	SpriteFrame(0, 0, 7, 12, 159, 40)
+	SpriteFrame(0, 0, 7, 12, 167, 40)
+	SpriteFrame(0, 0, 9, 12, 175, 40)
+	SpriteFrame(0, 0, 10, 12, 185, 40)
+	SpriteFrame(0, 0, 9, 12, 196, 40)
+	SpriteFrame(0, 0, 15, 12, 206, 40)
+	SpriteFrame(0, 0, 9, 12, 222, 40)
+	SpriteFrame(0, 0, 11, 12, 232, 40)
+	SpriteFrame(0, 0, 9, 12, 244, 40)	
+	SpriteFrame(0, 0, 5, 12, 170, 53)
+	SpriteFrame(0, 0, 3, 12, 176, 53)
+	SpriteFrame(0, 0, 5, 12, 180, 53)
+	SpriteFrame(0, 0, 9, 12, 186, 53) //295
+end event

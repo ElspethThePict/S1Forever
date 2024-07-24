@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="solid">
+  <Images>
+    <ImageFromSheet id="solid" sheet="Special/Objects.gif" sourcex="276" sourcey="76" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="entrance" sheet="Special/Objects.gif" sourcex="401" sourcey="176" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Behaviour" description="How this Block will act, and where it should be activated from if needed." type="behaviours" startbit="0" length="8" />
+  </Properties>
+  <Enums>
+    <Enum name="behaviours">
+      <EnumMember name="Solid" />
+      <EnumMember name="Entrance (From Top)" />
+      <EnumMember name="Entrance (From Left)" />
+      <EnumMember name="Entrance (From Right)" />
+      <EnumMember name="Entrance (From Bottom)" />
+      <EnumMember name="Entrance (From Right, Small)" />
+    </Enum>
+  </Enums>
+  <Subtypes>
+    <Subtype id="00" name="Solid" image="solid" />
+    <Subtype id="01" name="Entrance (From Top)" image="entrance" />
+    <Subtype id="02" name="Entrance (From Left)" image="entrance" />
+    <Subtype id="03" name="Entrance (From Right)" image="entrance" />
+    <Subtype id="04" name="Entrance (From Bottom)" image="entrance" />
+    <Subtype id="05" name="Entrance (From Right, Small)" image="entrance" />
+  </Subtypes>
+</ObjDef>

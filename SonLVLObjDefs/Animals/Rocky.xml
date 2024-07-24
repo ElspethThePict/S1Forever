@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="rocky">
+  <Images>
+    <ImageFromSheet id="rocky" sheet="Global/Items2.gif" sourcex="83" sourcey="66" width="16" height="24">
+      <Offset X="-7" Y="-12"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Behaviour" description="How this Rocky will act." type="behaviours" startbit="0" length="8" />
+  </Properties>
+  <Enums>
+    <Enum name="behaviours">
+      <EnumMember name="Placed" />
+      <EnumMember name="Fixed" />
+      <EnumMember name="Follow" />
+      <EnumMember name="Free" />
+    </Enum>
+  </Enums>
+  <Subtypes>
+    <Subtype id="00" name="Placed" image="rocky" />
+    <Subtype id="01" name="Fixed" image="rocky" />
+    <Subtype id="02" name="Follow" image="rocky" />
+    <Subtype id="03" name="Free" image="rocky" />
+  </Subtypes>
+</ObjDef>

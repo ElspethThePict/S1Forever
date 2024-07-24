@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" DefaultSubtype="01">
+  <Images>
+    <ImageFromSheet id="monitor" sheet="Global/Items.gif" sourcex="18" sourcey="1" width="32" height="32">
+      <Offset X="-16" Y="-16"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="static" sheet="Global/Items.gif" sourcex="51" sourcey="1" width="16" height="14">
+      <Offset X="-8" Y="-9"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="rings" sheet="Global/Items.gif" sourcex="51" sourcey="16" width="16" height="14">
+      <Offset X="-8" Y="-9"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="shield" sheet="Global/Items.gif" sourcex="68" sourcey="16" width="16" height="14">
+      <Offset X="-8" Y="-9"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="invincibility" sheet="Global/Items.gif" sourcex="51" sourcey="31" width="16" height="14">
+      <Offset X="-8" Y="-9"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="shoes" sheet="Global/Items.gif" sourcex="68" sourcey="31" width="16" height="14">
+      <Offset X="-8" Y="-9"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="sonic" sheet="Global/Items.gif" sourcex="51" sourcey="46" width="16" height="14">
+      <Offset X="-8" Y="-9"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="tails" sheet="Global/Items.gif" sourcex="68" sourcey="46" width="16" height="14">
+      <Offset X="-8" Y="-9"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="knuckles" sheet="Global/Items.gif" sourcex="51" sourcey="61" width="16" height="14">
+      <Offset X="-8" Y="-9"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="super" sheet="Global/Items.gif" sourcex="68" sourcey="61" width="16" height="14">
+      <Offset X="-8" Y="-9"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="bubble" sheet="Global/Items.gif" sourcex="51" sourcey="91" width="16" height="14">
+      <Offset X="-8" Y="-9"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="fire" sheet="Global/Items.gif" sourcex="68" sourcey="76" width="16" height="14">
+      <Offset X="-8" Y="-9"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="lightning" sheet="Global/Items.gif" sourcex="51" sourcey="76" width="16" height="14">
+      <Offset X="-8" Y="-9"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="eggman" sheet="Global/Items.gif" sourcex="68" sourcey="91" width="16" height="14">
+      <Offset X="-8" Y="-9"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="goggles" sheet="Global/Items.gif" sourcex="18" sourcey="100" width="16" height="14">
+      <Offset X="-8" Y="-9"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="dspikes" sheet="Global/Items.gif" sourcex="117" sourcey="26" width="16" height="14">
+      <Offset X="-8" Y="-9"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="dshields" sheet="Global/Items.gif" sourcex="117" sourcey="41" width="16" height="14">
+      <Offset X="-8" Y="-9"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="demeralds" sheet="Global/Items.gif" sourcex="117" sourcey="56" width="16" height="14">
+      <Offset X="-8" Y="-9"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Contents" description="The contents of this Monitor." type="Contents" startbit="0" length="8" />
+  </Properties>
+  <Enums>
+    <Enum name="Contents">
+      <EnumMember name="Static" />
+      <EnumMember name="Rings" />
+      <EnumMember name="Shield" />
+      <EnumMember name="Invincibility" />
+      <EnumMember name="Speed Shoes" />
+      <EnumMember name="Sonic 1UP" />
+      <EnumMember name="Tails 1UP" />
+      <EnumMember name="Knuckles 1UP" />
+      <EnumMember name="Super" />
+      <EnumMember name="Bubble Shield" />
+      <EnumMember name="Fire Shield" />
+      <EnumMember name="Lightning Shield" />
+      <EnumMember name="Eggman" />
+      <EnumMember name="Goggles" />
+      <EnumMember name="Random" /> <!-- #Forever change (used to be Debug Spikes, we're leaving that as the sprite name for consistency with the base def) -->
+      <EnumMember name="Debug Shields" />
+      <EnumMember name="Debug Emeralds" />
+      <!-- Forever also has stuff for subtype 17.. but it doesn't look like it's anything more than "Static 2" or whatever? so idk- -->
+    </Enum>
+  </Enums>
+  <ImageSets>
+    <ImageSet id="static">
+      <ImageRef image="monitor" />
+      <ImageRef image="static" />
+    </ImageSet>
+    <ImageSet id="rings">
+      <ImageRef image="monitor" />
+      <ImageRef image="rings" />
+    </ImageSet>
+    <ImageSet id="shield">
+      <ImageRef image="monitor" />
+      <ImageRef image="shield" />
+    </ImageSet>
+    <ImageSet id="invincibility">
+      <ImageRef image="monitor" />
+      <ImageRef image="invincibility" />
+    </ImageSet>
+    <ImageSet id="shoes">
+      <ImageRef image="monitor" />
+      <ImageRef image="shoes" />
+    </ImageSet>
+    <ImageSet id="sonic">
+      <ImageRef image="monitor" />
+      <ImageRef image="sonic" />
+    </ImageSet>
+    <ImageSet id="tails">
+      <ImageRef image="monitor" />
+      <ImageRef image="tails" />
+    </ImageSet>
+    <ImageSet id="knuckles">
+      <ImageRef image="monitor" />
+      <ImageRef image="knuckles" />
+    </ImageSet>
+    <ImageSet id="super">
+      <ImageRef image="monitor" />
+      <ImageRef image="super" />
+    </ImageSet>
+    <ImageSet id="bubble">
+      <ImageRef image="monitor" />
+      <ImageRef image="bubble" />
+    </ImageSet>
+    <ImageSet id="fire">
+      <ImageRef image="monitor" />
+      <ImageRef image="fire" />
+    </ImageSet>
+    <ImageSet id="lightning">
+      <ImageRef image="monitor" />
+      <ImageRef image="lightning" />
+    </ImageSet>
+    <ImageSet id="eggman">
+      <ImageRef image="monitor" />
+      <ImageRef image="eggman" />
+    </ImageSet>
+    <ImageSet id="goggles">
+      <ImageRef image="monitor" />
+      <ImageRef image="goggles" />
+    </ImageSet>
+    <ImageSet id="dspikes">
+      <ImageRef image="monitor" />
+      <ImageRef image="dspikes" />
+    </ImageSet>
+    <ImageSet id="dshields">
+      <ImageRef image="monitor" />
+      <ImageRef image="dshields" />
+    </ImageSet>
+    <ImageSet id="demeralds">
+      <ImageRef image="monitor" />
+      <ImageRef image="demeralds" />
+    </ImageSet>
+  </ImageSets>
+  <DefaultImage>
+    <ImageSetRef set="rings" />
+  </DefaultImage>
+  <Subtypes>
+    <Subtype id="00" name="Static">
+      <ImageSetRef set="static" />
+    </Subtype>
+    <Subtype id="01" name="Rings">
+      <ImageSetRef set="rings" />
+    </Subtype>
+    <Subtype id="02" name="Shield">
+      <ImageSetRef set="shield" />
+    </Subtype>
+    <Subtype id="03" name="Invincibility">
+      <ImageSetRef set="invincibility" />
+    </Subtype>
+    <Subtype id="04" name="Speed Shoes">
+      <ImageSetRef set="shoes" />
+    </Subtype>
+    <Subtype id="05" name="Sonic 1UP">
+      <ImageSetRef set="sonic" />
+    </Subtype>
+    <Subtype id="06" name="Tails 1UP">
+      <ImageSetRef set="tails" />
+    </Subtype>
+    <Subtype id="07" name="Knuckles 1UP">
+      <ImageSetRef set="knuckles" />
+    </Subtype>
+    <Subtype id="08" name="Super">
+      <ImageSetRef set="super" />
+    </Subtype>
+    <Subtype id="09" name="Bubble Shield">
+      <ImageSetRef set="bubble" />
+    </Subtype>
+    <Subtype id="0a" name="Fire Shield">
+      <ImageSetRef set="fire" />
+    </Subtype>
+    <Subtype id="0b" name="Lightning Shield">
+      <ImageSetRef set="lightning" />
+    </Subtype>
+    <Subtype id="0c" name="Eggman">
+      <ImageSetRef set="eggman" />
+    </Subtype>
+    <Subtype id="0d" name="Goggles">
+      <ImageSetRef set="goggles" />
+    </Subtype>
+    <Subtype id="0e" name="Random">
+      <ImageSetRef set="dspikes" />
+    </Subtype>
+    <Subtype id="0f" name="Debug Shields">
+      <ImageSetRef set="dshields" />
+    </Subtype>
+    <Subtype id="10" name="Debug Emeralds">
+      <ImageSetRef set="demeralds" />
+    </Subtype>
+  </Subtypes>
+</ObjDef>

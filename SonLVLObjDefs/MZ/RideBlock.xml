@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="block">
+  <Images>
+    <ImageFromSheet id="block" sheet="MZ/Objects.gif" sourcex="159" sourcey="322" width="32" height="32">
+      <Offset X="-16" Y="-16"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Direction" description="Which way this Block should travel." type="directions" startbit="0" length="1" />
+  </Properties>
+  <Enums>
+    <Enum name="directions">
+      <EnumMember name="Right" />
+      <EnumMember name="Left" />
+    </Enum>
+  </Enums>
+  <Subtypes>
+    <Subtype id="00" name="Travel Right" image="block" />
+    <Subtype id="01" name="Travel Left" image="block" />
+  </Subtypes>
+</ObjDef>

@@ -1,0 +1,9 @@
+# For packing the release
+
+SData.bin
+UData.bin
+*.bak
+settings.ini
+log.txt
+Data.rsdk
+Data.rsdk.xmf

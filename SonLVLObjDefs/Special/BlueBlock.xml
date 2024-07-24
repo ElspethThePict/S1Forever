@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org">
+  <Images>
+    <ImageFromSheet id="spr1" sheet="Special/Objects.gif" sourcex="126" sourcey="76" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="spr2" sheet="Special/Objects.gif" sourcex="151" sourcey="76" width="20" height="16">
+      <Offset X="-10" Y="-8"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="spr3" sheet="Special/Objects.gif" sourcex="1" sourcey="1" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Colour Change Offset" description="The delay this Block will use, for changing colours." type="int" startbit="0" length="4" />
+  </Properties>
+  <ImageSets>
+    <ImageSet id="frame">
+      <ImageRef image="spr1" />
+      <ImageRef image="spr2" />
+      <ImageRef image="spr3" />
+    </ImageSet>
+  </ImageSets>
+  <DefaultImage>
+    <ImageSetRef set="frame" />
+  </DefaultImage>
+</ObjDef>

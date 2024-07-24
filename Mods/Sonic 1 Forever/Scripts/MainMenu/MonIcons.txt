@@ -1,0 +1,721 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Sonic Team Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+
+
+reserve function ShowStatic
+reserve function DrawScanlines
+reserve function BehindMonitor
+
+//-------Aliases-------//
+private alias object.value0 : prevMenu
+private alias object.value1 : staticVisual
+
+function ShowStatic
+
+	temp1 = 0
+	while temp1 < 6
+
+		Rand(temp0, 4)
+		temp2 = temp1
+		temp3 = 19
+		if temp2 > 2
+			temp3 += 100
+			temp2 -= 3
+		end if
+		temp2 *= 100
+		temp2 -= current.xoffset
+		DrawSpriteScreenXY(temp0, temp2, temp3)
+
+		temp1++
+	loop	
+end function
+
+function DrawScanlines
+
+	temp1 = 19
+	while temp1 < 219
+	temp2 = current.xoffset
+	FlipSign(temp2)
+		DrawRect(temp2, temp1, 300, 2, color3, color3, color3, 10)
+		temp1++
+		DrawRect(temp2, temp1, 300, 2, color3, color3, color3, 10)
+		temp1 += 5
+	loop	
+end function
+
+function BehindMonitor
+	temp2 = current.xoffset
+	FlipSign(temp2)
+	DrawRect(temp2, 0, screen.xsize, 240, 0, 0, color4, 255)
+	temp2 += screen.xcenter
+	DrawSpriteScreenXY(70, temp2, screen.ycenter)
+end function
+
+event ObjectMain
+	if menu.state != prevMenu
+		staticVisual = 15
+	end if
+	if staticVisual > 0
+		staticVisual--
+	end if
+
+	if current.xoffset != 0
+		staticVisual = 5
+	end if
+
+	prevMenu = menu.state
+end event
+
+
+event ObjectDraw
+	CallFunction(BehindMonitor
+	if staticVisual > 0
+		CallFunction(ShowStatic)
+	else
+		switch menu.state
+			case 0 // Save Select
+				if screen.xsize == 320
+					DrawSpriteScreenXY(10, 9, 121)
+				else
+					DrawSpriteScreenXY(10, 44, 121)
+				end if
+				if 3min.count == 0
+					temp0 = frame.count
+					temp0 %= 600
+					temp0 /= 3
+					switch temp0
+						case 49
+						case 55
+							if screen.xsize == 320
+								DrawSpriteScreenXY(22, 113, 139)
+							else
+								DrawSpriteScreenXY(22, 148, 139)
+							end if
+							break
+						case 50
+						case 54
+							if screen.xsize == 320
+								DrawSpriteScreenXY(23, 113, 139)
+							else
+								DrawSpriteScreenXY(23, 148, 139)
+							end if
+							break
+						case 51
+						case 53
+							if screen.xsize == 320
+								DrawSpriteScreenXY(24, 113, 139)
+							else
+								DrawSpriteScreenXY(24, 148, 139)
+							end if
+							break
+						case 52
+							if screen.xsize == 320
+								DrawSpriteScreenXY(25, 113, 139)
+							else
+								DrawSpriteScreenXY(25, 148, 139)
+							end if
+							break
+					end switch
+				else
+					temp0 = frame.count
+					temp0 /= 3
+					if 3min.count > 1
+						temp0 = 50
+					end if
+					switch temp0
+						case 0
+							if screen.xsize == 320
+								DrawSpriteScreenXY(27, 116, 125)
+							else
+								DrawSpriteScreenXY(27, 151, 125)
+							end if
+							break
+						case 1
+						case 2
+						case 3
+						case 4
+						case 5
+						case 6
+						case 7
+						case 8
+						case 9
+						case 10
+						case 11
+						case 12
+						case 13
+						case 14
+						case 15
+						case 16
+						case 17
+						case 18
+						case 19
+						case 20
+							if screen.xsize == 320
+								DrawSpriteScreenXY(28, 116, 125)
+							else
+								DrawSpriteScreenXY(28, 151, 125)
+							end if
+							break
+						case 21
+							if screen.xsize == 320
+								DrawSpriteScreenXY(29, 116, 125)
+							else
+								DrawSpriteScreenXY(29, 151, 125)
+							end if
+							break
+						case 22
+							if screen.xsize == 320
+								DrawSpriteScreenXY(30, 116, 125)
+							else
+								DrawSpriteScreenXY(30, 151, 125)
+							end if
+							break
+						default
+							if screen.xsize == 320
+								DrawSpriteScreenXY(31, 116, 125)
+							else
+								DrawSpriteScreenXY(31, 151, 125)
+							end if
+							break
+					end switch
+
+				end if
+
+				break
+			case 1 //Game Modes/Time Attack
+				if screen.xsize == 320
+					DrawSpriteScreenXY(12, 39, 121)
+					DrawSpriteScreenXY(68, 114, 121)
+				else
+					DrawSpriteScreenXY(12, 44, 121)
+				end if
+				temp0 = frame.count
+
+				temp0 %= 450
+				temp0 /= 4
+				switch temp0
+					case 10
+					case 15
+					case 19
+					case 24
+						if screen.xsize == 320
+							DrawSpriteScreenXY(63, 129, 161)
+						else
+							DrawSpriteScreenXY(63, 158, 161)
+						end if
+						break
+					case 11
+					case 14
+					case 20
+					case 23
+						if screen.xsize == 320
+							DrawSpriteScreenXY(64, 129, 161)
+						else
+							DrawSpriteScreenXY(64, 158, 161)
+						end if
+						break
+					case 12
+					case 13
+					case 21
+					case 22
+						if screen.xsize == 320
+							DrawSpriteScreenXY(65, 129, 161)
+						else
+							DrawSpriteScreenXY(65, 158, 161)
+						end if
+						break
+					case 16
+					case 25
+						if screen.xsize == 320
+							DrawSpriteScreenXY(66, 129, 161)
+						else
+							DrawSpriteScreenXY(66, 158, 161)
+						end if
+						break
+					case 17
+					case 18
+					case 26
+						if screen.xsize == 320
+							DrawSpriteScreenXY(67, 129, 161)
+						else
+							DrawSpriteScreenXY(67, 158, 161)
+						end if
+						break
+					default
+						if screen.xsize == 320
+							DrawSpriteScreenXY(62, 129, 161)
+						else
+							DrawSpriteScreenXY(62, 158, 161)
+						end if
+						break
+				end switch
+				break				
+				
+			case 2 // Options
+				if screen.xsize == 320
+					DrawSpriteScreenXY(11, 34, 121)
+				else
+					DrawSpriteScreenXY(11, 44, 121)
+				end if
+				temp0 = frame.count
+
+				temp0 %= 420
+				temp0 /= 6
+				switch temp0
+					case 1
+					case 5
+						if screen.xsize == 320
+							DrawSpriteScreenXY(15, 35, 121)
+						else
+							DrawSpriteScreenXY(15, 70, 121)
+						end if	
+						break
+					case 2
+					case 6
+						if screen.xsize == 320
+							DrawSpriteScreenXY(16, 35, 121)
+						else
+							DrawSpriteScreenXY(16, 70, 121)
+						end if	
+						break
+					case 3
+					case 7
+						if screen.xsize == 320
+							DrawSpriteScreenXY(17, 35, 121)
+						else
+							DrawSpriteScreenXY(17, 70, 121)
+						end if	
+						break
+					default
+						if screen.xsize == 320
+							DrawSpriteScreenXY(14, 35, 121)
+						else
+							DrawSpriteScreenXY(14, 70, 121)
+						end if	
+						break
+				end switch
+
+				temp0 = frame.count
+				temp0 %= 120
+				temp0 /= 15
+				switch temp0
+					case 0
+					case 7
+						temp1 = 18
+						break
+					case 1
+					case 6
+						temp1 = 19
+						break
+					case 2
+					case 5
+						temp1 = 20
+						break
+					case 3
+					case 4
+						temp1 = 21
+						break
+				end switch
+				if screen.xsize == 320
+					DrawSpriteScreenXY(temp1, 108, 149)
+				else
+					DrawSpriteScreenXY(temp1, 143, 149)
+				end if	
+				break
+			case 3 // Extras
+				if screen.xsize == 320
+					DrawSpriteScreenXY(12, 39, 121)
+					DrawSpriteScreenXY(68, 114, 121)
+				else
+					DrawSpriteScreenXY(12, 44, 121)
+				end if
+				temp0 = frame.count
+				temp0 %= 420
+				temp0 /= 6
+				switch temp0
+					case 1
+						if screen.xsize == 320
+							DrawSpriteScreenXY(33, 11, 121)
+						else
+							DrawSpriteScreenXY(33, 44, 121)
+						end if	
+						break
+					case 2
+						if screen.xsize == 320
+							DrawSpriteScreenXY(34, 11, 121)
+						else
+							DrawSpriteScreenXY(34, 44, 121)
+						end if
+						break
+					case 3
+						if screen.xsize == 320
+							DrawSpriteScreenXY(35, 11, 121)
+						else
+							DrawSpriteScreenXY(35, 44, 121)
+						end if
+						break
+					case 4
+						if screen.xsize == 320
+							DrawSpriteScreenXY(36, 11, 121)
+						else
+							DrawSpriteScreenXY(36, 44, 121)
+						end if
+						break
+					case 5
+						if screen.xsize == 320
+							DrawSpriteScreenXY(37, 11, 121)
+						else
+							DrawSpriteScreenXY(37, 44, 121)
+						end if
+						break
+					case 6
+						if screen.xsize == 320
+							DrawSpriteScreenXY(38, 11, 121)
+						else
+							DrawSpriteScreenXY(38, 44, 121)
+						end if
+						break
+					case 7
+						if screen.xsize == 320
+							DrawSpriteScreenXY(39, 11, 121)
+						else
+							DrawSpriteScreenXY(39, 44, 121)
+						end if
+						break
+					case 8
+						if screen.xsize == 320
+							DrawSpriteScreenXY(40, 11, 121)
+						else
+							DrawSpriteScreenXY(40, 44, 121)
+						end if
+						break
+					default
+						if screen.xsize == 320
+							DrawSpriteScreenXY(32, 11, 121)
+						else
+							DrawSpriteScreenXY(32, 44, 121)
+						end if
+						break
+				end switch
+				break
+			case 4 //Mods
+				if screen.xsize == 320
+					DrawSpriteScreenXY(12, 39, 121)
+					DrawSpriteScreenXY(68, 114, 121)
+				else
+					DrawSpriteScreenXY(12, 44, 121)
+				end if
+
+				//Star 2
+				temp0 = frame.count
+				temp0 %= 210
+				temp0 /= 6
+				switch temp0
+					case 20
+						if screen.xsize == 320
+							DrawSpriteScreenXY(49, 155, 91)
+						else
+							DrawSpriteScreenXY(49, 206, 91)
+						end if
+						break
+					case 21
+						if screen.xsize == 320
+							DrawSpriteScreenXY(50, 155, 91)
+						else
+							DrawSpriteScreenXY(50, 206, 91)
+						end if
+						break
+					case 22
+						if screen.xsize == 320
+							DrawSpriteScreenXY(51, 155, 91)
+						else
+							DrawSpriteScreenXY(51, 206, 91)
+						end if
+						break
+					case 23
+						if screen.xsize == 320
+							DrawSpriteScreenXY(52, 155, 91)
+						else
+							DrawSpriteScreenXY(52, 206, 91)
+						end if
+						break
+					default
+						if screen.xsize == 320
+							DrawSpriteScreenXY(48, 155, 91)
+						else
+							DrawSpriteScreenXY(48, 206, 91)
+						end if
+						break
+				end switch
+				
+				//Star 1
+				temp0 = frame.count
+				temp0 %= 270
+				temp0 /= 6
+				switch temp0
+					case 31
+						if screen.xsize == 320
+							DrawSpriteScreenXY(44, 110, 121)
+						else
+							DrawSpriteScreenXY(44, 114, 121)
+						end if
+						break
+					case 32
+						if screen.xsize == 320
+							DrawSpriteScreenXY(45, 110, 121)
+						else
+							DrawSpriteScreenXY(45, 114, 121)
+						end if
+						break
+					case 33
+						if screen.xsize == 320
+							DrawSpriteScreenXY(46, 110, 121)
+						else
+							DrawSpriteScreenXY(46, 114, 121)
+						end if
+						break
+					case 34
+						if screen.xsize == 320
+							DrawSpriteScreenXY(47, 110, 121)
+						else
+							DrawSpriteScreenXY(47, 114, 121)
+						end if
+						break
+					case 35
+						if screen.xsize == 320
+							DrawSpriteScreenXY(41, 110, 121)
+						else
+							DrawSpriteScreenXY(41, 114, 121)
+						end if
+						break			
+					case 36
+						if screen.xsize == 320
+							DrawSpriteScreenXY(42, 110, 121)
+						else
+							DrawSpriteScreenXY(42, 114, 121)
+						end if
+						break			
+					default
+						if screen.xsize == 320
+							DrawSpriteScreenXY(43, 110, 121)
+						else
+							DrawSpriteScreenXY(43, 114, 121)
+						end if
+						break							
+				end switch
+				
+				//Star 3
+				temp0 = frame.count
+				temp0 %= 150
+				temp0 /= 6
+				switch temp0
+					case 10
+						if screen.xsize == 320
+							DrawSpriteScreenXY(54, 149, 149)
+						else
+							DrawSpriteScreenXY(54, 184, 149)
+						end if
+						break
+					case 11
+						if screen.xsize == 320
+							DrawSpriteScreenXY(55, 149, 149)
+						else
+							DrawSpriteScreenXY(55, 184, 149)
+						end if
+						break
+					case 12
+						if screen.xsize == 320
+							DrawSpriteScreenXY(57, 149, 149)
+						else
+							DrawSpriteScreenXY(57, 184, 149)
+						end if
+						break
+					case 13
+						if screen.xsize == 320
+							DrawSpriteScreenXY(58, 149, 149)
+						else
+							DrawSpriteScreenXY(58, 184, 149)
+						end if
+						break
+					case 14
+						if screen.xsize == 320
+							DrawSpriteScreenXY(59, 149, 149)
+						else
+							DrawSpriteScreenXY(59, 184, 149)
+						end if
+						break
+					case 15
+						if screen.xsize == 320
+							DrawSpriteScreenXY(60, 149, 149)
+						else
+							DrawSpriteScreenXY(60, 184, 149)
+						end if
+						break
+					case 16
+						if screen.xsize == 320
+							DrawSpriteScreenXY(61, 149, 149)
+						else
+							DrawSpriteScreenXY(61, 184, 149)
+						end if
+						break
+					default
+						if screen.xsize == 320
+							DrawSpriteScreenXY(53, 149, 149)
+						else
+							DrawSpriteScreenXY(53, 184, 149)
+						end if
+						break
+						
+				end switch
+				
+				break
+			case 5 // Exit
+				if screen.xsize == 320
+					DrawSpriteScreenXY(13, 10, 121)
+				else
+					DrawSpriteScreenXY(13, 44, 121)
+				end if
+				temp0 = frame.count
+				temp0 %= 540
+				temp0 /= 6
+				temp1 = 121
+				switch temp0
+					case 1
+					case 3
+					case 5
+					case 7
+						if screen.xsize == 320
+							DrawSpriteScreenXY(26, 10, temp1)
+						else
+							DrawSpriteScreenXY(26, 44, temp1)
+						end if
+						temp1 +=4
+						break
+					case 2
+					case 4
+					case 6
+					case 8
+						if screen.xsize == 320
+							DrawSpriteScreenXY(69, 10, temp1)
+						else
+							DrawSpriteScreenXY(69, 44, temp1)
+						end if
+						temp1 +=4
+						break
+				end switch
+				break
+			default
+				CallFunction(ShowStatic)
+				break
+		end switch
+	end if
+	CallFunction(DrawScanlines)
+
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("Menus/MonIcon.gif")
+	//Static
+	SpriteFrame(0, 0, 100, 100, 2, 296) //0 Static
+	SpriteFrame(0, 0, 100, 100, 102, 296) //1 Static
+	SpriteFrame(0, 0, 100, 100, 2, 396)   //2 Static
+	SpriteFrame(0, 0, 100, 100, 102, 396) //3 Static
+	SpriteFrame(0, 0, 100, 100, 202, 296) //4 Static
+	SpriteFrame(0, 0, 100, 100, 302, 296) //5 Static
+	SpriteFrame(0, 0, 100, 100, 402, 296) //6 Static
+	SpriteFrame(0, 0, 100, 100, 2, 396)   //7 Static
+	SpriteFrame(0, 0, 100, 100, 302, 396) //8 Static
+	SpriteFrame(0, 0, 100, 100, 402, 396) //9 Static
+
+	//Monitor Icons
+	SpriteFrame(0, -73, 225, 146, 228, 1) //10 Save Select Sonic
+	SpriteFrame(0, -73, 225, 146, 2, 148) //11 Options Border
+	SpriteFrame(0, -73, 225, 146, 228, 148) //12 Extras Emerald
+	SpriteFrame(0, -73, 225, 146, 2, 1) //13 Exit Eggman
+
+	SpriteFrame(0, -70, 173, 144, 2, 497) //14 Options Gear 1
+	SpriteFrame(0, -70, 173, 144, 176, 497) //15 Options Gear 2
+	SpriteFrame(0, -71, 173, 145, 350, 497) //16 Options Gear 3
+	SpriteFrame(0, -70, 173, 144, 524, 497) //17 Options Gear 4
+	SpriteFrame(0, -1, 8, 8, 2, 642) //18 Options Gear light 1
+	SpriteFrame(0, -1, 8, 8, 11, 642) //19 Options Gear light 2
+	SpriteFrame(0, -1, 8, 8, 20, 642) //20 Options Gear light 3
+	SpriteFrame(0, -1, 8, 8, 29, 642) //21 Options Gear light 4
+
+	SpriteFrame(0, -41, 80, 83, 455, 1) //22 Sevesel Blink 1
+	SpriteFrame(0, -41, 80, 83, 536, 1) //23 Sevesel Blink 2
+	SpriteFrame(0, -41, 80, 83, 617, 1) //24 Sevesel Blink 3
+	SpriteFrame(0, -41, 80, 83, 698, 1) //25 Sevesel Blink 4
+	
+	SpriteFrame(0, -73, 225, 146, 779, 1) //26 Exit Eggman
+
+	SpriteFrame(0, -31, 74, 61, 454, 177) //27 Savesel Frown 1
+	SpriteFrame(0, -31, 74, 61, 529, 177) //28 Savesel Frown 2
+	SpriteFrame(0, -31, 74, 61, 604, 177) //29 Savesel Frown 3
+	SpriteFrame(0, -31, 74, 61, 679, 177) //30 Savesel Frown 4
+	SpriteFrame(0, -31, 74, 61, 754, 177) //31 Savesel Frown 5
+	
+	SpriteFrame(55, -58, 116, 116, 1, 650) //32 Extras Shine 1
+	SpriteFrame(55, -58, 116, 116, 117, 650) //33 Extras Shine 2
+	SpriteFrame(55, -58, 116, 116, 234, 650) //34 Extras Shine 3
+	SpriteFrame(55, -58, 116, 116, 351, 650) //35 Extras Shine 4
+	SpriteFrame(55, -58, 116, 116, 468, 650) //36 Extras Shine 5
+	SpriteFrame(55, -58, 116, 116, 585, 650) //37 Extras Shine 6
+	SpriteFrame(55, -58, 116, 116, 702, 650) //38 Extras Shine 7
+	SpriteFrame(55, -58, 116, 116, 819, 650) //39 Extras Shine 8
+	SpriteFrame(55, -58, 116, 116, 0, 766) //40 Extras Shine 9
+	
+	SpriteFrame(-53, -63, 104, 125, 1, 883) //41 Mods Star 1-1
+	SpriteFrame(-53, -62, 104, 123, 106, 883) //42 Mods Star 1-2
+	SpriteFrame(-45, -54, 89, 107, 211, 883) //43 Mods Star 1-3
+	SpriteFrame(-40, -47, 79, 93, 301, 883) //44 Mods Star 1-4
+	SpriteFrame(-29, -67, 57, 134, 381, 883) //45 Mods Star 1-5
+	SpriteFrame(-64, -67, 213, 134, 439, 883) //46 Mods Star 1-6
+	SpriteFrame(-64, -65, 213, 128, 653, 883) //47 Mods Star 1-7
+	
+	SpriteFrame(-27, -31, 53, 61, 117, 767) //48 Mods Star 2-1
+	SpriteFrame(-27, -31, 53, 61, 171, 767) //49 Mods Star 2-2
+	SpriteFrame(-22, -28, 43, 55, 225, 767) //50 Mods Star 2-3
+	SpriteFrame(-10, -13, 19, 25, 269, 767) //51 Mods Star 2-4
+	SpriteFrame(-25, -32, 49, 63, 289, 767) //52 Mods Star 2-5
+
+	SpriteFrame(-16, -16, 31, 31, 117, 851) //53 Mods Star 3-1
+	SpriteFrame(-15, -15, 29, 29, 149, 853) //54 Mods Star 3-2
+	SpriteFrame(-14, -14, 27, 27, 179, 855) //55 Mods Star 3-3
+	SpriteFrame(-16, -16, 31, 31, 207, 851) //56 Mods Star 3-4
+	SpriteFrame(-10, -10, 19, 19, 239, 863) //57 Mods Star 3-5
+	SpriteFrame(-17, -20, 33, 39, 259, 843) //58 Mods Star 3-6
+	SpriteFrame(-16, -22, 31, 43, 293, 839) //59 Mods Star 3-7
+	SpriteFrame(-15, -25, 29, 49, 325, 833) //60 Mods Star 3-8
+	SpriteFrame(-14, -25, 27, 49, 355, 833) //61 Mods Star 3-9
+	
+	SpriteFrame(-63, -75, 126, 75, 741, 513) //62 Game Modes Shoo
+	SpriteFrame(-65, -81, 120, 81, 620, 385) //63 Game Modes Shoo
+	SpriteFrame(-73, -83, 116, 83, 503, 348) //64 Game Modes Shoo
+	SpriteFrame(-83, -86, 110, 86, 503, 261) //65 Game Modes Shoo
+
+	SpriteFrame(-62, -58, 134, 58, 741, 385) //66 Game Modes Shoo
+	SpriteFrame(-62, -68, 134, 68, 741, 444) //67 Game Modes Shoo
+
+	SpriteFrame(0, -73, 95, 146, 358, 148) //68 Options Border Right Side		
+	
+	SpriteFrame(0, -73, 225, 146, 619, 239) //69 Exit Eggman
+	
+	SpriteFrame(-50, -70, 255, 140, 203, 295) //70 South Island
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+end event
+

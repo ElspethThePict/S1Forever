@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org">
+  <Images>
+    <ImageFromSheet id="cover" sheet="MBZ/Objects.gif" sourcex="93" sourcey="429" width="64" height="64">
+      <Offset X="-32" Y="-32" />
+    </ImageFromSheet>
+    <ImageFromSheet id="panel" sheet="MBZ/Objects.gif" sourcex="158" sourcey="462" width="32" height="40">
+      <Offset X="-32" Y="-8" />
+    </ImageFromSheet>
+  </Images>
+  <ImageSets>
+    <ImageSet id="tubecover">
+      <ImageRef image="panel" />
+      <ImageRef image="cover" /> <!-- well the game draws the cover twice.. but it's fully opaque so i don't think that actually matters? -->
+    </ImageSet>
+  </ImageSets>
+  <DefaultImage>
+    <ImageSetRef set="tubecover" />
+  </DefaultImage>
+</ObjDef>

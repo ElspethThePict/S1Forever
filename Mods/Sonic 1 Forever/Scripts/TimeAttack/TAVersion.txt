@@ -1,0 +1,60 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Sonic Team Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias object[9].value16 : TA.yoffset
+
+// Function declarations
+
+// Static Values
+
+// Tables
+
+event ObjectMain
+end event
+
+
+
+//Drawing
+event ObjectDraw
+	temp0 = 10
+	temp0 -= TA.yoffset
+	GetTextInfo(temp2, 1, TEXTINFO_TEXTSIZE, 1, 0)
+	temp3 = 0
+	if saved.mobile == 1
+		temp4 = screen.xsize
+		temp4 -= 130
+	else
+		temp4 = 10
+	end if
+	while temp3 < temp2
+		GetTextInfo(temp7, 1, TEXTINFO_TEXTDATA, 1, temp3)
+		DrawSpriteScreenXY(temp7, temp4, temp0)
+		temp4 += 8
+		temp3++
+	loop	
+	
+end event
+
+
+event ObjectStartup
+	CreateTempObject(TypeName[Version Number], 0, 0, 0)
+	object[tempObjectPos].priority = PRIORITY_ACTIVE
+	object[tempObjectPos].drawOrder = 6
+	LoadSpriteSheet("Menus/Options.gif")
+	//Load font sprites
+	temp0 = 0
+	temp1 = 0
+	while temp0 < 88
+		while temp1 < 128
+			SpriteFrame(0, 0, 8, 8, temp1, temp0)
+			temp1 += 8
+		loop
+		temp1 = 0
+		temp0 += 8
+	loop	
+end event

@@ -1,0 +1,180 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: ST Logo Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias 3 : TYPE_STLOGO
+
+// Function declarations
+
+// Tables
+public table STLogo_table0
+	4, 4, 4, 4, 4, 4, 4, 7, 2, 2, 3, 4, 4, 4, 4
+end table
+
+public table STLogo_table1
+	4, 4, 4, 4, 4, 4, 7, 2, 2, 2, 3, 4, 4, 4
+end table
+
+
+
+
+event ObjectMain
+
+	switch object.state
+	case 0
+		stage[0].activeLayer = 2
+		object.state++
+		break
+	case 1
+		object.value0++
+		if object.value0 > 7
+			tileLayer[2].deformationOffset++
+			object.value0 = 0
+		end if
+		break
+	end switch
+	hParallax[1].scrollSpeed = 0
+	hParallax[2].scrollSpeed = 0
+	if screen.xsize == 320
+		temp0 = 172
+	else
+		temp0 = 119
+	end if
+	temp0 <<= 16
+	hParallax[1].scrollPos = temp0
+	hParallax[2].scrollPos = temp0
+	
+	temp0 = screen.xcenter
+	FlipSign(temp0)
+	temp0 += 256
+	screen.xoffset = temp0
+	
+	object.value2++
+	if object.value2 == 420
+		PlayMusic(1)
+	end if
+	if object.value2 >= 620
+		object.value1++
+		object.value2 = 590
+	end if
+	
+	if object.value1 >= 20
+		if object.value3 < 320
+			object.value3 += 8
+			music.volume -= 2
+		else
+			StopMusic()
+			stage.activeList = PRESENTATION_STAGE
+			stage.listPos = 10
+			LoadStage()
+		end if
+		SetScreenFade(0, 0, 0, object.value3)
+	end if
+
+			CheckEqual(inputPress.start, 1)
+			temp0 = checkResult
+			CheckEqual(inputPress.buttonA, 1)
+			temp0 |= checkResult
+			CheckEqual(inputPress.buttonB, 1)
+			temp0 |= checkResult
+			CheckEqual(inputPress.buttonC, 1)
+			temp0 |= checkResult
+			if temp0 == 1
+			stage.activeList = PRESENTATION_STAGE
+			stage.listPos = 10
+			LoadStage()
+			end if
+	
+end event
+
+
+event ObjectDraw
+	//DrawNumbers(0, screen.xcenter, 50, hParallax[1].scrollPos, 10, 8, 0)
+	//DrawNumbers(0, screen.xcenter, 100, hParallax[2].scrollPos, 10, 8, 0)
+
+	if screen.xsize == 320
+		temp1 = 210
+	else
+		temp1 = 265
+	end if
+	temp2 = object.value1
+	FlipSign(temp2)
+	temp2 += 199
+	
+	DrawSpriteScreenXY(10, temp1, temp2)
+	if object.value1 >= 10
+		DrawSpriteScreenXY(11, temp1, temp2)
+	end if
+	if object.value1 >= 20
+		DrawSpriteScreenXY(12, temp1, temp2)
+	end if
+	if object.value1 >= 30
+		DrawSpriteScreenXY(13, temp1, temp2)
+	end if
+	if object.value1 >= 40
+		DrawSpriteScreenXY(14, temp1, temp2)
+	end if
+	if screen.xsize == 320
+		DrawSpriteScreenXY(15, 28, 200)
+	else
+		DrawSpriteScreenXY(15, 81, 200)
+	end if
+end event
+
+
+event ObjectStartup
+	StopMusic()
+	LoadSpriteSheet("Ending/Ending2.gif")
+	SpriteFrame(0, 0, 7, 6, 2, 1) //0
+	SpriteFrame(0, 0, 7, 6, 10, 1) //1
+	SpriteFrame(0, 0, 7, 6, 18, 1) //2
+	SpriteFrame(0, 0, 7, 6, 26, 1) //3
+	SpriteFrame(0, 0, 7, 6, 34, 1) //4
+	SpriteFrame(0, 0, 7, 6, 42, 1) //5
+	SpriteFrame(0, 0, 7, 6, 50, 1) //6
+	SpriteFrame(0, 0, 7, 6, 58, 1) //7
+	SpriteFrame(0, 0, 7, 6, 66, 1) //8
+	SpriteFrame(0, 0, 7, 6, 74, 1) //9
+	
+	
+	SpriteFrame(-24, -10, 47, 10, 1, 8) 	//10 Egg slice 1
+	SpriteFrame(-24, 0, 47, 10, 1, 18) 	//11 Egg slice 2
+	SpriteFrame(-24, 10, 47, 10, 1, 28) 	//12 Egg slice 3
+	SpriteFrame(-24, 20, 47, 10, 1, 38) 		//13 Egg slice 4
+	SpriteFrame(-24, 30, 47, 10, 1, 48) 	//14 Egg slice 5
+	
+	SpriteFrame(0, -29, 264, 29, 82, 1) 	//15 Island
+	
+	
+	
+	
+	
+	
+	SetMusicTrack("Launch.ogg", 1, 34816)
+	arrayPos0 = 256
+	while arrayPos0 < 576
+		arrayPos1 = arrayPos0
+		arrayPos1 -= 256
+		Rand(stage[arrayPos1].deformationData2, 4)
+		temp0 = arrayPos0
+		temp0 &= 1
+		if temp0 == 1
+			FlipSign(stage[arrayPos1].deformationData2)
+		end if
+		stage[arrayPos0].deformationData2 = stage[arrayPos1].deformationData2
+		arrayPos0++
+	loop
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+end event

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org">
+  <Images>
+    <ImageFromSheet id="sprite1" sheet="MZ/Objects.gif" sourcex="1" sourcey="405" width="128" height="32">
+      <Offset X="-128" Y="-32" />
+    </ImageFromSheet>
+    <ImageFromSheet id="sprite2" sheet="MZ/Objects.gif" sourcex="1" sourcey="405" width="128" height="32">
+      <Offset X="0" Y="-32" />
+    </ImageFromSheet>
+    <ImageFromSheet id="sprite3" sheet="MZ/Objects.gif" sourcex="1" sourcey="405" width="256" height="32">
+      <Offset X="-128" Y="0" />
+    </ImageFromSheet>
+    <ImageFromSheet id="sprite4" sheet="MZ/Objects.gif" sourcex="1" sourcey="405" width="155" height="32" />
+    <ImageFromSheet id="sprite5" sheet="MZ/Objects.gif" sourcex="1" sourcey="194" width="60" height="64">
+      <Offset X="124" Y="-32" />
+    </ImageFromSheet>
+  </Images>
+  <ImageSets>
+    <ImageSet id="lavaflow">
+      <ImageRef image="sprite1" />
+      <ImageRef image="sprite2" />
+      <ImageRef image="sprite3" />
+      <ImageRef image="sprite4" />
+      <ImageRef image="sprite5" />
+    </ImageSet>
+  </ImageSets>
+  <DefaultImage>
+    <ImageSetRef set="lavaflow" />
+  </DefaultImage>
+</ObjDef>

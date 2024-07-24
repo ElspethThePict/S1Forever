@@ -1,0 +1,484 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Sonic Team Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+
+public alias saveRAM[274] : saved.region
+public alias saveRAM[286] : saved.language
+
+public alias saveRAM[295] : saved.mobile
+private alias 175 : game.modes.alpha
+
+private alias object.value0 : fade.control
+private alias object.value1 : char.select
+private alias object.value2 : bg.scroll
+private alias object.value3 : touch.inputReset
+private alias object.value4 : hold.time
+
+private alias object.value6 : arrow.flash
+private alias 10 : num.holes
+
+// Function declarations
+reserve function ScoreOrder
+reserve function menu.holdmovement
+
+// Static Values
+// Tables
+private table Golf_table0
+	0x6060A0, 0x80A0E0, 0xE08000, 0xE0C080, 0xA04000, 0x600000, 0xE02080, 0xE00040, 0x800000, 0x806080, 0xA08060, 0xE0C0A0, 0x80A0A0, 0xA04020
+end table
+
+private table Golf_table1
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0 
+end table
+
+private table Golf_table2
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0 
+end table
+
+private table golfstars
+	3, 4, 3
+	2, 4, 5
+	5, 2, 3
+	6, 4, 1
+end table
+
+function menu.holdmovement
+		if inputDown.up == 1
+			hold.time++
+			if hold.time >= 20
+				inputPress.up = 1
+				hold.time = 12
+			end if
+		else	
+			if inputDown.down == 1
+				hold.time++
+				if hold.time >= 20
+					inputPress.down = 1
+					hold.time = 12
+				end if
+			else
+				if inputDown.right == 1
+					hold.time++
+					if hold.time >= 20
+						inputPress.right = 1
+						hold.time = 12
+					end if		
+				else
+					if inputDown.left == 1
+						hold.time++
+						if hold.time >= 20
+							inputPress.left = 1
+							hold.time = 12
+						end if		
+					else
+						hold.time = 0
+					end if
+				end if
+			end if
+		end if
+end function 
+
+event ObjectMain
+		if saved.mobile == 1
+			CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+			if checkResult == -1
+				touch.inputReset = false
+			end if
+		end if
+		CallFunction(menu.holdmovement)
+		
+		switch object.state
+		case 2 //Character Select
+			if saved.mobile == 1
+				if touch.inputReset == false
+					CheckTouchRect(0, 55, 48, 240)
+					if CheckResult > -1
+						touch.inputReset = true
+						inputPress.left = true
+					end if
+
+					temp0 = 55
+					temp1 = 241
+					CheckTouchRect(temp0, 55, temp1, 240)
+					if CheckResult > -1
+						touch.inputReset = true
+						inputPress.right = true
+					end if
+					temp0 = screen.xcenter
+					temp1 = screen.xcenter
+					temp1 += 48
+					CheckTouchRect(temp0, 0, temp1, 48)
+					if CheckResult > -1
+						touch.inputReset = true
+						inputPress.buttonA = true
+					end if
+					temp1 += 32
+					CheckTouchRect(0, 0, 45, 45)
+					if CheckResult > -1
+						touch.inputReset = true
+						inputPress.buttonB = true
+					end if
+				end if
+			end if
+			if inputPress.right == 1
+				char.select++
+				PlaySfx(SfxName[Score Add], 0)
+			else
+				if inputPress.left == 1
+					char.select--
+					PlaySfx(SfxName[Score Add], 0)
+				end if
+			end if
+			while char.select < 0
+				char.select += 4
+			loop
+			char.select %= 4
+			
+			CheckEqual(inputPress.start, 1)
+			temp0 = checkResult
+			CheckEqual(inputPress.buttonA, 1)
+			temp0 |= checkResult
+			if temp0 == 1
+				object.state = 5
+				PlaySfx(SfxName[Lamp Post], 0)
+			end if
+			
+			if inputPress.buttonB == 1
+				object.state = 4
+			end if			
+			break
+		case 3 //Waiting to Start
+			CheckEqual(inputPress.start, 1)
+			temp0 = checkResult
+			CheckEqual(inputPress.buttonA, 1)
+			temp0 |= checkResult
+			if temp0 == 1
+				object.state = 5
+				PlaySfx(SfxName[Ring L], 0)
+			end if
+			
+			if inputPress.buttonB == 1
+				object.state = 2
+			end if
+			break
+		case 6 //Outro
+			CheckEqual(inputPress.start, 1)
+			temp0 = checkResult
+			CheckEqual(inputPress.buttonA, 1)
+			temp0 |= checkResult
+			if temp0 == 1
+				
+				object.state = 2
+				player.score = 0
+			end if
+			break		
+		end switch
+end event
+
+
+
+event ObjectDraw		
+		switch object.state
+		
+		//Fade in/out
+		case 0
+			fade.control = 255
+			SetScreenFade(0, 0, 0, fade.control)
+			object.state++
+			break
+		case 1
+			fade.control  -= 20
+			if fade.control  < 0
+				fade.control  = 0
+				object.state++
+				PlayMusic(0)
+			end if
+			SetScreenFade(0, 0, 0, fade.control)
+			break
+		case 2 //Character Select
+		case 3 //Waiting to Start
+		case 6 //Outro
+			fade.control = 0
+			break
+		case 4 //Fade out to exit
+			if fade.control < 320
+				fade.control += 16
+				music.volume -= 2
+			else
+				StopMusic()
+				stage.activeList = PRESENTATION_STAGE
+				stage.listPos = 6
+				LoadStage()
+			end if
+			SetScreenFade(0, 0, 0, fade.control)
+			break
+		case 5 //Fade out to Green Hill
+			if fade.control < 320
+				fade.control += 16
+				music.volume -= 2
+			else
+				StopMusic()
+					stage.activeList = BONUS_STAGE
+					stage.listPos = 1
+					options.gameMode = 5
+					stage.debugMode = 0
+					if char.select == 3
+						stage.playerListPos = 5
+					else
+						stage.playerListPos = char.select
+					end if
+				LoadStage()
+			end if
+			SetScreenFade(0, 0, 0, fade.control)
+			break
+		end switch
+		
+	//Background
+	bg.scroll++
+	bg.scroll &= 127
+	temp0 = bg.scroll
+	FlipSign(temp0)
+	while temp0 < screen.ysize
+		temp1 = bg.scroll
+		FlipSign(temp1)
+		while temp1 < screen.xsize
+			DrawSpriteScreenXY(0, temp1, temp0)
+			temp1 += 128
+		loop
+		temp0 += 128
+	loop
+	
+
+	DrawSpriteScreenXY(1, screen.xsize, screen.ysize)
+	if saved.mobile == 1
+		DrawSpriteScreenXY(44, 25, screen.ycenter)
+		DrawSpriteScreenXY(45, 220, screen.ycenter)
+
+		DrawSpriteScreenXY(46, screen.xcenter, 0)
+		DrawSpriteScreenXY(47, 0, 0)
+		
+		DrawSpriteScreenXY(2, 38, 14)	
+	else
+		DrawSpriteScreenXY(2, 14, 14)	
+	end if
+		
+		//Character Select
+		temp0 = 12
+		temp1 = 55
+		object.alpha = 128
+		
+		temp0 = char.select
+		temp0 += 3
+		DrawSpriteScreenFX(temp0, FX_INK, 32, 55)
+		temp0 += 4
+		DrawSpriteScreenXY(temp0, 32, 55)
+		temp0 += 4
+		temp3 = 190
+		DrawSpriteScreenXY(temp0, temp3, 160)
+		DrawSpriteScreenXY(15, temp3, 160)
+		
+		
+		//Skill
+		DrawSpriteScreenXY(31, 20, screen.ysize)
+		
+		//Strength
+		temp0 = char.select
+		temp0 *= 3
+		GetTableValue(temp1, temp0, golfstars)
+		temp2 = 0
+		temp3 = 195
+		while temp2 < temp1
+			DrawSpriteScreenXY(19, temp3, 177)
+			temp3 += 10
+			temp2++
+		loop
+		
+		//Control
+		temp0++
+		GetTableValue(temp1, temp0, golfstars)
+		temp2 = 0
+		temp3 = 175
+		while temp2 < temp1
+			DrawSpriteScreenXY(19, temp3, 188)
+			temp3 += 10
+			temp2++
+		loop
+		
+		//Accuracy
+		temp0++
+		GetTableValue(temp1, temp0, golfstars)
+		temp2 = 0
+		temp3 = 155
+		while temp2 < temp1
+			DrawSpriteScreenXY(19, temp3, 199)
+			temp3 += 10
+			temp2++
+		loop
+
+	//Records
+	temp0 = 1
+	arrayPos0 = 720
+	while temp0 < num.holes
+		//Bar
+		temp1 = temp0
+		temp1 *= 25
+		temp1 -= 15
+		temp2 = screen.xsize
+		temp2 -= 120
+		DrawRect(temp2, temp1, 120, 19, color2, color2, color2, 255)
+		DrawRect(temp2, temp1, 120, 17, color7, color7, color7, 255)
+		DrawSpriteScreenXY(30, temp2, temp1)
+		
+		//Hole
+		temp1 += 3
+		DrawSpriteScreenXY(16, temp2, temp1)
+		temp2 += 38
+		if temp0 > 9
+			temp2 += 8
+		end if
+		DrawNumbers(20, temp2, temp1, temp0, 4, 8, 0)
+		temp2 = screen.xsize
+		temp2 -= 60
+		temp2 += 10 //hello 1.5
+		
+		//Ball
+		DrawSpriteScreenXY(17, temp2, temp1)
+		temp2 += 15
+		temp1 += 3
+		if saveRAM[arrayPos0] > 0
+			DrawSpriteScreenXY(18, temp2, temp1)
+			temp2 += 8
+			if saveRAM[arrayPos0] > 99
+				saveRAM[arrayPos0] = 99
+			end if 
+			if saveRAM[arrayPos0] > 9
+				temp2 += 8
+			end if
+			DrawNumbers(32, temp2, temp1, saveRAM[arrayPos0], 2, 8, 0)
+		end if
+		
+		//Flicky 
+		//temp2 = screen.xsize
+		//temp2 -= 15
+		//temp1 -= 5
+		//if saveRAM[arrayPos0] == 1
+			//DrawSpriteScreenXY(43, temp2, temp1)
+		//else
+			//DrawSpriteScreenXY(42, temp2, temp1)
+		//end if
+		arrayPos0++
+		temp0++
+	loop		
+end event
+
+event ObjectStartup
+	foreach (TypeName[Golf Menu], arrayPos0, ALL_ENTITIES)
+		object[arrayPos0].type = TypeName[Blank Object]
+		ResetObjectEntity(5, TypeName[Golf Menu], 0, 0, 0)
+		object[5].priority = PRIORITY_ACTIVE
+		object[5].inkEffect = INK_ALPHA
+	next
+	LoadSpriteSheet("Menus/Golf.gif")	
+	SpriteFrame(0, 0, 128, 128, 230, 231) //0 BG
+	SpriteFrame(-125, -240, 125, 240, 1, 1) //1 Black Sides
+	
+	if saved.language == 1
+		SpriteFrame(0, 0, 193, 21, 1, 294) //2 Title
+	else
+		SpriteFrame(0, 0, 177, 21, 1, 316) //2 Title
+	end if
+	
+	//Portraits
+	SpriteFrame(6, 0, 103, 148, 128, 1) //3 Sonic
+	SpriteFrame(0, 1, 158, 114, 232, 1) //4 Tails
+	SpriteFrame(0, 0, 127, 133, 391, 1) //5 Knuckles
+	SpriteFrame(0, 0, 128, 147, 519, 1) //6 Amy
+	
+	//Drop shadow
+	SpriteFrame(7, 3, 106, 148, 1, 875) //7 Sonic
+	SpriteFrame(5, 1, 158, 119, 113, 904) //8 Tails
+	SpriteFrame(7, 9, 125, 129, 391, 135) //9 Knuckles
+	SpriteFrame(11, 5, 122, 147, 519, 149) //10 Amy
+	
+	//Names
+	SpriteFrame(-45, 0, 45, 15, 1, 338) //11 Sonic
+	if saved.region == 1
+		SpriteFrame(-42, 0, 42, 15, 159, 338) //12 Miles
+	else
+		SpriteFrame(-40, 0, 40, 15, 47, 338) //12 Tails	
+	end if
+	SpriteFrame(-70, 0, 70, 15, 88, 338) //13 Knuckles
+	SpriteFrame(-40, 0, 40, 15, 179, 322) //14 Amy
+	SpriteFrame(0, 0, 21, 15, 163, 354) //15 Name endcap	
+	
+	SpriteFrame(0, 0, 34, 11, 1, 407) //16 Hole
+	SpriteFrame(0, -1, 13, 13, 106, 387) //17 Ball
+	SpriteFrame(0, 0, 7, 7, 120, 387) //18 little x
+	SpriteFrame(0, 0, 9, 8, 359, 231) //19 Star
+
+	//Numbers
+	SpriteFrame(0, 0, 7, 11, 36, 407) //20 0
+	SpriteFrame(1, 0, 6, 11, 44, 407) //21 1
+	SpriteFrame(0, 0, 7, 11, 51, 407) //22 2
+	SpriteFrame(0, 0, 7, 11, 59, 407) //23 3
+	SpriteFrame(0, 0, 7, 11, 67, 407) //24 4
+	SpriteFrame(0, 0, 7, 11, 75, 407) //25 5
+	SpriteFrame(0, 0, 7, 11, 83, 407) //26 6
+	SpriteFrame(0, 0, 7, 11, 91, 407) //27 7
+	SpriteFrame(0, 0, 7, 11, 99, 407) //28 8
+	SpriteFrame(0, 0, 7, 11, 107, 407) //29 9
+
+	SpriteFrame(-32, 0, 32, 19, 1, 387) //30 Scoreboard Ender
+	switch saved.language
+	case 0
+		SpriteFrame(17, -85, 155, 56, 1, 431) //31 Skill Meter
+		break
+	case 1
+		SpriteFrame(17, -85, 155, 56, 1, 488) //31 Skill Meter
+		break
+	case 2
+		SpriteFrame(17, -85, 155, 56, 1, 545) //31 Skill Meter
+		break
+	end switch
+	
+	//lil numbers
+	
+	SpriteFrame(0, 0, 8, 7, 128, 387) //32 0
+	SpriteFrame(0, 0, 6, 7, 137, 387) //33 1
+	SpriteFrame(0, 0, 6, 7, 144, 387) //34 2
+	SpriteFrame(0, 0, 6, 7, 151, 387) //35 3
+	SpriteFrame(0, 0, 8, 7, 158, 387) //36 4
+	SpriteFrame(0, 0, 7, 7, 120, 395) //37 5
+	SpriteFrame(0, 0, 7, 7, 128, 395) //38 6
+	SpriteFrame(0, 0, 7, 7, 136, 395) //39 7
+	SpriteFrame(0, 0, 8, 7, 144, 395) //40 8
+	SpriteFrame(0, 0, 7, 7, 153, 395) //41 9
+	
+	
+	SpriteFrame(0, 0, 8, 14, 97, 387) //42 No bird
+	SpriteFrame(0, 0, 8, 14, 88, 387) //43 Bird
+
+	SpriteFrame(-21, 0, 21, 21, 685, 95) //44 lazy left arrow
+	SpriteFrame(0, 0, 21, 21, 707, 95) //45 lazy right arrow
+	SpriteFrame(0, 0, 48, 48, 648, 1) //46 lazy go
+	SpriteFrame(0, 0, 36, 36, 648, 95) //47 Back Arrow back
+
+	
+	SetMusicTrack("GolfMenu.ogg", 0, 1)
+	
+	CallFunction(ScoreOrder)
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+end event

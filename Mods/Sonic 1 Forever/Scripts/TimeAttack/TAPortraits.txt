@@ -1,0 +1,67 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Sonic Team Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias object[9].value14 : TA.xoffset
+private alias object[9].value7 : character.select
+
+private alias object.value1 : character.shadow
+
+
+// Function declarations
+
+// Static Values
+
+event ObjectMain
+
+end event
+
+
+
+//Drawing
+event ObjectDraw
+	//DrawRect(0, 0, screen.xsize, screen.ysize, color7, color7, color7, 255)
+	//Portrait
+	temp0 = screen.xsize
+	temp0 *= 2
+	if screen.xsize <= 320
+		temp0 -= 220
+	else
+		if screen.xsize == 384
+			temp0 -= 260
+		else
+			temp0 -= 294
+		end if
+		
+	end if
+	temp0 -= TA.xoffset	
+	
+	temp0 -= 3
+	character.select += 5
+	DrawSpriteScreenXY(character.select, temp0, 95)
+	character.select -= 5
+	temp0 += 3
+	DrawSpriteScreenXY(character.select, temp0, 90)
+end event
+
+event ObjectStartup
+	LoadSpriteSheet("Menus/TimePortraits.gif")
+	SpriteFrame(-52, -74, 103, 148, 1, 1) //0 Sonic
+	SpriteFrame(-73, -57, 157, 114, 106, 1) //1 Tails
+	SpriteFrame(-54, -66, 123, 133, 264, 1) //2 Knuckles
+	SpriteFrame(-62, -74, 128, 147, 1, 299) //3 Amy
+	SpriteFrame(-44, -62, 91, 122, 388, 1) //4 Super
+
+	//Shadow
+	SpriteFrame(-52, -74, 103, 148, 1, 150) //5 Sonic
+	SpriteFrame(-73, -57, 157, 114, 106, 150) //6 Tails
+	SpriteFrame(-54, -66, 123, 133, 264, 150) //7 Knuckles
+	SpriteFrame(-62, -74, 128, 147, 130, 299) //8 Amy
+	SpriteFrame(-44, -62, 91, 122, 388, 150) //9 Super
+	
+	
+end event

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="10000" DefaultSubtype="01">
+  <Images>
+    <ImageFromSheet id="10000" sheet="Global/Display.gif" sourcex="225" sourcey="49" width="31" height="23">
+      <Offset X="-16" Y="-12"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="1000" sheet="Global/Display.gif" sourcex="225" sourcey="25" width="31" height="23">
+      <Offset X="-16" Y="-12"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="100" sheet="Global/Display.gif" sourcex="225" sourcey="1" width="31" height="23">
+      <Offset X="-16" Y="-12"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Point Reward" description="How many points this object will award upon contact." type="rewards" startbit="0" length="2" />
+  </Properties>
+  <Enums>
+    <Enum name="rewards">
+      <EnumMember name="10000" value="1" />
+      <EnumMember name="1000" />
+      <EnumMember name="100" />
+    </Enum>
+  </Enums>
+  <Subtypes>
+    <Subtype id="01" name="10000 Points" image="10000" />
+    <Subtype id="02" name="1000 Points" image="1000" />
+    <Subtype id="03" name="100 Points" image="100" />
+  </Subtypes>
+</ObjDef>

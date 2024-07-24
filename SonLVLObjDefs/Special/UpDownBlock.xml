@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="speedup">
+  <Images>
+    <ImageFromSheet id="speedup" sheet="Special/Objects.gif" sourcex="226" sourcey="76" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="slowdown" sheet="Special/Objects.gif" sourcex="226" sourcey="176" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Effect" description="The effect this Block will apply upon contact." type="modes" startbit="0" length="1" />
+  </Properties>
+  <Enums>
+    <Enum name="modes">
+      <EnumMember name="Speed Up" />
+      <EnumMember name="Slow Down" />
+    </Enum>
+  </Enums>
+  <Subtypes>
+    <Subtype id="00" name="Speed Up" image="speedup" />
+    <Subtype id="01" name="Slow Down" image="slowdown" />
+  </Subtypes>
+</ObjDef>

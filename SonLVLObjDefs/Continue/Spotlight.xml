@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="frame">
+  <Images>
+    <ImageFromSheet id="frame" sheet="Continue/Objects.gif" sourcex="1" sourcey="1" width="48" height="13"> <!-- #Forever - change sheet pos -->
+      <Offset X="-24" Y="-6"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Player ID" description="Which player this Spotlight is focused on." type="int" startbit="0" length="8" />
+  </Properties>
+  <Subtypes>
+    <Subtype id="00" name="Player 1" image="frame" />
+    <Subtype id="01" name="Player 2" image="frame" />
+  </Subtypes>
+</ObjDef>

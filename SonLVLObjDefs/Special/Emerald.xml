@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ObjDef xmlns="http://www.sonicretro.org" Image="emerald1">
+  <Images>
+    <ImageFromSheet id="emerald1" sheet="Special/Objects.gif" sourcex="176" sourcey="276" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="emerald2" sheet="Special/Objects.gif" sourcex="201" sourcey="276" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="emerald3" sheet="Special/Objects.gif" sourcex="226" sourcey="276" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="emerald4" sheet="Special/Objects.gif" sourcex="251" sourcey="276" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="emerald5" sheet="Special/Objects.gif" sourcex="276" sourcey="276" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="emerald6" sheet="Special/Objects.gif" sourcex="301" sourcey="276" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+    <ImageFromSheet id="emerald7" sheet="Special/Objects.gif" sourcex="401" sourcey="276" width="24" height="24">
+      <Offset X="-12" Y="-12"/>
+    </ImageFromSheet>
+  </Images>
+  <Properties>
+    <Property name="Emerald ID" description="The Emerald type to be displayed." type="emeralds" startbit="0" length="8" /> <!-- had "Named after order ID rather than colour for clarity." in the desc before but mehhhh-->
+  </Properties>
+  <Enums>
+    <Enum name="emeralds">
+      <EnumMember name="Emerald 1" />
+      <EnumMember name="Emerald 2" />
+      <EnumMember name="Emerald 3" />
+      <EnumMember name="Emerald 4" />
+      <EnumMember name="Emerald 5" />
+      <EnumMember name="Emerald 6" />
+      <EnumMember name="Emerald 7" />
+    </Enum>
+  </Enums>
+  <Subtypes>
+    <Subtype id="00" name="Emerald 1" image="emerald1" />
+    <Subtype id="01" name="Emerald 2" image="emerald2" />
+    <Subtype id="02" name="Emerald 3" image="emerald3" />
+    <Subtype id="03" name="Emerald 4" image="emerald4" />
+    <Subtype id="04" name="Emerald 5" image="emerald5" />
+    <Subtype id="05" name="Emerald 6" image="emerald6" />
+    <Subtype id="06" name="Emerald 7" image="emerald7" />
+  </Subtypes>
+</ObjDef>
