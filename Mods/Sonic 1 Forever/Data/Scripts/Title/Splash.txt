@@ -1,0 +1,103 @@
+// If you have a custom title screen, this function is all that needs to be changed
+// This function is called after the splash is over to decide what to do next, by default it'll proceed with 
+
+function Splash_NextPhase
+	ResetObjectEntity(object.entityPos, TypeName[Sonic Team], 0, object.xpos, object.ypos)
+end function
+
+// Everything hereon is the splash code, you shouldn't need to change this
+
+// Array of every frame and what sprite to use
+private table Splash_SpriteTable
+	2, 1, 0, 1, 2, 1, 0, 2, 0, 1, 2, 0, 2, 1, 0, 1, 0, 1, 2, 1, 0, 2, 0, 2, 1, 0, 2, 0, 1, 2, 0, 2, 0, 2, 1, 0, 1, 0, 2, 0, 1, 2, 0, 2, 1, 0, 1, 2, 1, 2, 1, 0, 2, 0, 1, 2
+end table
+
+// Array of how long every frame lasts for
+private table Splash_frameDelay
+	64, 1, 1, 1, 1, 1, 2, 1, 2, 1, 3, 1, 4, 3, 1, 2, 3, 2, 4, 3, 3, 4, 64, 4, 2, 3, 2, 3, 2, 2, 3, 2, 3, 2, 2, 3, 2, 64, 2, 3, 2, 2, 3, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 3, 2, 360
+end table
+
+event ObjectMain
+	if inputPress.start == 1
+		if object.state < 5
+			object.state = 3
+			//object.value0 = 0
+		end if
+	end if
+	
+	switch object.state
+	case 0
+		// Initialization phase
+		object.value0 = 320
+		SetScreenFade(0, 0, 0, object.value0)
+		object.state++
+		break
+	case 1
+		// Fade-in phase
+		if object.value0 > 0
+			object.value0 -= 8
+		else
+			object.state++
+		end if
+		SetScreenFade(0, 0, 0, object.value0)
+		break
+	case 2
+		// Main phase
+
+		// Move to next frame in accordance with the table
+		GetTableValue(temp0, object.frame, Splash_frameDelay)
+		object.value1++
+		if object.value1 == temp0
+			object.frame += 1
+			object.value1 = 0
+		end if
+
+		// Play the jingle when the logo starts to flash
+		if object.frame == 1
+			if object.value0 == 0
+				PlayMusic(10)
+			end if
+		end if
+
+		// Fade out when on the last frame
+		if object.frame == 55
+			object.value0 = 0
+			object.state++
+		end if
+		break
+	case 3
+		// Fade-out phase
+		if object.value0 < 256
+			object.value0 += 8
+			SetScreenFade(0, 0, 0, object.value0)
+		else
+			Callfunction(Splash_NextPhase)
+			SetScreenFade(0, 0, 0, 255)
+		end if
+		break
+	end switch
+end event
+
+event ObjectDraw
+	GetTableValue(temp0, object.frame, Splash_SpriteTable)
+	DrawSpriteScreenXY(temp0, screen.xcenter, screen.ycenter)
+end event
+
+event ObjectStartup
+	LoadSpriteSheet("Title/Splash.gif")
+	SpriteFrame(-160, -112, 320, 224, 0, 0)
+	SpriteFrame(-160, -112, 320, 224, 0, 224)
+	SpriteFrame(-160, -112, 320, 224, 0, 448)
+	LoadPalette("Splash.act", 0, 50, 50, 61)
+	SetMusicTrack("Splash.ogg", 10, 0)
+end event
+
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+end event

@@ -1,0 +1,69 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Push Out Block Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias 68 : TYPE_PUSHOUTBLOCK
+
+
+// Static Values
+
+// Tables
+
+event ObjectMain
+	foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+		if object[currentPlayer].state != PlayerObject_KnuxLedgePullUp
+			BoxCollisionTest(C_TOUCH, object.entityPos, -16, -12, 16, 12, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
+			if checkResult == 1
+				if object[currentPlayer].xpos > object.xpos
+					object[currentPlayer].ixpos = object[currentPlayer].collisionLeft
+					FlipSign(object[currentPlayer].xpos)
+					object[currentPlayer].xpos += 0x100000
+					object[currentPlayer].xpos += object.xpos
+					if object[currentPlayer].xvel < 0
+						object[currentPlayer].pushing = 2
+						object[currentPlayer].xvel = 0
+						object[currentPlayer].speed = 0
+					end if
+				else
+					object[currentPlayer].ixpos = object[currentPlayer].collisionRight
+					FlipSign(object[currentPlayer].xpos)
+					object[currentPlayer].xpos -= 0x100000
+					object[currentPlayer].xpos += object.xpos
+					if object[currentPlayer].xvel > 0
+						object[currentPlayer].pushing = 2
+						object[currentPlayer].xvel = 0
+						object[currentPlayer].speed = 0
+					end if
+				end if
+			end if
+		end if
+	next
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+	
+	if editor.showGizmos == true
+		// Show the object's hitbox
+
+		editor.drawingOverlay = true
+		
+		temp0 = object.ixpos; temp0 -= 0x8
+		temp1 = object.iypos; temp1 -= 0x8
+		DrawRectOutline(temp0, temp1, 16, 16, 255, 255, 255, 255)
+		
+		editor.drawingOverlay = false
+	end if
+end event
+
+
+event RSDKLoad
+	LoadSpriteSheet("MZ/Objects.gif")
+	SpriteFrame(-16, -16, 32, 32, 159, 322)
+	
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
+end event

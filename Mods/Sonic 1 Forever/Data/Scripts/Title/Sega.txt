@@ -1,0 +1,411 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Sega Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias 1 : TYPE_SEGA
+public alias 256 : GROUP_PLAYERS
+public alias 65536 : HITBOX_AUTO
+public alias arrayPos6 : currentPlayer
+public alias arrayPos7 : playerCount
+
+private alias object.value13 : reset.done
+
+public alias saveRAM[257] : saved.spindash
+public alias saveRAM[258] : saved.speedCap
+public alias saveRAM[259] : saved.airSpeedCap
+public alias saveRAM[260] : saved.spikeBehavior
+public alias saveRAM[261] : saved.shieldType
+public alias saveRAM[262] : saved.superStates
+public alias saveRAM[263] : saved.Jumplock
+public alias saveRAM[264] : saved.Supermusic
+public alias saveRAM[265] : saved.Dropdash
+public alias saveRAM[266] : saved.Instashield
+public alias saveRAM[267] : saved.Peelout
+public alias saveRAM[268] : saved.FlightCancel
+public alias saveRAM[269] : saved.SonicMaxDash
+public alias saveRAM[270] : saved.Speen
+public alias saveRAM[271] : saved.Supercancel
+public alias saveRAM[272] : saved.Drowning
+public alias saveRAM[273] : saved.Timer
+public alias saveRAM[274] : saved.region
+public alias saveRAM[275] : saved.UFO
+public alias saveRAM[276] : saved.rotate
+public alias saveRAM[277] : saved.invincibilityType
+public alias saveRAM[280] : saved.gogoplus
+public alias saveRAM[281] : saved.lives
+public alias saveRAM[282] : saved.bubble
+public alias saveRAM[283] : saved.specialSpin
+public alias saveRAM[284] : saved.timeLimit
+public alias saveRAM[285] : saved.GHZwater
+public alias saveRAM[286] : saved.language
+public alias saveRAM[287] : saved.elemental
+
+
+public alias saveRAM[290] : saved.randomMonitor
+
+
+
+public alias saveRAM[294] : saved.graphics
+
+// Function declarations
+reserve function Sega_Function0
+reserve function Save_Transfer
+
+function Save_Transfer
+	ReadSaveRAM()
+	if saveRAM[4] == 0
+	
+	else
+		saveRAM[1000] = saveRAM[0]
+		saveRAM[1001] = saveRAM[1]
+		saveRAM[1002] = saveRAM[2]
+		saveRAM[1003] = saveRAM[3]
+		saveRAM[1004] = saveRAM[4]
+		saveRAM[1005] = saveRAM[5]
+		saveRAM[1006] = saveRAM[6]
+		saveRAM[1007] = saveRAM[7]
+	end if
+	
+	
+	if saveRAM[12] == 0
+	
+	else	
+		saveRAM[1008] = saveRAM[8]
+		saveRAM[1009] = saveRAM[9]
+		saveRAM[1010] = saveRAM[10]
+		saveRAM[1011] = saveRAM[11]
+		saveRAM[1012] = saveRAM[12]
+		saveRAM[1013] = saveRAM[13]
+		saveRAM[1014] = saveRAM[14]
+		saveRAM[1015] = saveRAM[15]
+	end if
+	
+	
+	if saveRAM[20] == 0
+	
+	else	
+		saveRAM[1016] = saveRAM[16]
+		saveRAM[1017] = saveRAM[17]
+		saveRAM[1018] = saveRAM[18]
+		saveRAM[1019] = saveRAM[19]
+		saveRAM[1020] = saveRAM[20]
+		saveRAM[1021] = saveRAM[21]
+		saveRAM[1022] = saveRAM[22]
+		saveRAM[1023] = saveRAM[23]
+	end if
+	
+	
+	if saveRAM[28] == 0
+	
+	else	
+		saveRAM[1024] = saveRAM[24]
+		saveRAM[1025] = saveRAM[25]
+		saveRAM[1026] = saveRAM[26]
+		saveRAM[1027] = saveRAM[27]
+		saveRAM[1028] = saveRAM[28]
+		saveRAM[1029] = saveRAM[29]
+		saveRAM[1030] = saveRAM[30]
+		saveRAM[1031] = saveRAM[31]
+	end if
+	
+	WriteSaveRAM()
+	PlaySfx(SfxName[Lamp Post], 0)
+end function
+
+function Sega_Function0
+	CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+	if checkResult == -1
+		object.value4 = 0
+	end if
+	if object.value4 == 0
+		temp0 = screen.xcenter
+		switch object.value3
+		case 0
+			temp0 -= 93
+			temp1 = temp0
+			temp1 += 39
+			break
+		case 1
+			temp0 -= 50
+			temp1 = temp0
+			temp1 += 42
+			break
+		case 2
+			temp0 -= 6
+			temp1 = temp0
+			temp1 += 42
+			break
+		case 3
+			temp0 += 36
+			temp1 = temp0
+			temp1 += 58
+			break
+		end switch
+		CheckTouchRect(temp0, 90, temp1, 150)
+		if checkResult > -1
+			object.value4 = 1
+			object.value3++
+			if object.value3 == 4
+				PlaySfx(SfxName[Ring L], 0)
+				options.stageSelectFlag = 1
+				saveRAM[295] = 1
+				WriteSaveRam()
+			end if
+		end if
+		temp0 = screen.xcenter
+		switch object.value5
+		case 0
+			temp0 += 36
+			temp1 = temp0
+			temp1 += 58
+			break
+		case 1
+			temp0 -= 6
+			temp1 = temp0
+			temp1 += 42
+			break
+		case 2
+			temp0 -= 50
+			temp1 = temp0
+			temp1 += 42
+			break
+		case 3
+			temp0 -= 93
+			temp1 = temp0
+			temp1 += 39
+			break
+		end switch
+		CheckTouchRect(temp0, 90, temp1, 150)
+		if checkResult > -1
+			object.value4 = 1
+			object.value5++
+			if object.value5 == 4
+				PlaySfx(SfxName[Ring L], 0)
+				saveRAM[278] ^= 1
+				WriteSaveRAM()
+			end if
+		end if
+		temp0 = screen.xcenter
+		switch object.value7
+		case 0
+			temp0 -= 50
+			temp1 = temp0
+			temp1 += 42
+			break
+		case 1
+			temp0 -= 6
+			temp1 = temp0
+			temp1 += 42
+			break
+		case 2
+			temp0 -= 6
+			temp1 = temp0
+			temp1 += 42
+			break
+		case 3
+			temp0 -= 93
+			temp1 = temp0
+			temp1 += 39
+			break
+		end switch
+		CheckTouchRect(temp0, 90, temp1, 150)
+		if checkResult > -1
+			object.value4 = 1
+			object.value7++
+			if object.value7 == 4
+			saveRAM[279] ^= 1
+			switch saveRAM[279]
+				case 0
+					PlaySfx(SfxName[Hurt], 0)
+					break
+				case 1
+					PlaySfx(SfxName[Ring L], 0)
+					break
+			end switch			
+			WriteSaveRAM()
+			end if
+		end if
+	end if
+	
+	
+	if object.value4 == 0 //There's a reason we're checking again and not just adding this to the above check. Don't touch this.
+		CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+		if checkResult > -1
+			if object.state < 5
+				object.state = 5
+				//object.value0 = 0
+			end if
+		end if
+	end if
+end function
+
+
+event ObjectMain
+	if reset.done == 0
+		stage.playerListPos = 0
+		credits.screen = 0
+		stage.debugMode = 0
+		options.stageSelectFlag = 0
+		options.gameMode = 0
+		options.attractMode = 0
+		player.lives = 3
+		player.continues = 0
+		player.score = 0
+		player.scoreBonus = 0xC350
+		stage.player2Enabled = 0
+		lampPostID = 0
+		specialStage.listPos = 0
+		specialStage.emeralds = 0
+		specialStage.nextZone = 0
+		
+		//if screen.xsize != 320
+		//	CallNativeFunction2(SetScreenWidth, 426, 0)
+		//end if
+		
+		WriteSaveRAM()
+		reset.done = 1
+	end if
+	
+	if inputPress.start == 1
+		if object.state < 5
+			object.state = 5
+			//object.value0 = 0
+		end if
+	end if
+	if inputDown.down == 1
+		object.value14++
+		if object.value14 > 180
+			ResetObjectEntity(object.entityPos, TypeName[Control Test], 0, object.xpos, object.ypos)
+		end if
+	else
+		object.value14 = 0
+	end if
+	
+	if inputPress.up == 1
+		object.value16++
+		if object.value16 == 5
+			CallFunction(Save_Transfer)
+		end if
+	end if
+		
+	switch object.state
+	case 0
+		object.alpha = 0
+		object.inkEffect = INK_ALPHA
+		object.value0 = 320
+		SetScreenFade(0, 0, 0, object.value0)
+		object.state++
+		break
+	case 1
+		if object.value0 > 0
+			object.value0 -= 8
+		else
+			object.value2 = screen.xcenter
+			object.value2 -= 104
+			object.alpha = 128
+			object.state++
+		end if
+		SetScreenFade(0, 0, 0, object.value0)
+		break
+	case 2
+		temp0 = screen.xcenter
+		temp0 += 112
+		if object.value2 < temp0
+			object.value2 += 4
+		else
+			object.alpha = 0
+			object.state++
+		end if
+		break
+	case 3
+		if object.alpha < 208
+			object.alpha += 8
+		else
+			object.alpha = 255
+			object.state++
+		end if
+		CallFunction(Sega_Function0)
+		break
+	case 4
+		object.value0++
+		if object.value0 >= 160
+			object.value0 = 0
+			object.state = 5
+		end if
+		if object.value0 == 2
+			PlaySfx(SfxName[Sega Chant], 0)
+		end if
+		if options.gameMode == 0
+			CallFunction(Sega_Function0)
+		end if
+		break
+	case 5
+		if object.value0 < 256
+			object.value0 += 8
+			SetScreenFade(0, 0, 0, object.value0)
+		else
+			ResetObjectEntity(object.entityPos, TypeName[Sonic Team], 0, object.xpos, object.ypos)
+			SetScreenFade(0, 0, 0, 255)
+		end if
+		break
+	end switch
+	
+	temp1 = inputDown.buttonX
+	temp1 &= inputDown.buttonZ
+	if temp1 == 1
+		object.value17++
+		if object.value17 == 100
+			ResetObjectEntity(object.entityPos, TypeName[Test], 0, 0, 0)
+		end if	
+	else
+		object.value17 = 0
+	end if
+end event
+
+
+event ObjectDraw
+	DrawRect(0, 0, screen.xsize, screen.ysize, color7, color7, color7, 255)
+	if object.alpha > 8
+		DrawSpriteScreenFX(0, FX_INK, screen.xcenter, screen.ycenter)
+	end if
+	if object.state == 2
+		temp0 = object.value2
+		temp0 -= 10
+		temp0 -= screen.xsize
+		DrawRect(temp0, 91, screen.xsize, 58, color7, color7, color7, 255)
+		temp0 = object.value2
+		temp0 -= 10
+		DrawRect(temp0, 91, 4, 58, color7, color7, color7, 192)
+		temp0 += 4
+		DrawRect(temp0, 91, 4, 58, color7, color7, color7, 160)
+		temp0 += 8
+		DrawRect(temp0, 91, 4, 58, color7, color7, color7, 160)
+		temp0 += 4
+		DrawRect(temp0, 91, 4, 58, color7, color7, color7, 192)
+		temp0 += 4
+		DrawRect(temp0, 91, screen.xsize, 58, color7, color7, color7, 255)
+		DrawSpriteScreenXY(1, screen.xcenter, screen.ycenter)
+	end if
+end event
+
+
+event ObjectStartup
+	ReadSaveRAM()
+	LoadSpriteSheet("Title/Title.gif")
+	SpriteFrame(-93, -29, 188, 58, 323, 242)
+	SpriteFrame(-125, -29, 252, 58, 259, 301)
+	options.touchControls = 0
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+end event
