@@ -136,7 +136,7 @@ function achieve.header
 end function
 
 function extras.header
-	CopyPalette(0, 213, 0, 240, 5)82, 0)
+	CopyPalette(0, 213, 0, 240, 5)
 	GetTextInfo(extras.textlen, 1, TEXTINFO_TEXTSIZE, 82, 0)
 	extras.textpos = extras.textlen
 	extras.drawx = text.xpos
