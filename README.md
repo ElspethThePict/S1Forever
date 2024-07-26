@@ -18,10 +18,10 @@ Team Forever
 Team Leads:
 Aprkot
 ElspethThePict
-Alexander "AlyStyle" Pinnell
+AlyStyle
 
 Coding:
-Alexander "AlyStyle" Pinnell
+AlyStyle
 Cosmic Eternity
 ElspethThePict
 Tania
@@ -30,7 +30,7 @@ with contributions by
 	GeffGeff (Video Player)
 
 Artists:
-Alexander "AlyStyle" Pinnell
+AlyStyle
 Aprkot
 Cosmic Eternity
 Cyb
@@ -63,7 +63,7 @@ ThunderLeon
 TruthTomato
 
 Testers:
-Alexander "AlyStyle" Pinnell
+AlyStyle
 BrySkye
 Burrotis Man
 Cosmic Eternity
@@ -86,7 +86,7 @@ Social Media:
 Petlamb
 
 Trailers:
-Alexander "AlyStyle" Pinnell
+AlyStyle
 Cosmic Eternity
 Elspeth The Pict
 
