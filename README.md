@@ -18,18 +18,19 @@ Team Forever
 Team Leads:
 Aprkot
 ElspethThePict
-AlyStyle
+Alexander "AlyStyle" Pinnell
 
 Coding:
-AlyStyle
+Alexander "AlyStyle" Pinnell
 Cosmic Eternity
 ElspethThePict
 Tania
 with contributions by
 	Leonx254
+	GeffGeff (Video Player)
 
 Artists:
-AlyStyle
+Alexander "AlyStyle" Pinnell
 Aprkot
 Cosmic Eternity
 Cyb
@@ -62,7 +63,7 @@ ThunderLeon
 TruthTomato
 
 Testers:
-AlyStyle
+Alexander "AlyStyle" Pinnell
 BrySkye
 Burrotis Man
 Cosmic Eternity
@@ -85,7 +86,7 @@ Social Media:
 Petlamb
 
 Trailers:
-AlyStyle
+Alexander "AlyStyle" Pinnell
 Cosmic Eternity
 Elspeth The Pict
 
@@ -143,7 +144,7 @@ Special thanks to RubberDuckyCooly, Megami, Leonx254, Lave Slime, and the users
 of Retro Engine Modding Server for their advice, assistance and feedback.
 	https://dc.railgun.works/retroengine
 	
-Special Thanks to huds601, flying fox, and Baleaf for extra testing and feedback.
+Special Thanks to huds601, flying fox, and HyperStormH for extra testing and feedback.
 
 Original Game by SEGA® and Sonic Team®
 Ported by Taxman and Stealth
