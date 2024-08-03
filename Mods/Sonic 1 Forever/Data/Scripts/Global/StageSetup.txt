@@ -1,0 +1,430 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Stage Setup Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias 4 : TYPE_STAGESETUP
+private alias object.value29 : achievement.state
+private alias object.value30 : achieve.xoffset
+private alias object.value31 : achieve.timer
+private alias object.value37 : achieve.earned
+private alias object.value14 : TimeOverFlag
+
+// Function declarations
+reserve function StageSetup_Function71
+
+// Static Values
+public value StageSetup_value22 = 0;
+public value StageSetup_value21 = 0;
+
+// Tables
+public table StageSetup_table8
+	128, 0, 128, 0, 128, 0, 128, 0, 128, 0, 128, 0, 128, 0, 128, 0
+	128, 0, 0x50F0, 286, 0x2080, 180, 0x3080, 270, 0x5080, 450, 0x7080, 630, 128, 0, 128, 0
+	
+end table
+
+public table StageSetup_table9
+	128, 0, 128, 0, 128, 0, 128, 0, 128, 0, 128, 0, 128, 0, 128, 0
+	128, 0, 0x50F0, 286, 0x2080, 180, 0x3080, 270, 0x5080, 450, 0x7080, 630, 128, 0, 128, 0
+	
+end table
+
+public table StageSetup_table10
+	2, 0x1000, 2, 0x1800, 2, 0x2000, 2, 0x3000, 4, 0x2000, 8, 0x800, 8, 0x4000, 4, 0x4000
+	2, 0x5000, 2, 0x5000, 2, 0x2000, 3, 0x3000, 5, 0x5000, 7, 0x7000, 2, 0x1000, 2, 0x1000
+	
+end table
+
+
+function StageSetup_Function71
+	temp0 = 0
+	temp1 = 0
+	while temp0 < 16
+		GetTableValue(temp4, temp1, StageSetup_table10)
+		GetTableValue(temp6, temp1, StageSetup_table9)
+		temp1++
+		GetTableValue(temp5, temp1, StageSetup_table10)
+		GetTableValue(temp7, temp1, StageSetup_table9)
+		temp1--
+		GetBit(temp2, StageSetup_value21, temp0)
+		if temp2 == 0
+			temp7 += temp4
+			temp6 += temp7
+			if temp6 >= temp5
+				SetBit(StageSetup_value21, temp0, 1)
+			end if
+		else
+			temp7 -= temp4
+			temp6 += temp7
+			if temp6 < temp5
+				SetBit(StageSetup_value21, temp0, 0)
+			end if
+		end if
+		SetTableValue(temp6, temp1, StageSetup_table9)
+		temp1++
+		SetTableValue(temp7, temp1, StageSetup_table9)
+		temp1++
+		temp0++
+	loop
+end function
+
+
+event ObjectMain		
+	Object.DrawOrder = 6
+	if stage.state != STAGE_PAUSED
+		if inputPress.start == 1
+			if options.attractMode == 0
+				if stage.pauseEnabled == 1
+					StopSfx(SfxName[Flying])
+					StopSfx(SfxName[Jump])
+					StopSfx(SfxName[Tired])
+					StopSfx(SfxName[DrownWarn])
+					CreateTempObject(TypeName[Music Event], 10, object.xpos, object.ypos)
+				end if
+			end if
+		end if
+	endif
+	if stage.state == STAGE_RUNNING
+		ringTimer++
+		if ringTimer == 4
+			ringTimer = 0
+			ringFrame++
+			ringFrame &= 7
+		end if
+		StageSetup_value22++
+		if StageSetup_value22 > 17
+			StageSetup_value22 = 0
+		end if
+		if options.gameMode < 2
+			if player.score >= player.scoreBonus
+				if saved.lives == 0
+					player.lives++
+					PlaySfx(SfxName[Life], 0)
+					PauseMusic()
+					ResetObjectEntity(25, TypeName[Music Event], 2, 0, 0)
+					object[25].priority = PRIORITY_ACTIVE
+				end if
+				player.scoreBonus += 0xC350
+			end if
+		end if
+		oscillation++
+		oscillation &= 511
+		CallFunction(StageSetup_Function71)
+		
+		//Time Over
+		if stage.timeEnabled == 1
+			switch options.gameMode
+				case 0
+				case 1
+				case 3
+					switch saved.timeLimit
+						case 0
+							break
+						case 1
+							if stage.minutes == 3
+								CheckEqual(stage.debugMode, 1)
+								temp0 = checkResult
+								if temp0 == 0
+									currentPlayer = 0
+									object[0].type = TypeName[Player Object]
+									CallFunction(PlayerObject_Kill)
+								end if
+								stage.minutes = 3
+								stage.seconds = 0
+								stage.milliSeconds = 0
+								stage.timeEnabled = 0
+								TimeOverFlag = 1
+							end if
+							break
+						case 2
+							if stage.minutes == 10
+								CheckEqual(stage.debugMode, 1)
+								temp0 = checkResult
+								if temp0 == 0
+									currentPlayer = 0
+									object[0].type = TypeName[Player Object]
+									CallFunction(PlayerObject_Kill)
+								end if
+								stage.minutes = 9
+								stage.seconds = 59
+								stage.milliSeconds = 99
+								stage.timeEnabled = 0
+								TimeOverFlag = 1
+							end if
+							break
+					end switch
+					break		
+			end switch
+		end if
+				
+		foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+			temp0 = object[currentPlayer].collisionLeft
+			temp0 <<= 16
+			temp0 += object[currentPlayer].xpos
+			temp1 = stage.curXBoundary1
+			temp1 <<= 16
+			if temp0 < temp1
+				if object[currentPlayer].right == 1
+					object[currentPlayer].xvel = 0x10000
+					object[currentPlayer].speed = 0x10000
+				else
+					object[currentPlayer].xvel = 0
+					object[currentPlayer].speed = 0
+				end if
+				object[currentPlayer].xpos = temp1
+				temp0 = object[currentPlayer].collisionLeft
+				temp0 <<= 16
+				object[currentPlayer].xpos -= temp0
+			end if
+			if options.gameMode != 5
+				temp1 = stage.curYBoundary2
+				temp1 <<= 16
+				if temp1 < stage.deathBoundary
+					if object[currentPlayer].ypos > stage.deathBoundary
+						CallFunction(PlayerObject_Kill)
+					end if
+				else
+					if object[currentPlayer].ypos > temp1
+						CallFunction(PlayerObject_Kill)
+					end if
+				end if
+			end if
+		next		
+	end if
+	
+	if stage.state != STAGE_PAUSED
+		currentPlayer = playerCount
+		currentPlayer--
+		while currentPlayer > -1
+			if object[currentPlayer].visible == 1
+				currentPlayer += playerCount
+				if object[currentPlayer].value18 == 0
+					currentPlayer -= playerCount
+					arrayPos0 = object[currentPlayer].value18
+					AddDrawListEntityRef(arrayPos0, currentPlayer)
+					currentPlayer += playerCount
+					AddDrawListEntityRef(arrayPos0, currentPlayer)
+					currentPlayer += playerCount
+					AddDrawListEntityRef(arrayPos0, currentPlayer)
+					currentPlayer -= playerCount
+					currentPlayer -= playerCount
+				else
+					currentPlayer -= playerCount
+					arrayPos0 = object[currentPlayer].value18
+					currentPlayer += playerCount
+					AddDrawListEntityRef(arrayPos0, currentPlayer)
+					currentPlayer += playerCount
+					AddDrawListEntityRef(arrayPos0, currentPlayer)
+					currentPlayer -= playerCount
+					currentPlayer -= playerCount
+					arrayPos0 = object[currentPlayer].value18
+					AddDrawListEntityRef(arrayPos0, currentPlayer)
+				end if
+			end if
+			currentPlayer--
+		loop
+	end if
+
+	//Achievement Display
+	if stage.state == STAGE_RUNNING
+		switch achievement.state
+			case 0
+				if achievement.trigger > 0
+					achieve.earned = achievement.trigger
+					achievement.trigger = 0
+					achievement.state = 1
+				end if
+				break
+			case 1
+				arrayPos1 = 399
+				arrayPos1 += achieve.earned
+				if saveRAM[arrayPos1] == 1
+					achieve.earned = 0	
+					achievement.state = 0
+				else
+					saveRAM[arrayPos1] = 1
+					WriteSaveRAM()
+					achievement.state++
+				end if
+				break
+			case 2
+				PlaySfx(SfxName[Event], 0)
+				achieve.xoffset = 0
+				achievement.state++
+				break			
+			case 3
+				if achieve.xoffset < 200
+					achieve.xoffset += 8
+				end if
+				if achieve.xoffset >= 200
+					achieve.xoffset = 200
+					achieve.timer = 0
+					achievement.state++
+				end if
+				break
+			case 4
+				if achieve.timer < 180
+					achieve.timer++
+				else
+					achievement.state++
+				end if
+				break
+			case 5
+				if achieve.xoffset > 0
+					achieve.xoffset -= 8
+				end if
+				if achieve.xoffset <= 0
+					achieve.xoffset = 0
+					achievement.state++
+				end if
+				break
+			case 6
+				achieve.earned = 0	
+				achievement.state = 0
+				break
+		end switch
+	end if
+end event
+
+event ObjectDraw
+	SetActivePalette(0, 0, screen.ysize)
+	if stage.state == STAGE_RUNNING
+		if achieve.earned > 0
+			//Achievement Display
+			temp0 = screen.xsize
+			temp0 -= achieve.xoffset
+			temp1 = screen.ysize
+			temp1 -= 29
+			temp2 = achieve.earned
+			temp2--
+
+			DrawSpriteScreenXY(temp2, temp0, temp1)
+		end if
+	end if
+end event
+
+event ObjectStartup
+	SetMusicTrack("ActComplete.ogg", 1, 0)
+	SetMusicTrack("Invincibility.ogg", 2, 0x9A68)
+	SetMusicTrack("Continue.ogg", 3, 0)
+	SetMusicTrack("Boss.ogg", 4, 1)
+	SetMusicTrack("GameOver.ogg", 5, 0)
+	SetMusicTrack("Drowning.ogg", 6, 0)
+	switch saved.Supermusic
+		case 1
+			SetMusicTrack("Super.ogg", 7, 1)
+			break
+		case 2
+			SetMusicTrack("Super3.ogg", 7, 1)
+			break
+		case 3
+			SetMusicTrack("Super3K.ogg", 7, 30014)
+			break
+		case 4
+			SetMusicTrack("Super3U.ogg", 7, 40914)
+			break
+		case 5
+			SetMusicTrack("SuperM.ogg", 7, 98754)
+			break
+	end switch
+	if options.attractMode == 0
+	else
+		SetObjectRange(424)
+	end if
+	SpeedUpMusic = 0
+	SlowDownMusic = 0
+	stage.musicFlag = 0
+	stage.deathBoundary = stage.curYBoundary2
+	stage.deathBoundary <<= 16
+	foreach (TypeName[Stage Setup], arrayPos0, ALL_ENTITIES)
+		ResetObjectEntity(arrayPos0, TypeName[Blank Object], 0, 0, 0)
+	next
+	object[8].type = TypeName[Stage Setup]
+	object[8].priority = PRIORITY_ACTIVE_PAUSED
+	foreach (TypeName[HUD], arrayPos0, ALL_ENTITIES)
+		object[arrayPos0].type = TypeName[Blank Object]
+		if credits.screen == 0
+			object[9].type = TypeName[HUD]
+			object[9].priority = PRIORITY_ACTIVE
+			object[9].drawOrder = 6
+			object[9].propertyValue = object[arrayPos0].propertyValue
+		end if
+	next
+	ringExtraLife = 100
+	oscillation = 0
+	StageSetup_value21 = 0x3E00
+	temp0 = 0
+	while temp0 < 32
+		GetTableValue(temp1, temp0, StageSetup_table8)
+		SetTableValue(temp1, temp0, StageSetup_table9)
+		temp0++
+	loop
+	
+	temp0 = saved.shieldType
+	if options.attractMode == 1
+		temp0 = 0
+	end if
+	
+	switch temp0
+	case 0
+	case 2
+		blueShieldType = 24
+		break
+	case 1
+		blueShieldType = 25
+		break
+	end switch
+
+	temp1 = saved.invincibilityType
+	if options.attractMode == 1
+		temp0 = 0
+	end if
+
+	if saved.invincibilityType == 0
+		invincibilityType = 31
+	else
+		invincibilityType = 32
+	end if
+	
+
+	//Achievement Display
+	LoadSpriteSheet("Global/Achievements.gif")
+	SpriteFrame(0, 0, 200, 29, 1, 1) // 0
+	SpriteFrame(0, 0, 200, 29, 1, 31) // 1
+	SpriteFrame(0, 0, 200, 29, 1, 61) // 2
+	SpriteFrame(0, 0, 200, 29, 1, 91) // 3
+	SpriteFrame(0, 0, 200, 29, 1, 121) // 4
+	SpriteFrame(0, 0, 200, 29, 1, 151) // 5
+
+	SpriteFrame(0, 0, 200, 29, 203, 1) // 6
+	SpriteFrame(0, 0, 200, 29, 203, 31) // 7
+	SpriteFrame(0, 0, 200, 29, 203, 61) // 8
+	SpriteFrame(0, 0, 200, 29, 203, 91) // 9
+	SpriteFrame(0, 0, 200, 29, 203, 121) // 10
+	SpriteFrame(0, 0, 200, 29, 203, 151) // 11
+	
+	SpriteFrame(0, 0, 200, 29, 1, 181) // 12 //Knuckles and Tails
+	SpriteFrame(0, 0, 200, 29, 203, 181) // 13 //Super Sonic Time Attack
+	
+	SpriteFrame(0, 0, 200, 29, 1, 211) // 14
+	SpriteFrame(0, 0, 200, 29, 203, 211) // 15
+	SpriteFrame(0, 0, 200, 29, 1, 241) // 16
+	SpriteFrame(0, 0, 200, 29, 203, 241) // 17
+
+	SpriteFrame(0, 0, 200, 29, 1, 271) // 18
+	SpriteFrame(0, 0, 200, 29, 1, 301) // 19
+	SpriteFrame(0, 0, 200, 29, 203, 301) // 20
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+end event

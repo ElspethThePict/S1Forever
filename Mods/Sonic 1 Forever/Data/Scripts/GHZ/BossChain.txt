@@ -1,0 +1,35 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Boss Chain Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias 68 : TYPE_BOSSCHAIN
+
+
+// Static Values
+
+// Tables
+
+event ObjectDraw
+	DrawSprite(0)
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("GHZ/Objects.gif")
+	SpriteFrame(-8, -8, 16, 16, 101, 1)
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("GHZ/Objects.gif")
+	SpriteFrame(-8, -8, 16, 16, 101, 1)
+	
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
+end event

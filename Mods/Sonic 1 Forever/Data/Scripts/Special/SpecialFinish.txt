@@ -1,0 +1,1036 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Special Finish Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias 22 : TYPE_SPECIALFINISH
+private alias object.value14 : achievement.state
+private alias object.value15 : achieve.xoffset
+private alias object.value16 : achieve.timer
+private alias object.value17 : bestmillis
+private alias object.value18 : bestseconds
+private alias object.value19 : bestminutes
+private alias object.value20 : besttotal
+private alias object.value21 : gems.bonus
+
+private alias 20 : gauntletcenter
+
+// Function declarations
+reserve function SpecialFinish_Function53
+
+// Static Values
+private value special.achievement = 0
+
+// Tables
+
+function SpecialFinish_Function53
+	switch object.value9
+	case 0
+		temp0 = screen.xcenter
+		FlipSign(temp0)
+		temp0 -= 160
+		object.value1 -= 16
+		if object.value1 <= temp0
+			object.value1 = temp0
+			object.value9++
+		end if
+		break
+	case 1
+		object.value1 += 16
+		if object.value1 >= 0
+			object.value1 = 0
+			object.value9++
+		end if
+		break
+	end switch
+end function
+
+
+event ObjectMain
+	switch object.state
+	case 0
+		object.rotation = PlayerObject_value1
+		PlayerObject_value2 = 2
+		object.rotation <<= 2
+		object.value2 = 8
+		object.state++
+		break
+	case 1
+		object.rotation -= object.value2
+		if object.rotation < 0
+			object.rotation += 0x800
+		end if
+		object.value2 += 2
+		PlayerObject_value1 = object.rotation
+		PlayerObject_value1 >>= 2
+		if object.value2 > 248
+			switch options.gameMode
+				case 4
+					if PlayerObject_value4 == 1
+						temp0 = stage.actNum
+						temp0--
+						SetBit(specialStage.emeralds, temp0, 1)
+						if stage.actNum == 7
+							object.state++
+							if specialStage.emeralds == 127
+								saveRAM[996] = 1
+							end if							
+						else
+							object.state = 14
+						end if
+					else
+						object.state++
+					end if					
+					WriteSaveRAM()
+					break
+				case 2	
+					if PlayerObject_value4 == 1
+						object.state++
+					else
+						object.state = 14
+					end if
+					break
+				default
+					object.state++
+					break			
+			end switch
+		end if
+		break
+	case 2
+		object.rotation -= object.value2
+		if object.rotation < 0
+			object.rotation += 0x800
+		end if
+		object.value2 += 2
+		PlayerObject_value1 = object.rotation
+		PlayerObject_value1 >>= 2
+		if object.value0 < 256
+			object.value0 += 8
+			SetScreenFade(color7, color7, color7, object.value0)
+		else
+			if PlayerObject_value4 == 1
+				temp0 = stage.actNum
+				temp0--
+				SetBit(specialStage.emeralds, temp0, 1)
+			end if
+			object.value5 = object[0].value0
+			object.value5 *= 100
+			if options.gameMode == 4
+				object.value5 = 0
+				object[0].value0 = 0
+			end if
+			if object[0].value0 >= 50
+				if options.gameMode != 3
+					if saved.lives == 0
+						object.value8 = 1
+					end if
+				end if
+			end if
+			if PlayerObject_value4 == 1
+				if options.gameMode == 3
+					gems.bonus = 10000
+				end if
+			end if
+			stage.listPos = specialStage.nextZone
+			stage.activeList = REGULAR_STAGE
+			switch specialStage.emeralds
+			case 63
+				if saved.superStates == 0
+					object.frame = 3
+					specialStage.listPos = 6
+					temp0 = 1
+				else
+					object.frame = 2
+					specialStage.listPos = 6
+					temp0 = 1
+				end if
+				break
+			case 127
+				object.frame = 3
+				specialStage.listPos++
+				specialStage.listPos %= 7
+				temp0 = 1
+				break
+			default
+				object.frame = 2
+				temp0 = 0
+				while temp0 == 0
+					specialStage.listPos++
+					if specialStage.listPos > 5
+						specialStage.listPos = 0
+					end if
+					GetBit(temp1, specialStage.emeralds, specialStage.listPos)
+					if temp1 == 0
+						temp0 = 1
+					end if
+				loop
+				break
+			end switch
+			if PlayerObject_value4 == 0
+				object.frame = 1
+				if options.gameMode == 4
+					object.frame = 2
+				end if
+			end if
+			object.value0 = 0
+			temp0 = 0
+			besttotal = object[9].value2
+			bestmillis = object[9].value3
+			bestseconds = object[9].value4
+			bestminutes = object[9].value5
+			while temp0 < 20
+				ResetObjectEntity(temp0, TypeName[Blank Object], 0, 0, 0)
+				temp0++
+			loop
+			temp0++
+			while temp0 < 0x4A0
+				ResetObjectEntity(temp0, TypeName[Blank Object], 0, 0, 0)
+				temp0++
+			loop
+			stage[0].activeLayer = 9
+			stage[1].activeLayer = 9
+			stage[2].activeLayer = 9
+			stage[3].activeLayer = 9
+			object.controlMode = 0
+			inputDown.left = 0
+			inputDown.right = 0
+			object.direction = FLIP_NONE
+			if options.gameMode == 1
+				arrayPos1 = options.saveSlot
+				arrayPos1 <<= 3
+				arrayPos1 += 1000
+				if stage.player2Enabled == 1
+					switch stage.playerListPos
+						case 0
+							saveRAM[arrayPos1] = 3
+							break
+						case 2
+							saveRAM[arrayPos1] = 4
+							break
+					end switch
+				else
+					saveRAM[arrayPos1] = stage.playerListPos
+				end if
+				arrayPos1++
+				saveRAM[arrayPos1] = player.lives
+				arrayPos1++
+				saveRAM[arrayPos1] = player.score
+				arrayPos1++
+				saveRAM[arrayPos1] = player.scoreBonus
+				arrayPos1++
+				temp0 = stage.listPos
+				temp0++
+				if temp0 > saveRAM[arrayPos1]
+					saveRAM[arrayPos1] = temp0
+				else
+					if saveRAM[arrayPos1] >= 128
+						saveRAM[arrayPos1] = temp0
+					end if
+				end if
+				arrayPos1++
+				saveRAM[arrayPos1] = specialStage.emeralds
+				arrayPos1++
+				saveRAM[arrayPos1] = specialStage.listPos
+				WriteSaveRAM()
+			end if
+			object.state++
+			SetScreenFade(color7, color7, color7, 255)
+		end if
+		break
+	case 3
+		if object.value0 < 45
+			object.value0++
+		else
+			if stage.actNum != 9
+				object.value0 = 0
+				object.state++
+			else
+				StopMusic()
+				stage.listPos = 10
+				stage.activeList = PRESENTATION_STAGE
+				LoadStage()
+			end if
+		end if
+		SetScreenFade(color7, color7, color7, 255)
+		break
+	case 4
+		PlayMusic(1)
+		object.drawOrder = 6
+		object.priority = PRIORITY_ACTIVE
+		object.inkEffect = INK_ALPHA
+		object.alpha = 0
+		object.xpos = screen.xcenter
+		object.xpos += 128
+		object.value1 = screen.xcenter
+		FlipSign(object.value1)
+		object.value1 -= 160
+		object.value3 = screen.xcenter
+		object.value3 += 192
+		object.value4 = object.value3
+		object.value4 += 32
+		object.value7 = object.value4
+		object.value7 += 32
+		object.state++
+		break
+	case 5
+		if object.xpos > 0
+			object.xpos -= 16
+			if object.xpos < 0
+				object.xpos = 0
+			end if
+		end if
+		if object.value1 < 0
+			object.value1 += 16
+			if object.value1 > 0
+				object.value1 = 0
+			end if
+		else
+			object.state++
+		end if
+		break
+	case 6
+		if object.value6 < 256
+			object.value6 += 8
+		end if
+		if object.value3 > 0
+			object.value3 -= 16
+			if object.value3 < 0
+				object.value3 = 0
+			end if
+		end if
+		if object.value4 > 0
+			object.value4 -= 16
+			if object.value4 < 0
+				object.value4 = 0
+			end if
+		end if
+		if object.value7 > 0
+			object.value7 -= 16
+			if object.value7 < 0
+				object.value7 = 0
+			end if
+		else
+			object.state++
+		end if
+		break
+	case 7
+		if object.value6 < 256
+			object.value6 += 8
+		end if
+		object.value0++
+		if object.value0 > 299
+			if stage.debugMode == 0
+				temp1 = specialStage.emeralds
+				temp1 &= 63
+				if temp1 == 63
+					if options.gameMode != 2
+						special.achievement = 1
+					end if
+				end if
+			end if
+			object.value0 = 0
+			object.state++
+			if options.gameMode == 2
+				object.state = 9
+			end if
+		end if
+		break
+	case 8
+		temp2 = inputDown.buttonA
+		temp2 |= inputDown.buttonB
+		temp2 |= inputDown.buttonC
+		if temp2 == 1
+			temp3 = 2000
+			if temp3 > object.value5
+				temp3 = object.value5
+			end if
+			temp4 = 2000
+			if temp4 > gems.bonus
+				temp4 = gems.bonus
+			end if
+		else
+			temp3 = 100
+			temp4 = 100
+		end if
+		if object.value5 > 0
+			object.value5 -= temp3
+			player.score += temp3
+		end if
+		if gems.bonus > 0
+			gems.bonus -= temp4
+			player.score += temp4
+		end if
+		if player.score >= player.scoreBonus
+			if options.gameMode < 2
+				if saved.lives == 0
+					player.lives++
+					PlaySfx(SfxName[Life], 0)
+					PauseMusic()
+					ResetObjectEntity(25, TypeName[Music Event], 2, 0, 0)
+					object[25].priority = PRIORITY_ACTIVE
+				end if	
+				player.scoreBonus += 0xC350
+			end if	
+		end if
+		CheckGreater(object.value5, 0)
+		temp0 = checkResult
+		CheckGreater(gems.bonus, 0)
+		temp0 |= checkResult
+		if temp0 == 1
+			object.value0++
+			if object.value0 == 2
+				PlaySfx(SfxName[Score Add], 0)
+				object.value0 = 0
+			end if
+		else
+			if object.value8 == 0
+				object.state++
+				if PlayerObject_value4 == 1
+					if specialStage.emeralds == 127
+						object.state = 16
+					end if
+				end if
+			else
+				object.state = 12
+			end if
+			object.value0 = 0
+			PlaySfx(SfxName[Score Total], 0)
+		end if
+		break
+	case 9
+		object.value0++
+		if object.value0 == 160
+			object.value0 = 0
+			object.state++
+			PlaySfx(SfxName[Warp], 0)
+		end if
+		break
+	case 10
+		if object.value0 < 400
+			object.value0 += 8
+			SetScreenFade(color7, color7, color7, object.value0)
+		else
+			object.value0 = 248
+			object.state++
+			SetScreenFade(color7, color7, color7, 255)
+		end if
+		break
+	case 11
+		if object.value0 > 0
+			object.value0 -= 8
+		else
+			if options.gameMode == 1
+				arrayPos1 = options.saveSlot
+				arrayPos1 <<= 3
+				arrayPos1 += 1000
+				if stage.player2Enabled == 1
+					switch stage.playerListPos
+						case 0
+							saveRAM[arrayPos1] = 3
+							break
+						case 2
+							saveRAM[arrayPos1] = 4
+							break
+					end switch
+				else
+					saveRAM[arrayPos1] = stage.playerListPos
+				end if
+				arrayPos1++
+				saveRAM[arrayPos1] = player.lives
+				arrayPos1++
+				saveRAM[arrayPos1] = player.score
+				arrayPos1++
+				saveRAM[arrayPos1] = player.scoreBonus
+				arrayPos1++
+				temp0 = stage.listPos
+				temp0++
+				if temp0 > saveRAM[arrayPos1]
+					saveRAM[arrayPos1] = temp0
+				else
+					if saveRAM[arrayPos1] >= 128
+						saveRAM[arrayPos1] = temp0
+					end if
+				end if
+				arrayPos1++
+				saveRAM[arrayPos1] = specialStage.emeralds
+				arrayPos1++
+				saveRAM[arrayPos1] = specialStage.listPos
+				WriteSaveRAM()
+			end if
+			fadeColor = 0
+			switch options.gameMode
+				case 4
+					stage.activeList = PRESENTATION_STAGE
+					stage.listPos = 6
+					recgoggles = 100
+					LoadStage()					
+					break
+				case 2
+					stage.activeList = PRESENTATION_STAGE
+					stage.listPos = 8
+					LoadStage()
+					break
+				default
+					if stage.listPos < stage.listSize
+						if stage.actNum == 8
+							stage.activeList = PRESENTATION_STAGE
+							stage.listPos = 6
+						end if
+						LoadStage()
+					else
+						stage.activeList = PRESENTATION_STAGE
+						stage.listPos = 0
+						LoadStage()
+					end if
+					break
+			end switch
+			if options.gameMode == 2
+			else
+
+			end if
+		end if
+		SetScreenFade(object.value0, object.value0, object.value0, 255)
+		break
+	case 12
+		object.value0++
+		if object.value0 == 120
+			object.value0 = 0
+			object.value8++
+			object.state++
+			if specialStage.emeralds == 127
+				PlaySfx(SfxName[Event], 0)
+			else
+				PlaySfx(SfxName[Continue], 0)
+			end if			
+		end if
+		break
+	case 13
+		if specialStage.emeralds == 127
+			CallFunction(SpecialFinish_Function53)
+		end if
+		object.value0++
+		if object.value0 == 360
+			object.value0 = 0
+			object.state = 10
+			PlaySfx(SfxName[Warp], 0)
+		end if
+		break
+	case 14
+		object.rotation -= object.value2
+		if object.rotation < 0
+			object.rotation += 0x800
+		end if
+		object.value2 += 2
+		PlayerObject_value1 = object.rotation
+		PlayerObject_value1 >>= 2
+		if object.value0 < 480
+			object.value0 += 8
+			if PlayerObject_value4 == 0
+				music.volume -= 2
+			end if
+		else
+			object.value0 = 248
+			object.state++
+			temp0 = 0
+			while temp0 < 20
+				ResetObjectEntity(temp0, TypeName[Blank Object], 0, 0, 0)
+				temp0++
+			loop
+			temp0++
+			while temp0 < 0x4A0
+				ResetObjectEntity(temp0, TypeName[Blank Object], 0, 0, 0)
+				temp0++
+			loop
+			stage[0].activeLayer = 9
+			stage[1].activeLayer = 9
+			stage[2].activeLayer = 9
+			stage[3].activeLayer = 9
+			if PlayerObject_value4 == 0
+				StopMusic()
+			end if
+		end if
+		SetScreenFade(color7, color7, color7, object.value0)
+		break
+	case 15
+		switch options.gameMode
+			case 2
+				break
+			case 4
+				stage.listPos++
+				break
+		end switch
+		LoadStage()
+		SetScreenFade(color7, color7, color7, object.value0)
+		break
+	case 16
+		object.value0++
+		if object.value0 == 120
+			object.value0 = 0
+			object.state++
+			if options.gameMode == 4
+				PlaySfx(SfxName[Twinkle], 0)
+			else
+				PlaySfx(SfxName[Event], 0)
+			end if
+		end if
+		break
+	case 17
+		CallFunction(SpecialFinish_Function53)
+		object.value0++
+		if object.value0 == 480
+			object.value0 = 0
+			object.state = 10
+			PlaySfx(SfxName[Warp], 0)
+		end if
+		break
+	end switch
+
+
+	//Achievement Display
+	if special.achievement == 1	
+		switch achievement.state
+			case 0
+				if saveRAM[408] == 1
+					special.achievement = 0	
+					achievement.state = 0
+				else
+					saveRAM[408] = 1
+					WriteSaveRAM()
+					achievement.state++
+				end if
+				break
+			case 1
+				PlaySfx(SfxName[Event], 0)
+				achieve.xoffset = 0
+				achievement.state++
+				break			
+			case 2
+				if achieve.xoffset < 200
+					achieve.xoffset += 8
+				end if
+				if achieve.xoffset >= 200
+					achieve.xoffset = 200
+					achieve.timer = 0
+					achievement.state++
+				end if
+				break
+			case 3
+				if achieve.timer < 180
+					achieve.timer++
+				else
+					achievement.state++
+				end if
+				break
+			case 4
+				if achieve.xoffset > 0
+					achieve.xoffset -= 8
+				end if
+				if achieve.xoffset <= 0
+					achieve.xoffset = 0
+					achievement.state++
+				end if
+				break
+			case 5
+				special.achievement = 0	
+				achievement.state = 0
+				break
+		end switch
+	end if
+end event
+
+
+event ObjectDraw
+	switch object.state
+	case 4
+	case 5
+	case 6
+	case 7
+	case 8
+	case 9
+	case 10
+	case 11
+	case 12
+	case 13
+	case 16
+	case 17
+		//White Background here
+		DrawRect(0, 0, screen.xsize, screen.ysize, color7, color7, color7, 255)
+		temp0 = screen.xcenter
+		temp0 += object.xpos
+		temp4 = 48
+		DrawSpriteScreenXY(0, temp0, temp4)
+		temp4 += 20
+		if object.value9 == 0
+			temp0 = screen.xcenter
+			temp0 += object.value1
+			DrawSpriteScreenXY(object.frame, temp0, temp4)
+		else
+			temp0 = screen.xcenter
+			temp0 += object.value1
+			DrawSpriteScreenXY(26, temp0, temp4)
+			DrawSpriteScreenXY(27, temp0, temp4)
+			DrawSpriteScreenXY(28, temp0, temp4)
+			temp0 = screen.xcenter
+			temp0 -= object.value1
+			DrawSpriteScreenXY(29, temp0, temp4)
+			DrawSpriteScreenXY(30, temp0, temp4)
+		end if
+		temp0 = screen.xcenter
+		temp0 -= 79
+		temp0 += object.value3
+		
+		switch options.gameMode
+		case 2
+			temp1 = temp0
+			temp1 += 24
+			DrawSpriteScreenXY(35, temp1, 151)
+			DrawSpriteScreenXY(36, temp0, 151)
+			temp0 += 114
+			temp1 = stage.minutes
+			while temp1 >= 10
+				temp0 += 8
+				temp1 /= 10
+			loop			
+			DrawSpriteScreenXY(34, temp0, 151)
+				temp0 += 37
+			DrawNumbers(9, temp0, 151, stage.milliSeconds, 2, 8, 1)
+			temp0 -= 24
+			DrawNumbers(9, temp0, 151, stage.seconds, 2, 8, 1)
+			temp5 = temp0
+			temp0 -= 24
+			DrawNumbers(9, temp0, 151, stage.minutes, 10, 8, 0)
+			temp0 = screen.xcenter
+			temp0 -= 79
+			temp0 += object.value4
+			temp1 = temp0
+			temp1 += 63
+			DrawSpriteScreenXY(35, temp1, 167)
+			DrawSpriteScreenXY(32, temp0, 167)
+			temp0 += 114
+			if object[9].value5 > 9
+				temp0 += 8
+			end if
+			DrawSpriteScreenXY(34, temp0, 167)
+				temp0 += 37
+			DrawNumbers(9, temp0, 167, bestmillis, 2, 8, 1)
+			temp0 -= 24
+			DrawNumbers(9, temp0, 167, bestseconds, 2, 8, 1)
+			temp5 = temp0
+			temp0 -= 24
+			DrawNumbers(9, temp0, 167, bestminutes, 2, 8, 0)
+			temp0 = screen.xcenter
+			temp0 -= 79
+			temp0 += object.value4
+			if besttotal > timeAttack.result
+				temp0 += 37
+				temp1 = temp 0
+				temp1 += 76
+				DrawSpriteScreenXY(35, temp1, 183)
+				DrawSpriteScreenXY(33, temp0, 183)
+			end if	
+			break
+		case 3
+			DrawSpriteScreenXY(4, temp0, 151)
+			temp0 += 151
+			DrawNumbers(9, temp0, 153, player.score, 6, 8, 0)
+			temp0 = screen.xcenter
+			temp0 -= 79
+			temp0 += object.value4		
+			DrawSpriteScreenXY(5, temp0, 167)
+			temp0 += 151
+			DrawNumbers(9, temp0, 169, object.value5, 5, 8, 0)
+			temp0 = screen.xcenter
+			temp0 -= 79
+			temp0 += object.value4
+			if PlayerObject_value4 == 1
+				DrawSpriteScreenXY(37, temp0, 183)
+				temp0 += 151
+				DrawNumbers(9, temp0, 185, gems.bonus, 5, 8, 0)	
+			end if
+			if object.value8 != 0
+				temp0 = screen.xcenter
+				temp0 -= 79
+				temp0 += object.value7
+				DrawSpriteScreenXY(6, temp0, 183)
+				if object.value8 == 2
+					temp0 += 151
+					GetBit(temp1, object.value0, 4)
+					temp1 += 7
+					if object.state != 13
+						temp1 = 7
+					end if
+					DrawSpriteScreenXY(temp1, temp0, 196)
+				end if
+			end if
+			break
+		case 4
+			if PlayerObject_value4 == 1
+				temp1 = temp0
+				temp1 += 24
+				DrawSpriteScreenXY(35, temp1, 151)
+				DrawSpriteScreenXY(36, temp0, 151)
+				temp0 += 114
+				temp1 = stage.minutes
+				while temp1 >= 10
+					temp0 += 8
+					temp1 /= 10
+				loop			
+				DrawSpriteScreenXY(34, temp0, 151)
+					temp0 += 37
+				DrawNumbers(9, temp0, 151, stage.milliSeconds, 2, 8, 1)
+				temp0 -= 24
+				DrawNumbers(9, temp0, 151, stage.seconds, 2, 8, 1)
+				temp5 = temp0
+				temp0 -= 24
+				DrawNumbers(9, temp0, 151, stage.minutes, 10, 8, 0)
+				temp0 = screen.xcenter
+				temp0 -= 79
+				temp0 += object.value4
+				temp1 = temp0
+				temp1 += 63
+				DrawSpriteScreenXY(35, temp1, 167)
+				DrawSpriteScreenXY(32, temp0, 167)
+				temp0 += 114
+				if object[9].value5 > 9
+					temp0 += 8
+				end if
+				DrawSpriteScreenXY(34, temp0, 167)
+					temp0 += 37
+				DrawNumbers(9, temp0, 167, bestmillis, 2, 8, 1)
+				temp0 -= 24
+				DrawNumbers(9, temp0, 167, bestseconds, 2, 8, 1)
+				temp5 = temp0
+				temp0 -= 24
+				DrawNumbers(9, temp0, 167, bestminutes, 2, 8, 0)
+				temp0 = screen.xcenter
+				temp0 -= 79
+				temp0 += object.value4
+				if besttotal > timeAttack.result
+					temp0 += 37
+					temp1 = temp 0
+					temp1 += 76
+					DrawSpriteScreenXY(35, temp1, 183)
+					DrawSpriteScreenXY(33, temp0, 183)
+				end if
+			end if
+			break
+		default
+			DrawSpriteScreenXY(4, temp0, 151)
+			temp0 += 151
+			DrawNumbers(9, temp0, 153, player.score, 6, 8, 0)
+			temp0 = screen.xcenter
+			temp0 -= 79
+			temp0 += object.value4		
+			DrawSpriteScreenXY(5, temp0, 167)
+			temp0 += 151
+			DrawNumbers(9, temp0, 169, object.value5, 5, 8, 0)
+			temp0 = screen.xcenter
+			temp0 -= 79
+			temp0 += object.value4
+			if object.value8 != 0
+				temp0 = screen.xcenter
+				temp0 -= 79
+				temp0 += object.value7
+				DrawSpriteScreenXY(6, temp0, 183)
+				if object.value8 == 2
+					temp0 += 151
+					GetBit(temp1, object.value0, 4)
+					temp1 += 7
+					if object.state != 13
+						temp1 = 7
+					end if
+					DrawSpriteScreenXY(temp1, temp0, 196)
+				end if
+			end if
+			break
+		end switch
+		
+		temp4 = 112
+		object.animationTimer += 16
+		object.animationTimer &= 511
+		Sin(temp0, object.animationTimer)
+		temp0 >>= 3
+		temp0 += 190
+		temp0 *= object.value6
+		temp0 >>= 8
+		object.alpha = temp0
+		temp0 = 0
+		temp1 = 19
+		temp3 = screen.xcenter
+		if specialStage.emeralds == 127
+			temp3 += 12
+		end if
+		while temp0 < 7
+			GetBit(temp2, specialStage.emeralds, temp0)
+			if temp2 == 1
+				DrawSpriteScreenFX(temp1, FX_INK, temp3, temp4)
+			end if
+			temp0++
+			temp1++
+		loop
+	end switch
+
+	if special.achievement > 0
+		//Achievement Display
+		temp0 = screen.xsize
+		temp0 -= achieve.xoffset
+		temp1 = screen.ysize
+		temp1 -= 29
+
+		DrawSpriteScreenXY(31, temp0, temp1)
+	end if
+
+	
+	//DrawNumbers(9, screen.xcenter, 20, object.alpha, 6, 8, 0)
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("Special/Objects.gif")
+	SpriteFrame(-32, 0, 56, 56, 63, 401)
+	SpriteFrame(-99, 0, 197, 16, 120, 401)
+	SpriteFrame(-112, 0, 223, 16, 156, 418)
+	switch stage.playerListPos
+	case 0
+	case 3
+		SpriteFrame(-127, 0, 254, 16, 156, 435)
+		break
+	case 1
+		if saved.region == 0
+			SpriteFrame(-127, 0, 254, 16, 156, 452)
+		else
+			SpriteFrame(-127, 0, 254, 16, 156, 469)
+		end if
+		break
+	case 2
+		SpriteFrame(-156, 0, 312, 16, 501, 349)
+		break
+	case 5
+		SpriteFrame(-127, 0, 254, 16, 156, 486)
+		break
+	end switch
+	SpriteFrame(0, 0, 44, 16, 35, 458) //Score
+	SpriteFrame(0, 0, 86, 16, 35, 475)
+	SpriteFrame(0, 0, 69, 16, 35, 492)
+	switch stage.playerListPos
+	case 0
+	case 3
+		SpriteFrame(-8, -11, 16, 23, 399, 376)
+		SpriteFrame(-8, -11, 16, 23, 416, 376)
+		break
+	case 1
+		SpriteFrame(-8, -11, 16, 23, 433, 376)
+		SpriteFrame(-8, -11, 16, 23, 450, 376)
+		break
+	case 2
+		SpriteFrame(-8, -11, 16, 23, 467, 376)
+		SpriteFrame(-8, -11, 16, 23, 484, 376)
+		break
+	case 5
+		SpriteFrame(-8, -12, 16, 24, 365, 375)
+		SpriteFrame(-8, -12, 16, 24, 382, 375)
+		break
+	end switch
+	SpriteFrame(0, 0, 8, 11, 120, 418)
+	SpriteFrame(0, 0, 8, 11, 129, 418)
+	SpriteFrame(0, 0, 8, 11, 138, 418)
+	SpriteFrame(0, 0, 8, 11, 147, 418)
+	SpriteFrame(0, 0, 8, 11, 120, 430)
+	SpriteFrame(0, 0, 8, 11, 129, 430)
+	SpriteFrame(0, 0, 8, 11, 138, 430)
+	SpriteFrame(0, 0, 8, 11, 147, 430)
+	SpriteFrame(0, 0, 8, 11, 120, 442)
+	SpriteFrame(0, 0, 8, 11, 129, 442)
+	if options.gameMode == 2
+		SpriteFrame(-28, -4, 24, 24, 176, 276)
+		SpriteFrame(-28, -4, 24, 24, 201, 276)
+		//if saved.superStates == 0
+			SpriteFrame(-28, -4, 24, 24, 226, 276)
+		//else
+		//	SpriteFrame(-28, -4, 24, 24, 426, 276)
+		//end if
+		SpriteFrame(-28, -4, 24, 24, 251, 276)
+		SpriteFrame(-28, -4, 24, 24, 276, 276)
+		SpriteFrame(-28, -4, 24, 24, 301, 276)
+		SpriteFrame(-28, -4, 24, 24, 401, 276)
+	else
+		SpriteFrame(-28, -4, 24, 24, 176, 276)
+		SpriteFrame(-4, -4, 24, 24, 201, 276)
+		//if saved.superStates == 0
+			SpriteFrame(-52, -4, 24, 24, 226, 276)
+		//else
+		//	SpriteFrame(-52, -4, 24, 24, 426, 276)
+		//end if
+		SpriteFrame(20, -4, 24, 24, 251, 276)
+		SpriteFrame(-76, -4, 24, 24, 276, 276)
+		SpriteFrame(44, -4, 24, 24, 301, 276)
+		SpriteFrame(-100, -4, 24, 24, 401, 276)
+	end if
+	if options.gameMode == 4
+		SpriteFrame(-79, -12, 46, 16, 291, 435)
+		SpriteFrame(-23, -12, 47, 16, 558, 452)
+		SpriteFrame(33, -12, 21, 16, 502, 418)
+		SpriteFrame(-75, 12, 53, 16, 411, 435)
+		SpriteFrame(-12, 12, 63, 16, 465, 435)
+	else
+		switch stage.playerListPos
+		case 0
+		case 3
+			SpriteFrame(-113, -12, 53, 16, 411, 435)
+			SpriteFrame(-51, -12, 70, 16, 156, 435)
+			SpriteFrame(28, -12, 85, 16, 411, 452)
+			SpriteFrame(-77, 12, 76, 16, 411, 469)
+			SpriteFrame(8, 12, 70, 16, 156, 435)
+			break
+		case 1
+			if saved.region == 0
+				SpriteFrame(-113, -12, 53, 16, 411, 435)
+				SpriteFrame(-51, -12, 70, 16, 156, 452)
+				SpriteFrame(28, -12, 85, 16, 411, 452)
+				SpriteFrame(-77, 12, 76, 16, 411, 469)
+				SpriteFrame(8, 12, 70, 16, 156, 452)
+			else
+				SpriteFrame(-113, -12, 53, 16, 411, 435)
+				SpriteFrame(-51, -12, 70, 16, 156, 469)
+				SpriteFrame(28, -12, 85, 16, 411, 452)
+				SpriteFrame(-77, 12, 76, 16, 411, 469)
+				SpriteFrame(8, 12, 70, 16, 156, 469)
+			end if
+			break
+		case 2
+			SpriteFrame(-141, -12, 53, 16, 411, 435)
+			SpriteFrame(-80, -12, 127, 16, 501, 349)
+			SpriteFrame(57, -12, 85, 16, 411, 452)
+			SpriteFrame(-99, 12, 76, 16, 411, 469)
+			SpriteFrame(-14, 12, 127, 16, 501, 349)
+			break
+		case 5
+			SpriteFrame(-103, -12, 53, 16, 411, 435)
+			SpriteFrame(-41, -12, 48, 16, 703, 383)
+			SpriteFrame(18, -12, 85, 16, 411, 452)
+			SpriteFrame(-67, 12, 76, 16, 411, 469)
+			SpriteFrame(18, 12, 48, 16, 703, 383)
+			break
+		end switch
+	end if
+	SpriteFrame(0, 0, 200, 29, 501, 1) // 31 Achievement
+	
+	SpriteFrame(0, 0, 70, 11, 501, 31) //32 Best Time
+	SpriteFrame(0, 0, 83, 11, 573, 31) //33 New Record
+	SpriteFrame(0, 0, 29, 4, 107, 505) //34 Time Marker
+	SpriteFrame(-4, -2, 16, 16, 84, 458) //35 Results Oval
+	SpriteFrame(0, 0, 31, 11, 540, 31) //36 Time
+	SpriteFrame(0, 0, 89, 16, 501, 43) //37 Gems Bonus
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+end event

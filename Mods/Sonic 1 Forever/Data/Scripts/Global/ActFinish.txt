@@ -1,0 +1,696 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Act Finish Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias 8 : TYPE_ACTFINISH
+private alias object.value3 : score.offset
+private alias object.value4 : time.offset
+private alias object.value5 : time.bonus
+private alias object.value6 : ring.bonus
+private alias object.value7 : ring.offset
+private alias object.value8 : perfect.offset
+private alias object.value10 : perfect.bonus
+private alias object.value20 : player.perfect
+
+// Static Values
+
+// Tables
+
+event ObjectMain
+	switch object.state
+	case 0
+		stage.pauseEnabled = 0
+		object.drawOrder = 6
+		object.priority = PRIORITY_ACTIVE
+		object.xpos = screen.xcenter
+		object.xpos += 128
+		object.ypos = screen.xcenter
+		object.value1 = screen.xcenter
+		FlipSign(object.value1)
+		object.value1 -= 160
+		object.value2 = screen.xcenter
+		FlipSign(object.value2)
+		object.value2 -= 160
+		score.offset = screen.xcenter
+		score.offset += 128
+		time.offset = score.offset
+		time.offset += 32
+		ring.offset = time.offset
+		ring.offset += 32
+		perfect.offset = ring.offset
+		perfect.offset += 32
+		if PlayerObject_SuperState == 1
+			PlayerObject_SuperState = 2
+		end if
+		switch stage.minutes
+		case 0
+			if stage.seconds < 30
+				time.bonus = 0xC350
+			else
+				if stage.seconds < 45
+					time.bonus = 0x2710
+				else
+					time.bonus = 0x1388
+				end if
+			end if
+			break
+		case 1
+			if stage.seconds < 30
+				time.bonus = 0xFA0
+			else
+				time.bonus = 0xBB8
+			end if
+			break
+		case 2
+			time.bonus = 0x7D0
+			break
+		case 3
+			time.bonus = 1000
+			break
+		case 4
+			time.bonus = 500
+			break
+		case 5
+			time.bonus = 100
+			break
+		case 9
+			if stage.debugMode == 0
+				if options.gameMode < 2
+					if stage.seconds == 59
+						time.bonus = 0x186A0
+					end if
+				end if
+			end if
+			break
+		end switch
+		ring.bonus = object[0].value0
+		ring.bonus *= 100
+		switch stage.playerListPos
+		case 0
+		case 3
+		case 5
+			temp0 = 0
+			foreach (TypeName[Ring], arrayPos0, ALL_ENTITIES)
+				if object[arrayPos0].propertyValue <= 1
+					temp0++
+				end if
+			next
+			break
+		case 1
+		case 2
+		case 4
+			temp0 = 0
+			foreach (TypeName[Ring], arrayPos0, ALL_ENTITIES)
+				if object[arrayPos0].propertyValue != 2
+					temp0++
+				end if
+			next
+			break
+		end switch
+		if options.gameMode == 3
+			if temp0 == 0
+				perfect.bonus = 50000
+				player.perfect = 1
+			end if
+		end if
+		object.state++
+		break
+	case 1
+		if object.xpos > 0
+			object.xpos -= 16
+			if object.xpos < 0
+				object.xpos = 0
+			end if
+		end if
+		if object.value1 < 0
+			object.value1 += 16
+			if object.value1 > 0
+				object.value1 = 0
+			end if
+		else
+			object.state++
+		end if
+		break
+	case 2
+		if object.value2 < 0
+			object.value2 += 16
+			if object.value2 > 0
+				object.value2 = 0
+			end if
+		else
+			object.state++
+		end if
+		break
+	case 3
+		if object.ypos > 0
+			object.ypos -= 16
+			if object.ypos < 0
+				object.ypos = 0
+			end if
+		else
+			object.state++
+		end if
+		break
+	case 4
+		if score.offset > 0
+			score.offset -= 16
+			if score.offset < 0
+				score.offset = 0
+			end if
+		end if
+		if time.offset > 0
+			time.offset -= 16
+			if time.offset < 0
+				time.offset = 0
+			end if
+		end if
+		if ring.offset > 0
+			ring.offset -= 16
+			if ring.offset < 0
+				ring.offset = 0
+			end if
+		else
+			object.state++
+		end if
+		
+		if perfect.offset > 0
+			perfect.offset -= 16
+			if perfect.offset < 0
+				perfect.offset = 0
+			end if
+		end if
+		break
+	case 5		
+		if perfect.offset > 0
+			perfect.offset -= 16
+			if perfect.offset < 0
+				perfect.offset = 0
+			end if
+		end if
+		
+		object.value0++
+		if options.gameMode == 2
+			if object.value0 > 400
+				object.value0 = 0
+				object.state = 8
+			end if
+		else
+			if object.value0 > 299
+				object.value0 = 0
+				object.state++
+			end if
+		end if
+		break
+	case 6
+		temp2 = inputDown.buttonA
+		temp2 |= inputDown.buttonB
+		temp2 |= inputDown.buttonC
+		if temp2 == 1
+			temp3 = 2000
+			if temp3 > ring.bonus
+				temp3 = ring.bonus
+			end if
+			temp4 = 2000
+			if temp4 > time.bonus
+				temp4 = time.bonus
+			end if
+			temp6 = 2000
+			if temp6 > perfect.bonus
+				temp6 = perfect.bonus
+			end if			
+		else
+			temp3 = 100
+			temp4 = 100
+			temp6 = 100
+		end if
+		if ring.bonus > 0
+			ring.bonus -= temp3
+			player.score += temp3
+		end if
+		if time.bonus > 0
+			time.bonus -= temp4
+			player.score += temp4
+		end if
+		if perfect.bonus > 0
+			perfect.bonus -= temp6
+			player.score += temp6
+		end if
+		CheckGreater(ring.bonus, 0)
+		temp0 = checkResult
+		CheckGreater(time.bonus, 0)
+		temp0 |= checkResult
+		CheckGreater(perfect.bonus, 0)
+		temp0 |= checkResult
+		if temp0 == 1
+			object.value0++
+			if object.value0 == 2
+				PlaySfx(SfxName[Score Add], 0)
+				object.value0 = 0
+			end if
+		else
+			object.state++
+			object.value0 = 0
+			PlaySfx(SfxName[Score Total], 0)
+		end if
+		break
+	case 7
+		object.value0++
+		if object.value0 == 160
+			object.value0 = 0
+			if options.gameMode != 2
+				CheckCurrentStageFolder("Zone06")
+				temp0 = checkResult
+				CheckEqual(stage.actNum, 2)
+				temp0 &= checkResult
+				if temp0 == 1
+					object.state = 9
+				else
+					object.state++
+					if object[0].type == TypeName[Blank Object]
+						PlaySfx(SfxName[Warp], 0)
+					end if
+				end if
+			else
+				object.state++
+				if object[0].type == TypeName[Blank Object]
+					PlaySfx(SfxName[Warp], 0)
+				end if
+			end if
+		end if
+		break
+	case 8
+		if object[0].type == TypeName[Blank Object]
+			object.value0 += 8			
+			SetScreenFade(color6, color7, color6, object.value0)
+			if object.value0 == 0x400
+				fadeColor = 208
+				fadeColor <<= 16
+				temp0 = 255
+				temp0 <<= 8
+				fadeColor += temp0
+				fadeColor += 224
+				object.direction = FLIP_NONE
+				object.value0 = 0
+				lampPostID = 0
+				stage.listPos++
+				if options.gameMode == 1
+					arrayPos1 = options.saveSlot
+					arrayPos1 <<= 3
+					arrayPos1 += 1000
+					if stage.player2Enabled == 1
+						switch stage.playerListPos
+							case 0
+								saveRAM[arrayPos1] = 3
+								break
+							case 2
+								saveRAM[arrayPos1] = 4
+								break
+						end switch
+					else
+						saveRAM[arrayPos1] = stage.playerListPos
+					end if
+					arrayPos1++
+					saveRAM[arrayPos1] = player.lives
+					arrayPos1++
+					saveRAM[arrayPos1] = player.score
+					arrayPos1++
+					saveRAM[arrayPos1] = player.scoreBonus
+					arrayPos1++
+					temp0 = stage.listPos
+					temp0++
+					if temp0 > saveRAM[arrayPos1]
+						saveRAM[arrayPos1] = temp0
+						saveRAM[arrayPos1] += 128
+					end if
+					arrayPos1++
+					saveRAM[arrayPos1] = specialStage.emeralds
+					arrayPos1++
+					saveRAM[arrayPos1] = specialStage.listPos
+				end if
+				specialStage.nextZone = stage.listPos
+				stage.listPos = specialStage.listPos
+				stage.activeList = SPECIAL_STAGE
+				temp0 = engine.trialMode
+				if stage.listPos >= stage.listSize
+					temp0 = 1
+				end if
+				if temp0 == 0
+					WriteSaveRAM()
+					LoadStage()
+				else
+					stage.activeList = PRESENTATION_STAGE
+					stage.listPos = 0
+					WriteSaveRAM()
+					LoadStage()
+				end if
+			end if
+		else
+			object.value0 += 8
+			SetScreenFade(0, 0, 0, object.value0)
+			if object.value0 >= 384
+				fadeColor = 0
+				object.value0 = 0
+				lampPostID = 0
+				object.direction = FLIP_NONE
+				stage.listPos++
+				if options.gameMode == 1
+					arrayPos1 = options.saveSlot
+					arrayPos1 <<= 3
+					arrayPos1 += 1000
+					if stage.player2Enabled == 1
+						switch stage.playerListPos
+							case 0
+								saveRAM[arrayPos1] = 3
+								break
+							case 2
+								saveRAM[arrayPos1] = 4
+								break
+						end switch
+					else
+						saveRAM[arrayPos1] = stage.playerListPos
+					end if
+					arrayPos1++
+					saveRAM[arrayPos1] = player.lives
+					arrayPos1++
+					saveRAM[arrayPos1] = player.score
+					arrayPos1++
+					saveRAM[arrayPos1] = player.scoreBonus
+					arrayPos1++
+					temp0 = stage.listPos
+					temp0++
+					if temp0 > saveRAM[arrayPos1]
+						saveRAM[arrayPos1] = temp0
+					end if
+					arrayPos1++
+					saveRAM[arrayPos1] = specialStage.emeralds
+					arrayPos1++
+					saveRAM[arrayPos1] = specialStage.listPos
+				end if
+				switch options.gameMode
+				case 2
+					if stage.activeList == BONUS_STAGE
+						stage.listPos = 6
+						recGoggles = 102
+					else
+						stage.listPos = 8
+					end if
+					stage.activeList = PRESENTATION_STAGE
+					
+					LoadStage()
+					//CallNativeFunction2(SetLeaderboard, stage.listPos, timeAttack.result)
+					//engine.state = 8
+					break
+				case 5
+					stage.listPos = 11
+					stage.activeList = PRESENTATION_STAGE
+					LoadStage()
+				default
+					temp0 = engine.trialMode
+					if stage.listPos >= stage.listSize
+						temp0 = 1
+					end if
+					if temp0 == 0
+						LoadStage()
+					else
+						stage.activeList = PRESENTATION_STAGE
+						stage.listPos = 0
+						LoadStage()
+					end if
+					break
+				end switch
+				WriteSaveRAM()
+			end if
+		end if
+		break
+	case 9
+		object.xpos += 32
+		object.ypos += 32
+		object.value1 -= 32
+		object.value0++
+		if object.value0 == 8
+			object.value0 = 0
+			object.state++
+		end if
+		break
+	case 10
+		object.xpos += 32
+		object.ypos += 32
+		object.value1 -= 32
+		object.value2 -= 32
+		object.value0++
+		if object.value0 == 8
+			object.value0 = 0
+			object.state++
+		end if
+		break
+	case 11
+		object.xpos += 32
+		object.ypos += 32
+		object.value1 -= 32
+		object.value2 -= 32
+		score.offset += 32
+		if score.offset > 96
+			time.offset += 32
+			if time.offset > 96
+				ring.offset += 32
+				if ring.offset > 96
+					perfect.offset += 32
+				end if
+			end if
+		end if
+		object.value0++
+		if object.value0 == 35
+			object.value0 = 0
+			temp0 = tileLayer[0].xsize
+			temp0 <<= 7
+			stage.newXBoundary2 = temp0
+			foreach (TypeName[Sign Post], arrayPos0, ACTIVE_ENTITIES)
+				object[arrayPos0].state = 5
+			next
+			currentPlayer = 0
+			while currentPlayer < playerCount
+				object[currentPlayer].interaction = 1
+				object[currentPlayer].controlMode = 0
+				object[currentPlayer].right = 1
+				currentPlayer++
+			loop
+			ResetObjectEntity(object.entityPos, TypeName[Blank Object], 0, 0, 0)
+			SetMusicTrack("Final.ogg", 0, 0x14AC8)
+			PlayMusic(0)
+		end if
+		break
+	end switch
+end event
+
+
+event ObjectDraw
+	SetActivePalette(0, 0, screen.ysize)
+	temp0 = screen.xcenter
+	temp0 += 16
+	temp0 += object.xpos
+	DrawSpriteScreenXY(3, temp0, 56)
+	temp0 = screen.xcenter
+	temp0 += 3
+	temp0 += object.value1
+	if stage.playerListPos == 5
+	DrawSpriteScreenXY(29, temp0, 60)
+	else
+	DrawSpriteScreenXY(stage.playerListPos, temp0, 60)
+	end if
+	DrawSpriteScreenXY(4, temp0, 60)
+	temp0 = screen.xcenter
+	temp0 -= 48
+	temp0 += object.value2
+	DrawSpriteScreenXY(5, temp0, 80)
+	temp0 = screen.xcenter
+	temp0 += 24
+	temp0 += object.ypos
+	if stage.actNum == 5
+		temp1 = 27
+	else
+		temp1 = stage.actNum
+		temp1 += 5
+		if temp1 < 6
+			temp1 = 6
+		end if
+		if temp1 > 8
+			temp1 = 8
+		end if
+	end if
+	DrawSpriteScreenXY(temp1, temp0, 82)
+	temp0 = screen.xcenter
+	temp0 -= 79
+	temp0 += score.offset
+	switch options.gameMode
+		case 2 //time attack
+			temp1 = temp0
+			temp1 += 24
+			DrawSpriteScreenXY(26, temp1, 117)
+			DrawSpriteScreenXY(10, temp0, 117)
+			temp0 += 114
+			
+			temp1 = stage.minutes
+			while temp1 >= 10
+				temp0 += 8
+				temp1 /= 10
+			loop
+			
+			DrawSpriteScreenXY(25, temp0, 117)
+				temp0 += 37
+			DrawNumbers(13, temp0, 117, stage.milliSeconds, 2, 8, 1)
+			temp0 -= 24
+			DrawNumbers(13, temp0, 117, stage.seconds, 2, 8, 1)
+			temp5 = temp0
+			temp0 -= 24
+			DrawNumbers(13, temp0, 117, stage.minutes, 10, 8, 0)
+			break
+		default
+			DrawSpriteScreenXY(9, temp0, 117)
+			temp0 += 151
+			DrawNumbers(13, temp0, 117, player.score, 6, 8, 0)
+			break
+	end switch
+	
+	temp0 = screen.xcenter
+	temp0 -= 79
+	temp0 += time.offset
+	switch options.gameMode
+		case 2 //time attack
+			temp1 = temp0
+			temp1 += 63
+			DrawSpriteScreenXY(26, temp1, 133)
+			DrawSpriteScreenXY(23, temp0, 133)
+			temp0 += 114
+			if object[9].value5 > 9
+				temp0 += 8
+			end if
+			DrawSpriteScreenXY(25, temp0, 133)
+				temp0 += 37
+			DrawNumbers(13, temp0, 133, object[9].value3, 2, 8, 1)
+			temp0 -= 24
+			DrawNumbers(13, temp0, 133, object[9].value4, 2, 8, 1)
+			temp5 = temp0
+			temp0 -= 24
+			DrawNumbers(13, temp0, 133, object[9].value5, 2, 8, 0)
+			break
+		case 5 //golf
+			time.bonus = 0
+			break
+		default
+			DrawSpriteScreenXY(10, temp0, 133)
+			DrawSpriteScreenXY(12, temp0, 133)
+			temp0 += 151
+			DrawNumbers(13, temp0, 133, time.bonus, 6, 8, 0)
+			break
+	end switch
+	
+	temp0 = screen.xcenter
+	temp0 -= 79
+	temp0 += ring.offset
+	
+	switch options.gameMode
+		case 2	//time attack
+			if object[9].value2 > timeAttack.result
+				temp0 += 37
+				temp1 = temp0
+				temp1 += 76
+				DrawSpriteScreenXY(26, temp1, 149)
+				DrawSpriteScreenXY(24, temp0, 149)
+			end if
+			break
+		case 5 //golf
+			ring.bonus = 0
+			break
+		default
+			DrawSpriteScreenXY(11, temp0, 149)
+			DrawSpriteScreenXY(12, temp0, 149)
+			temp0 += 151
+			DrawNumbers(13, temp0, 149, ring.bonus, 5, 8, 0)
+			break
+	end switch
+		
+	temp0 = screen.xcenter
+	temp0 -= 79
+	temp0 += perfect.offset
+	
+	if options.gameMode == 3
+		if player.perfect == 1
+			DrawSpriteScreenXY(28, temp0, 165)
+			temp0 += 24
+			DrawSpriteScreenXY(12, temp0, 165)
+			temp0 += 127
+			DrawNumbers(13, temp0, 165, perfect.bonus, 5, 8, 0)
+		end if
+	end if
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-70, 0, 70, 16, 1, 222) //0 Sonic
+	if saved.region == 0
+		SpriteFrame(-69, 0, 69, 16, 72, 222) //1 Tails
+	else
+		SpriteFrame(-69, 0, 69, 16, 145, 205) //1 Miles
+	end if
+	SpriteFrame(-107, 0, 127, 16, 51, 256) //2 Knuckles
+	if stage.playerListPos != 2
+		SpriteFrame(0, 0, 56, 56, 41, 1) //3 Blue Egg
+		SpriteFrame(17, 0, 47, 16, 1, 205) //4 Has
+		SpriteFrame(0, 0, 95, 16, 49, 205) //5 Passed
+		SpriteFrame(0, 0, 39, 24, 98, 1) //6 Act 1
+		SpriteFrame(0, 0, 43, 24, 138, 1) //7 Act 2
+		SpriteFrame(0, 0, 43, 24, 182, 1) //8 Act 3
+	else
+		SpriteFrame(20, 0, 56, 56, 41, 1) //3 Blue Egg
+		SpriteFrame(37, 0, 47, 16, 1, 205) //4 Has
+		SpriteFrame(20, 0, 95, 16, 49, 205) //5 Passed
+		SpriteFrame(20, 0, 39, 24, 98, 1) //6 Act 1
+		SpriteFrame(20, 0, 43, 24, 138, 1) //7 Act 2
+		SpriteFrame(20, 0, 43, 24, 182, 1) //8 Act 3
+	end if
+	SpriteFrame(0, -2, 44, 16, 161, 26) //9 Score
+	SpriteFrame(0, 0, 31, 11, 1, 17) //10 Time
+	SpriteFrame(0, 0, 31, 11, 1, 33) //11 Ring
+	SpriteFrame(40, -2, 46, 16, 98, 43) //12 Bonus
+	
+	//Numbers
+	SpriteFrame(0, 0, 8, 11, 1, 50) // 13 0
+	SpriteFrame(0, 0, 8, 11, 10, 50) //14 1
+	SpriteFrame(0, 0, 8, 11, 19, 50) //15 2
+	SpriteFrame(0, 0, 8, 11, 28, 50) //16 3
+	SpriteFrame(0, 0, 8, 11, 1, 62) //17 4
+	SpriteFrame(0, 0, 8, 11, 10, 62) //18 5
+	SpriteFrame(0, 0, 8, 11, 19, 62) //19 6
+	SpriteFrame(0, 0, 8, 11, 28, 62) //20 7
+	SpriteFrame(0, 0, 8, 11, 1, 74) //21 8
+	SpriteFrame(0, 0, 8, 11, 10, 74) //22 9
+		
+	SpriteFrame(0, 0, 70, 11, 46, 192) //23 Best Time
+	SpriteFrame(0, 0, 83, 11, 118, 192) //24 New Record
+	SpriteFrame(0, 0, 29, 4, 1, 45) //25 Time Marker
+	SpriteFrame(-4, -2, 16, 16, 182, 175) //26 Results Oval
+	
+	if stage.playerListPos != 2
+		SpriteFrame(0, 16, 32, 8, 174, 64) //27 Act 1
+	else		
+		SpriteFrame(20, 16, 32, 8, 174, 64) //27 Act 1
+	end if
+	
+	SpriteFrame(0, 0, 56, 11, 199, 179) //28 Perfect
+	SpriteFrame(-51, 0, 48, 16, 1, 256) //29 Amy
+
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+end event

@@ -1,0 +1,281 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: HUD Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias 24 : TYPE_HUD
+public alias saveRAM[295]: saved.mobile
+public alias saveRAM[296]: saved.transmobile
+
+private alias object.value10 : touch.fade
+
+// Function declarations
+reserve function TouchControls
+
+// Static Values
+
+// Tables
+
+function TouchControls
+	object.inkEffect = INK_ALPHA
+	CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+	if checkResult > -1
+		touch.fade = 0
+	else
+		touch.fade++
+	end if
+
+	if touch.fade >= 400
+		if object.alpha > 0
+   			 object.alpha -= 15
+		end if
+	else
+		switch saved.transmobile
+			case 0
+				object.alpha = 191
+				break
+			case 1
+				object.alpha = 255
+				break
+			case 2
+				object.alpha = 0
+				break
+			case 3
+				object.alpha = 63
+				break
+			case 4
+				object.alpha = 127
+				break
+			default					
+				object.alpha = 191
+				break
+		end switch
+	end if	
+
+	temp0 = screen.xsize
+	temp0 += 44
+	DrawSpriteScreenFX(17,FX_INK,26,149)
+	temp0 -= 108
+	DrawSpriteScreenFX(24,0,temp0,8)
+	temp0 -= 38
+	if options.gameMode == 2
+		DrawSpriteScreenFX(26,0,temp0,8)
+	end if
+	temp0 += 45
+		if inputDown.Left==1
+			DrawSpriteScreenFX(20,FX_INK,26,151)
+		endif
+		if inputDown.Down==1
+			DrawSpriteScreenFX(19,FX_INK,26,189)
+		end if
+		if inputDown.Right==1
+			DrawSpriteScreenFX(21,FX_INK,64,151)
+		endif
+		if inputDown.Up==1
+			DrawSpriteScreenFX(18,FX_INK,26,151)
+		endif
+		temp0 -= 25
+		if object[0].type == TypeName[Debug Mode]
+			if inputDown.buttonC==1
+				DrawSpriteScreenFX(23,FX_INK,temp0,163)	
+			else
+				DrawSpriteScreenFX(22,FX_INK,temp0,163)
+			endif
+		else
+			if inputDown.buttonA==1
+				DrawSpriteScreenFX(23,FX_INK,temp0,163)
+			else
+				DrawSpriteScreenFX(22,FX_INK,temp0,163)
+			endif
+		end if
+end function
+
+event ObjectMain
+	if object.state == 0
+		switch options.gameMode
+			case 2
+				switch stage.playerListPos
+					case 0
+						arrayPos1 = 520
+						break
+					case 1
+						arrayPos1 = 550
+						break
+					case 2
+						arrayPos1 = 580
+						break
+					case 5
+						arrayPos1 = 490
+						break						
+				end switch
+				arraypos1 += stage.listPos
+				object.value2 = saveRAM[arrayPos1]
+				object.state++
+				break
+			case 4
+				arrayPos1 = 651
+				object.value2 = saveRAM[arrayPos1]
+				object.state++
+				break
+		end switch
+	end if
+end event
+
+
+
+event ObjectDraw
+		if saved.mobile == 1
+			if options.attractMode == 0
+				CallFunction(TouchControls)
+			end if
+		end if
+
+	if (object[currentPlayer].type != TypeName[Debug Mode])
+	//Time
+	if saved.timer == 0
+		temp0 = screen.xcenter
+		temp0 -= 42
+		DrawSpriteScreenXY(10, temp0, 9)
+		temp0 += 49
+	else
+		temp0 = screen.xcenter
+		temp0 -= 47
+		DrawSpriteScreenXY(10, temp0, 9)
+		temp0 += 49	
+	end if	
+	
+	temp1 = stage.minutes
+	while temp1 >= 10
+		temp0 += 8
+		temp1 /= 10
+	loop
+	
+	if saved.timer == 0
+		temp0 += 11
+		DrawSpriteScreenXY(14, temp0, 9)
+		temp0 -= 11
+		temp0 += 24
+		DrawNumbers(0, temp0, 9, stage.seconds, 2, 8, 1)
+		temp5 = temp0
+		temp0 -= 24
+		DrawNumbers(0, temp0, 9, stage.minutes, 10, 8, 0)
+	else
+		DrawSpriteScreenXY(13, temp0, 9)
+		temp0 += 37
+		DrawNumbers(0, temp0, 9, stage.milliSeconds, 2, 8, 1)
+		temp0 -= 24
+		DrawNumbers(0, temp0, 9, stage.seconds, 2, 8, 1)
+		temp5 = temp0
+		temp0 -= 24
+		DrawNumbers(0, temp0, 9, stage.minutes, 10, 8, 0)
+	end if
+	
+	//Rings
+	temp1 = screen.xcenter
+	temp1 -= 34
+	DrawSpriteScreenXY(16, temp1, 25)
+	temp1 += 60
+	DrawNumbers(0, temp1, 25, object[0].value0, 3, 8, 0)
+	
+	//DrawNumbers(0, temp1, 56, object[0].value12, 8, 8, 0)
+	//DrawNumbers(0, temp1, 66, object[0].value13, 7, 8, 0)
+	
+	switch options.gameMode
+		case 2
+		case 4
+			//Best
+			temp1 = screen.ysize
+			temp1 -= 19
+			temp0 = screen.xcenter
+			if saved.timer == 0
+				temp0 -= 42
+			else
+				temp0 -= 47
+			end if
+			DrawSpriteScreenXY(15, temp0, temp1)
+			temp0 += 49
+			
+			object.value3 = object.value2
+			object.value4 = 0
+			object.value5 = 0
+			while object.value3 >= 6000
+				object.value5++
+				object.value3 -= 6000
+			loop
+			
+			while object.value3 >= 100
+				object.value4++
+				object.value3 -= 100
+			loop
+			
+			if object.value5 > 9
+				temp0 += 8
+			end if
+			
+			if saved.timer == 0
+				temp0 += 11
+				DrawSpriteScreenXY(14, temp0, temp1)
+				temp0 += 13
+				DrawNumbers(0, temp0, temp1, object.value4, 2, 8, 1)
+				temp0 -= 24
+				DrawNumbers(0, temp0, temp1, object.value5, 2, 8, 0)
+			else
+				DrawSpriteScreenXY(13, temp0, temp1)
+				temp0 += 37
+				
+				DrawNumbers(0, temp0, temp1, object.value3, 2, 8, 1)
+				temp0 -= 24
+				DrawNumbers(0, temp0, temp1, object.value4, 2, 8, 1)
+				temp0 -= 24
+				DrawNumbers(0, temp0, temp1, object.value5, 2, 8, 0)
+			end if
+			break
+	end switch
+	end if
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(0, 0, 8, 11, 1, 50)
+	SpriteFrame(0, 0, 8, 11, 10, 50)
+	SpriteFrame(0, 0, 8, 11, 19, 50)
+	SpriteFrame(0, 0, 8, 11, 28, 50)
+	SpriteFrame(0, 0, 8, 11, 1, 62)
+	SpriteFrame(0, 0, 8, 11, 10, 62)
+	SpriteFrame(0, 0, 8, 11, 19, 62)
+	SpriteFrame(0, 0, 8, 11, 28, 62)
+	SpriteFrame(0, 0, 8, 11, 1, 74)
+	SpriteFrame(0, 0, 8, 11, 10, 74)
+	SpriteFrame(0, 0, 31, 11, 1, 17)
+	SpriteFrame(0, 0, 31, 11, 1, 119)
+	SpriteFrame(0, 0, 39, 11, 1, 131)
+	SpriteFrame(0, 0, 29, 4, 1, 45)
+	SpriteFrame(0, 0, 3, 11, 37, 50)
+	
+	SpriteFrame(0, 0, 36, 11, 46, 192) //15 Best
+	SpriteFrame(0, 0, 39, 11, 1, 33) //16 "Rings"
+
+	SpriteFrame(0,0,64,66,257,1) //49 DPAD
+	SpriteFrame(26,0,12,25,373,65) //50 DPAD up press
+	SpriteFrame(26,0,12,26,373,103) //51 DPAD down press
+	SpriteFrame(0,25,26,13,346,102) //52 DPAD left press
+	SpriteFrame(0,25,26,13,346,116) //53 DPAD right press
+	SpriteFrame(0,0,48,48,322,1) //54 A button
+	SpriteFrame(0,0,48,48,322,50) //55 A button down
+	SpriteFrame(0,0,16,16,329,112) // 56 Pause Button
+	SpriteFrame(0,0,16,16,329,129) // 57 Super Button
+	SpriteFrame(0,0,16,16,329,146) // 58 TA Restart Button
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+end event

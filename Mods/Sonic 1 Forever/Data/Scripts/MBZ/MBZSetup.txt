@@ -1,0 +1,646 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: SBZ Setup Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias 39 : TYPE_MBZSETUP
+
+// Function declarations
+reserve function MBZSetup_Function95
+reserve function MBZSetup_Function96
+reserve function LavaFlowMain
+reserve function LavaFlowOscillate
+reserve function LavaFlowStraight
+reserve function LavaFlowOscRight
+reserve function LavaFlowExp
+reserve function LoadObjects
+
+// Static Values
+public value MBZSetup_value31 = 0;
+public value MBZSetup_value30 = 0;
+public value MBZSetup_value29 = 0;
+public value MBZSetup_value28 = 0;
+public value MBZBossHits = 8;
+
+
+// Tables
+public table MBZSetup_table35
+	0xE0E000, 0xE08000, 0xE00000, 0x800000, 0x800000, 0xE00000, 0xE08000, 0xE0E000
+end table
+
+
+public table MBZSetup_table36
+	0x800000, 0xE00000, 0xE08000, 0xE0E000, 0xE0E000, 0xE08000, 0xE00000, 0x800000
+end table
+
+
+private table MBZ_Object_Spawn
+	44, 623, 273, 0
+	77, 800, 295, 12
+	10, 752, 205, 0
+	10, 776, 205, 0
+	10, 800, 205, 0
+	10, 824, 205, 0
+	10, 848, 205, 0
+	61, 960, 194, 0
+	13, 1472, 112, 11
+	13, 1536, 112, 9
+	13, 1600, 112, 10
+	41, 802, 458, 0
+	78, 1536, 209, 4
+	78, 1648, 320, 4
+	10, 1480, 312, 0
+	10, 1592, 312, 0
+	10, 1616, 256, 0
+	10, 1456, 256, 0
+	10, 1480, 200, 0
+	10, 1592, 200, 0
+	10, 1536, 176, 0
+	44, 2071, 400, 0
+	34, 2329, 485, 0
+	0, 2447, 424, 0
+	0, 2447, 400, 0
+	0, 2447, 376, 0
+	0, 2447, 352, 0
+	0, 2447, 328, 0
+	0, 2447, 304, 0
+	73, 2447, 295, 0
+	76, 2319, 384, 0
+	76, 2575, 384, 0
+	34, 2777, 1024, 0
+	52, 2640, 652, 0
+	13, 3057, 657, 1
+	15, 3000, 720, 2
+	51, 2895, 728, 0
+	10, 2896, 656, 0
+	10, 2872, 656, 0
+	10, 2848, 656, 0
+	10, 2824, 656, 0
+	10, 2578, 754, 0
+	10, 2603, 754, 0
+	52, 3074, 812, 0
+	52, 3487, 812, 0
+	80, 2864, 872, 5
+	80, 3072, 872, 4
+	80, 3280, 872, 5
+	80, 3488, 872, 4
+	10, 3624, 916, 0
+	10, 3648, 916, 0
+	10, 3672, 916, 0
+	91, 2688, 976, 56
+	91, 3712, 992, 4
+	91, 3952, 992, 10
+	65, 4304, 836, 0
+	0, 4032, 960, 0
+	34, 4355, 1400, 0
+	61, 4559, 857, 0
+	61, 4671, 929, 0
+	15, 4880, 1096, 0
+	10, 4880, 928, 0
+	10, 4880, 896, 0
+	10, 4880, 864, 0
+	10, 4880, 832, 0
+	10, 4880, 800, 0
+	10, 4880, 768, 0
+	10, 4880, 736, 0
+	10, 4887, 705, 0
+	10, 4904, 680, 0
+	10, 4931, 662, 0
+	10, 4964, 656, 0
+	10, 4997, 656, 0
+	81, 5088, 784, 0
+	81, 5168, 784, 0
+	81, 5248, 784, 0
+	10, 5152, 984, 0
+	10, 5184, 984, 0
+	10, 5216, 984, 0
+	10, 5280, 984, 0
+	10, 5312, 984, 0
+	10, 5344, 984, 0
+	10, 5200, 960, 0
+	10, 5232, 960, 0
+	10, 5264, 960, 0
+	10, 5296, 960, 0
+	15, 5136, 1224, 0
+	15, 5168, 1224, 0
+	15, 5200, 1224, 0
+	15, 5296, 1224, 0
+	15, 5328, 1224, 0
+	15, 5360, 1224, 0
+	13, 5248, 1217, 1
+	50, 5604, 910, 0
+	42, 5691, 625, 0
+	16, 5744, 856, 0
+	34, 5552, 1400, 0
+	10, 5616, 628, 0
+	10, 5648, 628, 0
+	10, 5680, 628, 0
+	10, 5712, 628, 0
+	10, 5744, 628, 0
+	10, 5776, 628, 0
+	10, 5808, 628, 0
+	10, 5840, 628, 0
+	10, 5872, 628, 0
+	67, 6364, 490, 0
+	0, 6112, 692, 0
+	68, 5936, 656, 0
+	68, 6288, 656, 0
+	34, 5862, 692, 0
+	34, 6556, 1580, 0
+	69, 5904, 656, 0
+	69, 5968, 656, 0
+	69, 6000, 656, 0
+	69, 6032, 656, 0
+	69, 6064, 656, 0
+	69, 6096, 656, 0
+	69, 6128, 656, 0
+	69, 6160, 656, 0
+	69, 6192, 656, 0
+	69, 6224, 656, 0
+	69, 6256, 656, 0
+	69, 6320, 656, 0
+	86, 6904, 622, 1
+	84, 6960, 736, 0
+	84, 6992, 832, 0
+	55, 6559, 658, 0
+	55, 6852, 946, 0
+	105, 7024, 848, 86
+	101, 6944, 1072, 0
+	102, 7024, 1048, 0
+	87, 0, 0, 0
+	10, 6728, 1136, 0
+	10, 6728, 1160, 0
+	10, 6752, 1112, 0
+	10, 6752, 1136, 0
+	10, 6752, 1160, 0
+	10, 6752, 1184, 0
+	10, 6776, 1112, 0
+	10, 6776, 1136, 0
+	10, 6776, 1160, 0
+	10, 6776, 1184, 0
+	10, 6800, 1112, 0
+	10, 6800, 1136, 0
+	10, 6800, 1160, 0
+	10, 6800, 1184, 0
+	10, 6824, 1112, 0
+	10, 6824, 1136, 0
+	10, 6824, 1160, 0
+	10, 6824, 1184, 0
+	10, 6848, 1136, 0
+	10, 6848, 1160, 0
+	13, 6671, 1264, 9
+	10, 6736, 751, 0
+	10, 6960, 1040, 0
+	10, 6928, 1040, 0
+	10, 6992, 1040, 0
+	86, 7512, 304, 1
+	86, 7496, 384, 0
+	86, 7640, 384, 1
+	84, 7472, 464, 1
+	84, 7600, 592, 0
+	86, 7576, 688, 0
+	84, 7504, 720, 1
+	69, 7472, 720, 0
+	86, 7512, 816, 1
+	86, 7496, 896, 0
+	86, 7640, 896, 1
+	86, 7512, 1072, 1
+	86, 7496, 1152, 0
+	84, 7472, 1248, 1
+	84, 7440, 1328, 1
+	70, 7440, 1472, 0
+	56, 9095, 259, 2
+	10, 8485, 326, 0
+	10, 8527, 299, 0
+	10, 8553, 258, 0
+	103, 8477, 208, 2
+	57, 8673, 208, 0
+	57, 8720, 208, 0
+	10, 9422, 257, 0
+	10, 9266, 257, 0
+	10, 9294, 202, 0
+	10, 9394, 202, 0
+	10, 9344, 178, 0
+	78, 9344, 209, 4
+	92, 9296, 456, 4
+	78, 9336, 432, 4
+	34, 9600, 632, 0
+	71, 9824, 596, 255
+	71, 9724, 596, 255
+	71, 9924, 596, 255
+	72, 9822, 490, 0
+	34, 10242, 2500, 0
+	51, 10544, 663, 0
+	104, 10880, 671, 2
+	104, 11136, 671, 2
+	59, 11593, 652, 5
+	51, 12073, 599, 0
+	106, 12496, 400, 7
+	99, 12368, 592, 0
+	99, 12624, 592, 0
+	99, 12720, 432, 0
+	100, 12376, 712, 0
+	100, 12472, 632, 0
+	100, 12632, 712, 0
+	100, 12728, 632, 0
+	100, 12600, 344, 0
+	100, 12728, 280, 0
+	46, 13405, 410, 0
+	46, 13658, 407, 0
+	107, 13768, 416, 2
+	34, 10948, 2500, 0
+	34, 12988, 504, 0
+	93, 13952, 420, 0
+	94, 13904, 544, 0
+	94, 14032, 544, 0
+	94, 13840, 192, 0
+	94, 13968, 192, 0
+	95, 14088, 316, 0
+	96, 14144, 400, 0
+	98, 14425, 411, 0
+	83, 13840, 464, 49
+	83, 13968, 464, 49
+	83, 13904, 272, 49
+	83, 14032, 272, 49
+end table
+
+function LoadObjects
+	if saveRAM[410] == 0
+		stage.activeList = PRESENTATION_STAGE
+		stage.listPos = 0
+		options.attractMode = 0
+		LoadStage()
+	end if
+end function
+
+function LavaFlowMain
+	
+	while object.value8 < 0
+		object.value8 += 32
+	loop
+	object.value8 %= 32
+	
+	temp0 = object.value8
+	temp0 *= 4
+	temp0 += 340
+	
+	Copy16x16Tile(152, temp0)
+	temp0++
+	Copy16x16Tile(153, temp0)
+	temp0++
+	Copy16x16Tile(155, temp0)
+	temp0++
+	Copy16x16Tile(156, temp0)
+end function
+
+function LavaFlowExp
+
+end function
+
+
+function LavaFlowOscRight
+	object.value2++
+	object.value2 &= 511
+	temp0 = object.value2
+	temp0 >>= 1
+	temp0 += 128
+	Sin(object.value8, temp0)
+	object.value8 >>= 3
+end function
+
+function LavaFlowOscillate
+	object.value2++
+	object.value2 &= 511
+	Sin(object.value8, object.value2)
+	object.value8 >>= 3
+	
+end function
+
+function LavaFlowStraight
+	object.value4--
+	object.value4 &= 0xFFF
+	object.value8 = object.value4
+	object.value8 >>= 1
+end function
+
+function MBZSetup_Function95
+	CheckEqual(object[25].type, TypeName[Music Event])
+	temp0 = checkResult
+	CheckEqual(object[25].propertyValue, 2)
+	temp0 &= checkResult
+	CheckEqual(stage.musicFlag, 0)
+	temp0 &= checkResult
+	if temp0 == 0
+		switch music.currentTrack
+		case 0
+			SetMusicTrack("Invincibility_F.ogg", 2, 0x76E4)
+			SwapMusicTrack("BossRush_F.ogg", 0, 19766, 0x1F40)
+			break
+		case 2
+			SetMusicTrack("BossRush_F.ogg", 0, 19766)
+			SwapMusicTrack("Invincibility_F.ogg", 2, 0x76E4, 0x1F40)
+			break
+		default
+			SetMusicTrack("BossRush_F.ogg", 0, 19766)
+			SetMusicTrack("Invincibility_F.ogg", 2, 0x76E4)
+			break
+		end switch
+	else
+		stage.musicFlag = 1
+	end if
+end function
+
+
+function MBZSetup_Function96
+	CheckEqual(object[25].type, TypeName[Music Event])
+	temp0 = checkResult
+	CheckEqual(object[25].propertyValue, 2)
+	temp0 &= checkResult
+	CheckEqual(stage.musicFlag, 0)
+	temp0 &= checkResult
+	if temp0 == 0
+		switch music.currentTrack
+		case 0
+			SetMusicTrack("Invincibility.ogg", 2, 0x9A68)
+			SwapMusicTrack("BossRush.ogg", 0, 24708, 0x30D4)
+			break
+		case 2
+			SetMusicTrack("BossRush.ogg", 0, 24708)
+			SwapMusicTrack("Invincibility.ogg", 2, 0x9A68, 0x30D4)
+			break
+		default
+			SetMusicTrack("BossRush.ogg", 0, 24708)
+			SetMusicTrack("Invincibility.ogg", 2, 0x9A68)
+			break			
+		end switch
+	else
+		stage.musicFlag = 2
+	end if
+end function
+
+
+event ObjectMain
+
+	//Searchlight Palette Rotation
+	object.value7++
+	if object.value7 == 14
+		object.value7 = 0
+		object.value15++
+		object.value15 &= 7
+		GetTableValue(temp0, object.value15, MBZSetup_table35)
+		SetPaletteEntry(0, 169, temp0)
+		GetTableValue(temp0, object.value15, MBZSetup_table36)
+		SetPaletteEntry(0, 188, temp0)
+	end if
+	
+	//Lightning
+	if MBZSetup_value31 == 0
+
+	end if
+	MBZSetup_value31++
+	
+	if MBZSetup_value31 == MBZSetup_value30 
+		MBZSetup_value29 = 16
+		PlaySfx(SfxName[Thunder], 0)
+		MBZSetup_value31 = 0		
+		Rand(MBZSetup_value30, 1500)
+		MBZSetup_value30 += 300
+	end if
+		
+	temp1 = 0
+	if MBZSetup_value29 > 0
+		MBZSetup_value29--
+		temp0 = MBZSetup_value29
+		temp0 /= 4
+		temp0 %= 2
+		if temp0 == 0
+			temp1 = 1
+		end if
+	end if
+	
+	if temp1 == 1
+		//lightning colours
+		CopyPalette(0, 249, 0, 224, 4)
+	else
+		//regular colours
+		CopyPalette(0, 245, 0, 224, 4)
+	end if
+		
+	//Lava Hurts
+	foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+		temp1 = object[currentPlayer].xpos
+		temp1 >>= 16
+		temp2 = object[currentPlayer].ypos
+		temp2 >>= 16
+		temp2 += 4
+		temp2 += 16
+		Get16x16TileInfo(temp0, temp1, temp2, TILEINFO_ANGLEB)
+		if temp0 == 1
+			if object[currentPlayer].value37 != 3
+				CallFunction(PlayerObject_Hit)
+			end if
+		end if
+	next
+	
+	//Lava Flow		
+	//CallFunction(LavaFlowOscillate)
+	//CallFunction(LavaFlowStraight)
+	CallFunction(LavaFlowOscRight)	
+	//CallFunction(LavaFlowExp)	
+	CallFunction(LavaFlowMain)
+	
+	object.value3++
+	temp0 = object.value3
+	temp0 %= 20
+	if temp0 == 0
+		//RotatePalette(0, 214, 217, 1)
+	end if
+	
+	
+	//Piston Palette Rotation
+	temp0 = object.value3
+	temp0 %= 30
+	if temp0 == 0
+		RotatePalette(0, 233, 238, 0)
+	end if
+
+	//Gamer PC Palette Rotation
+	object.value35++
+	if object.value35 == 6
+		object.value35 = 0
+		RotatePalette(0, 242, 243, 1)
+	end if
+	
+	//Conveyors
+	RotatePalette(0, 229, 231, 0)
+	foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+		if object[currentPlayer].gravity == GRAVITY_GROUND
+			temp2 = object[currentPlayer].ypos
+			temp2 >>= 16
+			temp2 += object[currentPlayer].collisionBottom
+			temp2 += 2
+			temp1 = object[currentPlayer].xpos
+			temp1 >>= 16
+			temp1 += object[currentPlayer].collisionLeft
+			temp3 = 0
+			Get16x16TileInfo(temp0, temp1, temp2, TILEINFO_ANGLEB)
+			if temp0 == 2
+				Get16x16TileInfo(temp0, temp1, temp2, TILEINFO_DIRECTION)
+				if temp0 == 0
+					temp3 += 0x20000
+				else
+					temp3 -= 0x20000
+				end if
+			end if
+			temp1 = object[currentPlayer].xpos
+			temp1 >>= 16
+			temp1 += object[currentPlayer].collisionRight
+			Get16x16TileInfo(temp0, temp1, temp2, TILEINFO_ANGLEB)
+			if temp0 == 2
+				Get16x16TileInfo(temp0, temp1, temp2, TILEINFO_DIRECTION)
+				if temp0 == 0
+					temp3 += 0x20000
+					if temp3 > 0x20000
+						temp3 = 0x20000
+					end if
+				else
+					temp3 -= 0x20000
+					if temp3 < -0x20000
+						temp3 = -0x20000
+					end if
+				end if
+			end if
+			object[currentPlayer].xpos += temp3
+		end if
+	next
+	
+	//Water palette lightning shield control
+	if MBZSetup_value28 > 0
+		MBZSetup_value28--
+	end if
+end event
+
+event ObjectDraw
+	switch object.drawOrder
+		case 0
+			//Water Palette
+			temp0 = stage.waterLevel
+			temp0 -= screen.yoffset
+			if temp0 < 0
+				temp0 = 0
+			end if
+			if temp0 > screen.ysize
+				temp0 = screen.ysize
+			end if
+			SetActivePalette(0, 0, temp0)
+			if MBZSetup_value28 > 0
+				SetActivePalette(2, temp0, screen.ysize)
+			else
+				SetActivePalette(1, temp0, screen.ysize)
+			end if
+			object.drawOrder = 2
+			AddDrawListEntityRef(2, object.entityPos)
+			break
+		case 2
+			if MBZSetup_value29 > 0
+				temp0 = MBZSetup_value30
+				temp0 %= screen.xsize
+				temp1 = MBZSetup_value30
+				temp1 &= 3
+				DrawSpriteScreenXY(temp1, temp0, 64)
+			end if
+			object.drawOrder = 0
+			break
+	end switch
+end event
+
+
+event ObjectStartup
+	SetMusicTrack("BossRush.ogg", 0, 24708)
+	SpeedUpMusic = MBZSetup_Function95
+	SlowDownMusic = MBZSetup_Function96
+		
+	animalType1 = TypeName[Pecky]
+	animalType2 = TypeName[Ricky]
+	object[10].type = TypeName[MBZ Setup]
+	object[10].priority = PRIORITY_ACTIVE
+	object[10].drawOrder = 0
+	
+	CallFunction(LoadObjects)
+	temp0 = 0
+	arrayPos0 = 200
+	while temp0 < 908
+		GetTableValue(temp1, temp0, MBZ_Object_Spawn)
+		temp0++
+		GetTableValue(temp2, temp0, MBZ_Object_Spawn)
+		temp0++
+		GetTableValue(temp3, temp0, MBZ_Object_Spawn)
+		temp0++
+		GetTableValue(temp4, temp0, MBZ_Object_Spawn)
+		temp0++
+		temp2 <<= 16
+		temp3 <<= 16
+		ResetObjectEntity(arrayPos0, temp1, temp4, temp2, temp3)
+		if object[arrayPos0].type == TypeName[Y Bound Adjust]
+			object[arrayPos0].priority = PRIORITY_ACTIVE
+		end if
+		if object[arrayPos0].type == TypeName[FZ Piston]
+			if object[arrayPos0].ypos < 0x12C0000
+				object[arrayPos0].direction = 2
+			end if
+		end if
+		if object[arrayPos0].type == TypeName[Fan]
+			object[arrayPos0].direction = 1
+		end if
+		if object[arrayPos0].type == TypeName[Monitor]
+			if saved.elemental == 0
+				switch object[arrayPos0].propertyValue
+					case 9
+						object[arrayPos0].propertyValue = 2
+						break
+					case 10
+					case 11
+						ResetObjectEntity(arrayPos0, TypeName[Blank Object], 0, 0, 0)
+						break				
+				end switch
+			end if
+		end if
+		if object[arrayPos0].type == 108 //for some bizarre reason TypeName[Invisible Block] does not work here
+			object[arrayPos0].drawOrder = 5
+			object[arrayPos0].value0 = object[arrayPos0].propertyValue
+			object[arrayPos0].value0 &= 240
+			object[arrayPos0].value0 += 16
+			object[arrayPos0].value0 >>= 1
+			object[arrayPos0].value1 = object[arrayPos0].propertyValue
+			object[arrayPos0].value1 &= 15
+			object[arrayPos0].value1++
+			object[arrayPos0].value1 <<= 3
+		end if
+		arrayPos0++	
+	loop
+	
+	Rand(MBZSetup_value30, 1500)
+	MBZSetup_value30 += 300
+	
+	
+	LoadPalette("MBZ_WaterPal.act", 1, 0, 0, 256)
+	LoadPalette("ElectricFlash.act", 2, 0, 0, 256)
+	
+	LoadSpriteSheet("MBZ/Lightning.gif")
+	SpriteFrame(-67, 0, 134, 240, 1, 1)
+	SpriteFrame(-67, 0, 134, 240, 1, 1)
+	SpriteFrame(-67, 0, 134, 240, 1, 1)
+	SpriteFrame(-67, 0, 134, 240, 1, 1)
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+end event

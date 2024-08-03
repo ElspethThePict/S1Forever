@@ -1,0 +1,217 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Golf Hole Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias 0x50000 : max.speed
+
+// Function declarations
+reserve function GolfHole_DebugDraw
+reserve function GolfHole_DebugSpawn
+
+// Static Values
+
+// Tables
+
+function GolfHole_DebugDraw
+	DrawSprite(0)
+end function
+
+
+function GolfHole_DebugSpawn
+	CreateTempObject(TypeName[Golf Hole], 0, object.xpos, object.ypos)
+	object[tempObjectPos].state = 2
+end function
+
+
+event ObjectMain
+	switch object.state
+		case 0 //Active
+			checkEqual(object[0].gravity, GRAVITY_GROUND)
+			temp0 = checkResult
+			temp2 = object[0].speed
+			Abs(temp2)
+			checkLower(temp2, max.speed)
+			temp0 &= checkResult
+			
+			checkEqual(object[0].gravity, GRAVITY_AIR)
+			temp2 = checkResult
+			checkGreater(object[0].yvel, 0)
+			temp2 &= checkResult
+			
+			temp0 |= temp2
+			
+			if temp0 == 1
+				BoxCollisionTest(C_TOUCH, object.entityPos, -3, 16, 3, 20, 0, -5, 6, 4, 15)
+				if checkResult == 1
+					lampPostID = object.entityPos
+					object.state = 1
+					object.value0 = 384
+					if object.priority != PRIORITY_XBOUNDS_DESTROY
+						object.priority = PRIORITY_ACTIVE
+					end if
+					PlaySfx(SfxName[Lamp Post], 0)
+					PlaySfx(SfxName[Golf Clap], 0)
+					object[0].state = PlayerObject_Blank
+					object[0].xvel = 0
+					object[0].yvel = 0
+					object[0].speed = 0
+					object[0].xpos = object.xpos
+					arrayPos0 = object.value5
+					checkEqual(saveRAM[arrayPos0], 0)
+					temp1 = checkResult
+					checkGreater(saveRAM[arrayPos0], golf.holeScore)
+					temp1 |= checkResult
+					if temp1 == 1 //New record
+						saveRAM[arrayPos0] = golf.holeScore
+						if golf.holeScore == 1
+							PlaySfx(SfxName[Life], 0)
+							PauseMusic()
+							ResetObjectEntity(25, TypeName[Music Event], 2, 0, 0)
+							object[25].priority = PRIORITY_ACTIVE
+						end if
+					end if
+					if golf.holeScore == 1
+						temp1 = object.ypos
+						temp1 += 0xD0000
+						CreateTempObject(TypeName[Flicky], 0, object.xpos, temp1)
+					end if
+					golf.holeScore = 0
+					WriteSaveRAM()
+				end if			
+			end if
+			break
+		case 1 //Holding Ball
+			object.value40++
+			if object.value40 > 180
+				temp0 = 0
+				object[9].value2 = 0
+				foreach (TypeName[Golf Hole], arrayPos0, ALL_ENTITIES)
+					object[arrayPos0].priority = PRIORITY_ACTIVE
+					if arrayPos0 <= lampPostID
+						object[arrayPos0].state = 2
+						object[9].value2++
+					else
+						if temp0 == 0
+							object[arrayPos0].state = 0							
+							object[9].value2++
+							temp0 = 1
+						else
+							object[arrayPos0].state = 3
+						end if
+					end if
+				next
+				if temp0 == 0
+					PlayMusic(1)
+					object.state = 2
+					object[30].type = TypeName[Act Finish]
+					object[30].drawOrder = 6
+					object[30].priority = PRIORITY_ACTIVE
+				else
+					object[0].xpos = object.xpos
+					object[0].ypos = object.ypos
+					object[0].ypos += 0x50000
+					object[0].state = Golf_Air
+					object[0].xvel = 0
+					object[0].yvel = 0
+					object[0].speed = 0
+					object[0].value43 = 0
+					object[0].value44 = 0	
+					golf.oscill = 0
+				end if
+			end if
+			break
+	end switch
+	object.value1++
+	if object.value1 > 6
+		object.value1 = 0
+		object.value2++
+		object.value2 %= 3
+	end if
+end event
+
+
+event ObjectDraw
+	DrawSprite(0)
+	temp1 = object.ypos
+	temp1 -= 0x1B 0000
+	
+	switch object.state
+		case 0 //Active
+			temp0 = 1
+			temp0 += object.value2
+			DrawSpriteXY(temp0, object.xpos, temp1)
+			break
+		case 1 //Holding Ball
+		case 2 //Complete
+			temp0 = 4
+			temp0 += object.value2
+			DrawSpriteXY(temp0, object.xpos, temp1)		
+			break
+		case 3 //Inactive
+			break
+	end switch
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("Global/KnuxGreyShield.gif")
+	SpriteFrame(-8, -44, 29, 64, 99, 191)	//Pole
+			
+	SpriteFrame(2, -14, 19, 20, 129, 195) //Red Flag 1
+	SpriteFrame(2, -14, 19, 20, 149, 195) //Red Flag 2
+	SpriteFrame(2, -14, 19, 20, 169, 195) //Red Flag 3
+				
+	SpriteFrame(2, -14, 19, 20, 129, 216) //Blue Flag 1
+	SpriteFrame(2, -14, 19, 20, 149, 216) //Blue Flag 2
+	SpriteFrame(2, -14, 19, 20, 169, 216) //Blue Flag 3
+	
+	SetTableValue(TypeName[Golf Hole], DebugMode_ObjCount, DebugMode_TypesTable)
+	SetTableValue(GolfHole_DebugDraw, DebugMode_ObjCount, DebugMode_DrawTable)
+	SetTableValue(GolfHole_DebugSpawn, DebugMode_ObjCount, DebugMode_SpawnTable)
+	DebugMode_ObjCount++
+	
+	if options.gameMode == 5
+		if lampPostID == 0
+			player.score = 0
+		end if
+		golf.holeScore = 0
+		temp0 = 0
+		object[9].value2 = 0
+		temp1 = 720
+		foreach (TypeName[Golf Hole], arrayPos0, ALL_ENTITIES)	
+			object[arrayPos0].value5 = temp1
+			temp1++
+			object[arrayPos0].priority = PRIORITY_ACTIVE
+			if arrayPos0 <= lampPostID
+				object[arrayPos0].state = 3
+				object[9].value2++
+			else
+				if temp0 == 0
+					object[arrayPos0].state = 0
+					object[9].value2++
+					temp0 = 1
+				else
+					object[arrayPos0].state = 4
+				end if
+			end if
+		next
+	else
+		foreach (TypeName[Golf Hole], arrayPos0, ALL_ENTITIES)			
+			object[arrayPos0].priority = PRIORITY_ACTIVE
+			object[arrayPos0].state = 3
+		next
+	end if	
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Items.gif")
+	SpriteFrame(-8, -44, 16, 64, 1, 137)
+end event

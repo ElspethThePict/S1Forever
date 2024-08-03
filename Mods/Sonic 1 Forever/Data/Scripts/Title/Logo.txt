@@ -1,0 +1,650 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Logo Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias 3 : TYPE_LOGO
+
+// Function declarations
+reserve function Logo_Function1
+reserve function AnimatedForever
+
+
+// Tables
+public table Logo_table0
+	0x6060A0, 0x80A0E0, 0xE08000, 0xE0C080, 0xA04000, 0x600000, 0xE02080, 0xE00040, 0x800000, 0x806080, 0xA08060, 0xE0C0A0, 0x80A0A0, 0xA04020
+end table
+
+public table Logo_table1
+	-50, -40, -53, -56, -58, -68, -60, -74, -62, -78, -63, -79, -64, -80
+end table
+
+public table Logo_table2
+	5, -32, 6, -31
+end table
+
+function AnimatedForever
+	if object.state > 4
+		if object.value21 < 19
+			temp0 = object.value21
+			temp0 += 13
+			DrawSpriteScreenXY(temp0, screen.xcenter, object.ypos)
+			object.value22++
+			object.value22 &= 1
+			if object.value22 == 1
+				object.value21++
+			end if
+		end if	
+	end if
+end function
+
+
+function Logo_Function1
+	temp0 = 0
+	if inputPress.up == 1
+		temp0 = 1
+	end if
+	if inputPress.down == 1
+		temp0 = 2
+	end if
+	if inputPress.left == 1
+		temp0 = 3
+	end if
+	if inputPress.right == 1
+		temp0 = 4
+	end if
+	if inputPress.buttonA == 1
+		temp0 = 5
+	end if
+	if inputPress.buttonB == 1
+		temp0 = 6
+	end if
+	if inputPress.buttonC == 1
+		temp0 = 7
+	end if
+	switch object.value14
+	case 0
+		if temp0 == 1
+			object.value14++
+		else
+			if temp0 != 0
+				object.value14 = 0
+			end if
+		end if
+		break
+	case 1
+		if temp0 == 2
+			object.value14++
+		else
+			if temp0 != 0
+				object.value14 = 0
+			end if
+		end if
+		break
+	case 2
+		if temp0 == 3
+			object.value14++
+		else
+			if temp0 != 0
+				object.value14 = 0
+			end if
+		end if
+		break
+	case 3
+		if temp0 == 4
+			object.value14++
+			//object.value14 = 0
+			options.stageSelectFlag = 1
+			PlaySfx(SfxName[Ring L], 0)
+		else
+			if temp0 != 0
+				object.value14 = 0
+			end if
+		end if
+		break
+	end switch
+	switch object.value15
+	case 0
+		if temp0 == 1
+			object.value15++
+		else
+			if temp0 != 0
+				object.value15 = 0
+			end if
+		end if
+		break
+	case 1
+		if temp0 == 7
+			object.value15++
+		else
+			if temp0 != 0
+				object.value15 = 0
+			end if
+		end if
+		break
+	case 2
+		if temp0 == 2
+			object.value15++
+		else
+			if temp0 != 0
+				object.value15 = 0
+			end if
+		end if
+		break
+	case 3
+		if temp0 == 7
+			object.value15++
+		else
+			if temp0 != 0
+				object.value15 = 0
+			end if
+		end if
+		break
+	case 4
+		if temp0 == 3
+			object.value15++
+		else
+			if temp0 != 0
+				object.value15 = 0
+			end if
+		end if
+		break
+	case 5
+		if temp0 == 7
+			object.value15++
+		else
+			if temp0 != 0
+				object.value15 = 0
+			end if
+		end if
+		break
+	case 6
+		if temp0 == 4
+			object.value15++
+		else
+			if temp0 != 0
+				object.value15 = 0
+			end if
+		end if
+		break
+	case 7
+		if temp0 == 7
+			object.value15++
+			//object.value15 = 0
+			stage.debugMode = 1
+			PlaySfx(SfxName[Ring L], 0)
+			
+			//also activate level select
+			object.value14 = object.value15
+			options.stageSelectFlag = 1
+			
+		else
+			if temp0 != 0
+				object.value15 = 0
+			end if
+		end if
+		break
+	end switch
+	switch object.value16
+	case 0
+		if temp0 == 1
+			object.value16++
+		else
+			if temp0 != 0
+				object.value16 = 0
+			end if
+		end if
+		break
+	case 1
+	case 2
+	case 3
+	case 4
+		if temp0 == 2
+			object.value16++
+		else
+			if temp0 != 0
+				object.value16 = 0
+			end if
+		end if
+		break
+	case 5
+		if temp0 == 1
+			object.value16++
+			object.value16 = 0
+			saveRAM[278] ^= 1
+			switch saveRAM[278]
+				case 0
+					PlaySfx(SfxName[Hurt], 0)
+					break
+				case 1
+					PlaySfx(SfxName[Ring L], 0)
+					break
+			end switch		
+			WriteSaveRAM()
+		else
+			if temp0 != 0
+				object.value16 = 0
+			end if
+		end if
+		break
+	end switch
+	
+	switch object.value17
+	case 0
+		if temp0 == 3
+			object.value17++
+		else
+			if temp0 != 0
+				object.value17 = 0
+			end if
+		end if
+		break
+	case 1
+		if temp0 == 3
+			object.value17++
+		else
+			if temp0 != 0
+				object.value17 = 0
+			end if
+		end if
+		break
+	case 2
+		if temp0 == 3
+			object.value17++
+		else
+			if temp0 != 0
+				object.value17 = 0
+			end if
+		end if
+		break
+	case 3
+		if temp0 == 4
+			object.value17++
+		else
+			if temp0 != 0
+				object.value17 = 0
+			end if
+		end if
+		break
+	case 4
+		if temp0 == 4
+			object.value17++
+		else
+			if temp0 != 0
+				object.value17 = 0
+			end if
+		end if
+		break
+	case 5
+		if temp0 == 4
+			object.value17++
+		else
+			if temp0 != 0
+				object.value17 = 0
+			end if
+		end if
+		break
+	case 6
+		if temp0 == 1
+			object.value17++
+		else
+			if temp0 != 0
+				object.value17 = 0
+			end if
+		end if
+		break
+	case 7
+		if temp0 == 1
+			object.value17++
+		else
+			if temp0 != 0
+				object.value17 = 0
+			end if
+		end if
+		break
+	case 8
+		if temp0 == 1
+			object.value17++
+			object.value17 = 0
+			saveRAM[279] ^= 1
+			switch saveRAM[279]
+				case 0
+					PlaySfx(SfxName[Hurt], 0)
+					break
+				case 1
+					PlaySfx(SfxName[Ring L], 0)
+					break
+			end switch			
+			WriteSaveRAM()
+		else
+			if temp0 != 0
+				object.value17 = 0
+			end if
+		end if
+		break
+	end switch
+end function
+
+
+event ObjectMain
+	if object.state == 0
+		stage.playerListPos = 0
+		options.gameMode = 0
+	end if
+	
+	if object.value10 == 0
+		object.value3++
+		if object.value3 == 6
+			object.value3 = 0
+			RotatePalette(0, 192, 195, 1)
+		end if
+	end if
+	if options.gameMode == 0
+		//if object.state > 3
+		if object[+1].value10 == 0
+			CallFunction(Logo_Function1)
+		end if
+		//end if
+	end if
+end event
+
+
+event ObjectDraw
+	if object[+1].value10 == 1
+		DrawRect(0, 0, screen.xsize, screen.ysize, 0, 0, 0, 255)
+	end if
+	temp0 = 1
+
+	if temp0 != 0
+		DrawSpriteScreenXY(9, screen.xcenter, object.ypos)
+	end if
+
+		switch object.state
+		case 0
+			screen.xoffset = 0
+			object.priority = PRIORITY_ACTIVE
+			object.value0 = 256
+			stage[0].activeLayer = 1
+			object.state++
+			SetScreenFade(0, 0, 0, 255)
+					object[+1].type = TypeName[Start Message]
+					object[+1].priority = PRIORITY_ACTIVE
+					object[+1].xpos = screen.xcenter
+					object[+1].ypos = 192
+			break
+		case 1
+			screen.xoffset += 2
+			if object.value0 > 0
+				object.value0 -= 8
+			else
+				PlayMusic(0)
+				object.state++
+			end if
+			SetScreenFade(0, 0, 0, object.value0)
+			break
+		case 2
+			screen.xoffset += 2
+			object.value0++
+			if object.value0 == 38
+				object.value0 = 0
+				object.value2 = 186
+				object.frame = 0
+				object.state++
+			end if
+			break
+		case 3
+			screen.xoffset += 2
+			object.value2 -= 8
+			if object.value2 < 144
+				object.frame = 1
+			end if
+			if object.value2 <= 112
+				object.value2 = 112
+				object.state++
+			end if
+			DrawSpriteScreenXY(object.frame, screen.xcenter, object.value2)
+			break
+		case 4
+			screen.xoffset += 2
+			object.value0++
+			if object.value0 == 8
+				if object[+1].value10 == 0
+					object.frame++
+				end if
+				if object.frame >= 7
+					object.frame = 7
+					//object[+1].type = TypeName[Start Message]
+					//object[+1].priority = PRIORITY_ACTIVE
+					//object[+1].xpos = screen.xcenter
+					//object[+1].ypos = 192
+					object.state++
+				end if
+				object.value0 = 0
+			end if
+			DrawSpriteScreenXY(object.frame, screen.xcenter, object.value2)
+			break
+		case 5
+			screen.xoffset += 2
+			object.value0++
+			if object.value0 == 8
+				if object[+1].value10 == 0
+					object.frame++
+				end if
+				if object.frame > 8
+					object.frame = 7
+				end if
+				object.value0 = 0
+			end if
+			DrawSpriteScreenXY(9, screen.xcenter, object.ypos)
+			DrawSpriteScreenXY(object.frame, screen.xcenter, object.value2)
+			break
+		case 6
+			screen.xoffset += 2
+			object.ypos -= 2
+			object.value2 -= 2
+			if object.ypos <= -24
+				object.value8 = screen.xsize
+				object.value8 += 108
+				object.state++
+				object.value1 = screen.xcenter
+			end if
+			DrawSpriteScreenXY(9, screen.xcenter, object.ypos)
+			DrawSpriteScreenXY(object.frame, screen.xcenter, object.value2)
+			break
+		case 7
+			screen.xoffset += 2
+			object.value0++
+			object.value1++
+			object.value8 -= 8
+			temp0 = screen.xcenter
+			temp0 += 12
+			if object.value8 <= temp0
+				object.value8 = temp0
+				object.value13 = 12
+				object.state++
+			end if
+			DrawSpriteScreenXY(object.frame, object.value1, object.value2)
+			if saved.region == 1
+				DrawSpriteScreenXY(33, object.value8, 228)
+			else
+				DrawSpriteScreenXY(31, object.value8, 228)
+			end if
+			DrawSpriteScreenXY(36, object.value8, 228)
+			break
+		case 8
+			screen.xoffset += 2
+			temp0 = object.value4
+			GetTableValue(object.value11, temp0, Logo_table1)
+			object.value11 += screen.xcenter
+			object.value11 -= 24
+			temp0++
+			GetTableValue(object.value12, temp0, Logo_table1)
+			object.value12 += screen.ycenter
+			object.value12 -= 24
+			object.value0++
+			object.value0 &= 3
+			if object.value0 == 0
+				object.value4 += 2
+				if object.value4 == 14
+					object.state++
+				end if
+			end if
+			DrawSpriteScreenXY(object.frame, object.value1, object.value2)
+			DrawSpriteScreenXY(object.value13, object.value11, object.value12)
+			if saved.region == 1
+				DrawSpriteScreenXY(33, object.value8, 228)
+			else
+				DrawSpriteScreenXY(31, object.value8, 228)
+			end if
+			DrawSpriteScreenXY(36, object.value8, 228)
+			break
+		case 9
+			screen.xoffset += 2
+			object.value0++
+			if object.value0 == 2
+				object.value13++
+				if object.value13 >= 16
+					object.value13 = 16
+					object.value6 = 8
+					object.value6 += screen.xcenter
+					object.value7 = -27
+					object.value7 += screen.ycenter
+					object.value4 = 0
+					object.state++
+				end if
+				object.value0 = 0
+			end if
+			DrawSpriteScreenXY(object.value13, object.value11, object.value12)
+			if object.value13 == 16
+				DrawSpriteScreenXY(17, object.value6, object.value7)
+			end if
+			DrawSpriteScreenXY(object.frame, object.value1, object.value2)
+			if saved.region == 1
+				DrawSpriteScreenXY(33, object.value8, 228)
+			else
+				DrawSpriteScreenXY(31, object.value8, 228)
+			end if
+			DrawSpriteScreenXY(36, object.value8, 228)
+			break
+		case 10
+			screen.xoffset += 2
+			temp0 = object.value4
+			GetTableValue(object.value6, temp0, Logo_table2)
+			object.value6 += screen.xcenter
+			object.value6 -= 24
+			temp0++
+			GetTableValue(object.value7, temp0, Logo_table2)
+			object.value7 += screen.ycenter
+			object.value7 -= 24
+			object.value0++
+			object.value0 &= 3
+			if object.value0 == 0
+				object.value4 += 2
+				if object.value4 == 4
+					object.state++
+				end if
+			end if
+			DrawSpriteScreenXY(object.value13, object.value11, object.value12)
+			DrawSpriteScreenXY(17, object.value6, object.value7)
+			DrawSpriteScreenXY(object.frame, object.value1, object.value2)
+			if saved.region == 1
+				DrawSpriteScreenXY(33, object.value8, 228)
+			else
+				DrawSpriteScreenXY(31, object.value8, 228)
+			end if
+			DrawSpriteScreenXY(36, object.value8, 228)
+			break
+		case 11
+			screen.xoffset += 2
+			object.value0++
+			if object.value0 == 8
+				if object[+1].value10 == 0
+					object.frame++
+				end if
+				if object.frame > 8
+					object.frame = 7
+				end if
+				object.value0 = 0
+			end if
+			DrawSpriteScreenXY(object.value13, object.value11, object.value12)
+			DrawSpriteScreenXY(17, object.value6, object.value7)
+			DrawSpriteScreenXY(object.frame, object.value1, object.value2)
+			if saved.region == 1
+				DrawSpriteScreenXY(33, object.value8, 228)
+			else
+				DrawSpriteScreenXY(31, object.value8, 228)
+			end if
+			DrawSpriteScreenXY(36, object.value8, 228)
+			break
+		end switch
+
+	DrawSpriteScreenXY(10, screen.xcenter, object.ypos)
+	CallFunction(AnimatedForever)
+	temp0 = screen.xsize
+	temp0 -= 96
+	DrawSpriteScreenXY(11, temp0, 216)
+	DrawSpriteScreenXY(12, 25, 225)
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("Title/Title.gif")
+	SetMusicTrack("Titlescreen.ogg", 0, 0)
+	SpriteFrame(-33, -74, 65, 64, 1, 1) //0 Sonic
+	SpriteFrame(-33, -74, 65, 88, 1, 1)
+	SpriteFrame(-34, -66, 74, 88, 67, 1)
+	SpriteFrame(-34, -66, 74, 88, 142, 1)
+	SpriteFrame(-32, -72, 79, 88, 217, 1)
+	SpriteFrame(-24, -74, 72, 88, 297, 1)
+	SpriteFrame(-36, -76, 81, 88, 370, 1)
+	SpriteFrame(-36, -76, 81, 88, 1, 90)
+	SpriteFrame(-36, -76, 81, 88, 83, 90)
+	SpriteFrame(-128, 42, 256, 74, 255, 90) //9 Logo Top
+	SpriteFrame(-128, 112, 256, 74, 255, 167) //10 Logo Bottom
+	SpriteFrame(0, 0, 71, 17, 182, 210) //11 Copyright Sega
+	SpriteFrame(-2, 0, 128, 8, 155, 242) //12 Team Forever
+	
+	//Forever Animated
+	SpriteFrame(19, 148, 46, 7, 1, 319) //13
+	SpriteFrame(19, 148, 46, 7, 48, 319) //14
+	SpriteFrame(19, 148, 46, 7, 95, 319) //15
+	SpriteFrame(19, 148, 46, 7, 142, 319) //16
+	SpriteFrame(19, 148, 46, 7, 1, 327) //17
+	SpriteFrame(19, 148, 46, 7, 48, 327) //18
+	SpriteFrame(19, 148, 46, 7, 95, 327) //19
+	SpriteFrame(19, 148, 46, 7, 142, 327) //20
+	SpriteFrame(19, 148, 46, 7, 1, 335) //21
+	SpriteFrame(19, 148, 46, 7, 48, 335) //22
+	SpriteFrame(19, 148, 46, 7, 95, 335) //23
+	SpriteFrame(19, 148, 46, 7, 142, 335) //24
+	SpriteFrame(19, 148, 46, 7, 1, 343) //25
+	SpriteFrame(19, 148, 46, 7, 48, 343) //26
+	SpriteFrame(19, 148, 46, 7, 95, 343) //27
+	SpriteFrame(19, 148, 46, 7, 142, 343) //28
+	SpriteFrame(19, 148, 46, 7, 1, 351) //29
+	SpriteFrame(19, 148, 46, 7, 48, 351) //30
+	SpriteFrame(19, 148, 46, 7, 95, 351) //31
+	
+	
+	
+	temp0 = 208
+	temp1 = 0
+	while temp1 < 14
+		GetTableValue(temp2, temp1, Logo_table0)
+		SetPaletteEntry(0, temp0, temp2)
+		temp0++
+		temp1++
+	loop
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+end event

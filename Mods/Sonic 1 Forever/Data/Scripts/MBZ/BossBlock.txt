@@ -1,0 +1,55 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Boss Block Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias 64 : TYPE_BOSSBLOCK
+
+
+// Static Values
+
+// Tables
+
+event ObjectMain
+	if object.propertyValue == 0
+		if object.state == 0
+			foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+				BoxCollisionTest(C_BOX, object.entityPos, -16, -16, 16, 16, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
+			next
+		end if
+	else
+		object.xpos += object.xvel
+		object.yvel += 0x1800
+		object.ypos += object.yvel
+		if object.outOfBounds == 1
+			object.type = TypeName[Blank Object]
+		end if
+	end if
+end event
+
+
+event ObjectDraw
+	DrawSprite(object.propertyValue)
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("MBZ/Objects.gif")
+	SpriteFrame(-16, -16, 32, 32, 76, 363)
+	SpriteFrame(-8, -8, 16, 16, 76, 363)
+	SpriteFrame(-8, -8, 16, 16, 92, 363)
+	SpriteFrame(-8, -8, 16, 16, 76, 379)
+	SpriteFrame(-8, -8, 16, 16, 92, 379)
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+end event

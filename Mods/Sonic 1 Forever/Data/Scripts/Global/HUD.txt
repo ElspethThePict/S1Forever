@@ -1,0 +1,1008 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: HUD Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias 5 : TYPE_HUD
+public alias saveRAM[295]: saved.mobile
+public alias saveRAM[296]: saved.transmobile
+
+//object.value2 reserved for display of game mode info
+//object.value3 reserved for display of game mode info
+//object.value4 reserved for display of game mode info
+//object.value5 reserved for display of game mode info
+private alias object.value10 : debug.toggle
+private alias object.value11 : touchoffset
+private alias object.value12 : pauseoffset
+
+private alias object.value30 : display.milliSeconds
+private alias object.value31 : display.seconds
+private alias object.value32 : display.minutes
+
+private alias object.value33 : touch.fade
+private alias object.value34 : buttonoffset
+//object.value35 reserved for display of game mode info
+
+// Function declarations
+reserve function HUD_DrawUsual
+reserve function HUD_DrawTimeAttack
+reserve function HUD_DrawArcadeMode
+reserve function HUD_DrawGolf
+reserve function DebugExtra
+reserve function DebugDisplays
+reserve function TileFind
+reserve function PerfectCount
+reserve function TouchControls
+reserve function SuperButton
+
+// Static Values
+
+// Tables
+
+function DebugExtra
+	//Extra Numbers below rings, useful for debugging
+	if inputPress.buttonX == 1
+		debug.toggle ^= 1
+	end if
+	
+	if debug.toggle == 1	
+		temp1 = screen.xsize
+		temp1 -= 24
+		temp2 = screen.xsize
+		temp2 -= 80
+		temp0 = object[0].xvel
+		temp0 *= 60
+		temp0 >>= 16
+		Abs(temp0)
+		DrawNumbers(0, temp2, 9, temp0, 5, 8, 1)
+		temp0 = object[0].yvel
+		temp0 *= 60
+		temp0 >>= 16
+		Abs(temp0)
+		DrawNumbers(0, temp2, 24, temp0, 5, 8, 1)
+		temp0 = object[0].speed
+		temp0 *= 60
+		temp0 >>= 16
+		Abs(temp0)
+		DrawNumbers(0, temp2, 41, temp0, 5, 8, 1)
+		DrawNumbers(0, temp1, 41, stage.waterLevel, 5, 8, 1)
+		CallFunction(PerfectCount)
+		DrawNumbers(0, 50, 60, temp0, 7, 8, 0)
+		
+		DrawNumbers(0, 50, 80, object[0].animation, 7, 8, 0)
+		DrawNumbers(0, 50, 95, object[0].frame, 7, 8, 0)
+		DrawNumbers(0, 50, 110, object[0].value24, 7, 8, 0)
+		DrawNumbers(0, 50, 125, object[0].rotation, 7, 8, 0)
+		//DrawNumbers(0, 50, 140, temp0, 7, 8, 0)		
+		//DrawNumbers(0, 50, 155, object.value41, 7, 8, 0)
+
+		//Simple function to display foreground chunk info of character position
+		CallFunction(TileFind)
+	end if
+end function
+
+function DebugDisplays
+	temp0 = object[0].xpos
+	temp0 >>= 16
+	Abs(temp0)
+	temp1 = screen.xsize
+	temp1 -= 24
+	if saved.mobile == 1
+		DrawNumbers(0, temp1, 25, temp0, 5, 8, 1)
+	else
+		DrawNumbers(0, temp1, 9, temp0, 5, 8, 1)
+	end if
+	temp0 = object[0].ypos
+	temp0 >>= 16
+	Abs(temp0)
+	if saved.mobile == 1
+		DrawNumbers(0, temp1, 41, temp0, 5, 8, 1)
+	else
+		DrawNumbers(0, temp1, 25, temp0, 5, 8, 1)
+	end if
+	
+	if saved.mobile == 1
+		temp2 = 27
+	else
+		temp2 = 11
+	end if
+	temp1 -= 42
+	if object[0].xpos >= 0
+		DrawSpriteScreenXY(18, temp1, temp2)
+	else
+		DrawSpriteScreenXY(36, temp1, temp2)
+	end if
+	temp2 += 16
+	if object[0].ypos >= 0
+		DrawSpriteScreenXY(19, temp1, temp2)
+	else
+		DrawSpriteScreenXY(37, temp1, temp2)
+	end if
+	if saved.mobile == 1
+		if object[0].type == TypeName[Debug Mode]
+			DrawSpriteScreenXY(34, screen.xcenter, 16)
+			DrawSpriteScreenXY(35, screen.xcenter, 16)
+		end if
+	end if
+end function
+
+function TileFind
+	temp1 = object[0].xpos
+	temp1 >>= 16
+	temp1 /= 128
+	
+	temp2 = object[0].ypos
+	temp2 >>= 16
+	temp2 /= 128	
+	GetTileLayerEntry(temp3, 0, temp1, temp2)		
+	
+	DrawNumbers(0, screen.xcenter, 13, temp1, 7, 8, 0)
+	DrawNumbers(0, screen.xcenter, 29, temp2, 7, 8, 0)
+	DrawNumbers(0, screen.xcenter, 45, temp3, 7, 8, 0)
+	
+	temp1 = object[0].xpos
+	temp1 >>= 16
+	temp1 -= 16
+	temp2 = object[0].ypos
+	temp2 >>= 16
+	temp2 -= 16
+	temp3 = 0
+	temp4 = 0
+	temp5 = 20
+	temp6 = 90
+	
+	while temp4 < 8
+		while temp3 < 8
+			//Get16x16TileInfo(temp0, temp1, temp2, TILEINFO_INDEX)
+			if temp0 != 0
+				//DrawNumbers(0, temp5, temp6, temp0, 7, 8, 0)
+			end if
+			temp1 += 16
+			temp3++
+			temp5 += 25
+		loop
+		temp1 = object[0].xpos
+		temp1 >>= 16
+		temp1 -= 16
+		temp2 += 16
+		temp3 = 0
+		temp4++
+		temp5 = 20
+		temp6 += 15
+	loop
+	
+	temp1 = object[0].xpos
+	temp1 >>= 16
+	if object[0].direction == FLIP_NONE
+		temp1 += 10
+	else
+		if object[0].direction == FLIP_X
+			temp1 -= 10
+		end if
+	end if
+	temp2 = object[0].ypos
+	temp2 >>= 16
+	temp2 -= 10
+	Get16x16TileInfo(temp0, temp1, temp2, TILEINFO_INDEX)
+	DrawNumbers(0, 400, 200, temp0, 7, 8, 0)	
+end function
+
+function PerfectCount
+	switch stage.playerListPos
+		case 0
+		case 3
+		case 5
+			temp0 = 0
+			foreach (TypeName[Ring], arrayPos0, ALL_ENTITIES)
+					temp0++
+			next
+			break
+		case 1
+		case 2
+			temp0 = 0
+			foreach (TypeName[Ring], arrayPos0, ALL_ENTITIES)
+					temp0++
+			next
+			break
+	end switch
+end function
+
+function TouchControls
+	object.inkEffect = INK_ALPHA
+		CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+		if checkResult > -1
+			touch.fade = 0
+		else
+			touch.fade++
+		end if
+	if object[30].type == TypeName[Act Finish])
+		if object.alpha > 0
+   			 object.alpha -= 15
+		end if
+	else
+		if touch.fade >= 400
+			if object.alpha > 0
+   				 object.alpha -= 15
+			end if
+		else
+			switch saved.transmobile
+				case 0
+					object.alpha = 191
+					break
+				case 1
+					object.alpha = 255
+					break
+				case 2
+					object.alpha = 0
+					break
+				case 3
+					object.alpha = 63
+					break
+				case 4
+					object.alpha = 127
+					break
+				default					
+					object.alpha = 191
+					break
+			end switch
+		end if	
+	end if
+	temp0 = screen.xsize
+	temp0 -= 44
+	DrawSpriteScreenFX(49, FX_INK, 26,1 49) //dpad
+	temp0 -= 39
+
+	if stage.pauseEnabled == 1
+		if pauseoffset < 8
+			pauseoffset += 2
+		end if
+		if pauseoffset >= 8
+			pauseoffset = 8
+		end if
+	else
+		if pauseoffset > -20
+			pauseoffset -= 8
+		end if
+		if pauseoffset <= -20
+			pauseoffset = -20
+		end if
+	end if
+	DrawSpriteScreenFX(56, 0, temp0, pauseoffset) //pause
+
+	temp0 -= 34
+	switch options.gameMode
+		case 2
+			DrawSpriteScreenXY(58, temp0, 8)
+			break
+		case 5
+			DrawSpriteScreenXY(58, temp0, 8)
+			break
+		default
+			temp1 = stage.timeEnabled
+			CheckEqual(specialStage.emeralds, 127)
+			temp1 &= checkResult
+			CheckGreater(object[0].value0, 49)
+			temp1 &= checkResult
+			CheckNotEqual(PlayerObject_SuperState, 1)
+			temp1 &= checkResult
+			CheckEqual(saved.superStates, 1)
+			temp1 &= checkResult
+			CheckNotEqual(object[30].type, TypeName[Act Finish])
+			temp1 &= checkResult			
+			CheckEqual(PlayerObject_SuperState, 1)
+			temp2 = checkResult
+			CheckEqual(saved.superCancel, 1)
+			temp2 &= checkResult			
+			temp1 |= temp2
+			if temp1 == 1
+				if touchoffset < 8
+					touchoffset += 2
+				end if
+				if touchoffset >= 8
+					touchoffset = 8
+				end if
+			else
+				if touchoffset > -20
+					touchoffset -= 8
+				end if
+				if touchoffset <= -20
+					touchoffset = -20
+				end if
+			end if
+			
+			DrawSpriteScreenXY(57, temp0, touchoffset)
+			break
+	end switch
+	//if PlayerObject_SuperState == 1
+	//	DrawSpriteScreenFX(57, 0, temp0, 8)
+	//end if
+	//if specialStage.emeralds == 127
+	//	if object[0].value0 >= 50
+	//		DrawSpriteScreenFX(57, 0, temp0, 8)
+	//	end if
+	//end if
+	
+	temp0 -= 10
+	if inputDown.Left==1
+		DrawSpriteScreenFX(52, FX_INK, 26, 151)
+	endif
+	if inputDown.Down==1
+		DrawSpriteScreenFX(51, FX_INK, 26, 189)
+	end if
+	if inputDown.Right==1
+		DrawSpriteScreenFX(53, FX_INK, 64, 151)
+	endif
+	if inputDown.Up==1
+		DrawSpriteScreenFX(50, FX_INK, 26, 151)
+	endif
+	
+	temp0 += 45
+	if saved.lives == 1
+		temp0 -= 13
+	end if		
+	if object[0].type == TypeName[Debug Mode]
+		if inputDown.buttonC==1
+			DrawSpriteScreenFX(55, FX_INK, temp0, 163)	
+		else
+			DrawSpriteScreenFX(54, FX_INK, temp0, 163)
+		endif
+	else
+		if inputDown.buttonA==1
+			DrawSpriteScreenFX(55, FX_INK, temp0, 163)	
+		else
+			DrawSpriteScreenFX(54, FX_INK, temp0, 163)
+		endif
+	end if
+end function
+
+function SuperButton
+	if saved.mobile == 0
+		object.inkEffect = INK_ALPHA
+		temp0 = stage.timeEnabled
+		CheckEqual(specialStage.emeralds, 127)
+		temp0 &= checkResult
+		CheckGreater(object[0].value0, 49)
+		temp0 &= checkResult
+		CheckNotEqual(PlayerObject_SuperState, 1)
+		temp0 &= checkResult
+		CheckNotEqual(object[30].type, TypeName[Act Finish])
+		temp0 &= checkResult
+		CheckEqual(saved.superStates, 1)
+		temp0 &= checkResult
+		CheckEqual(saved.mobile, 0)
+		temp0 &= checkResult
+		if temp0 == 1
+			if buttonoffset < 52
+				buttonoffset += 8
+			end if
+			if buttonoffset >= 52
+				buttonoffset = 52
+			end if
+		else
+			if buttonoffset > 0
+				buttonoffset -= 8
+			end if
+			if buttonoffset <= 0
+				buttonoffset = 0
+			end if
+		end if
+		temp0 = screen.xsize
+		temp0 -= buttonoffset		
+		CheckEqual (object[0].value35, 1)
+		temp1 = checkResult
+		CheckEqual (object[0].value8, 0)
+		temp1 &= checkResult
+		if temp1 == 1
+			object.alpha = 255
+		else
+			object.alpha = 155
+		end if
+		DrawSpriteScreenFX(46, FX_INK,temp0, 9)
+		DrawSpriteScreenXY(59, temp0, 9)
+	end if
+end function
+
+function HUD_DrawUsual
+	if saved.mobile == 1
+		if options.attractMode == 0
+			CallFunction(TouchControls)
+		end if
+	end if
+	CallFunction(SuperButton)
+	DrawSpriteScreenXY(10, 17, 9)
+	temp5 = 0
+	temp1 = stage.minutes
+	while temp1 >= 10
+		temp5 += 8
+		temp1 /= 10
+	loop
+	if player.score >= 1000000
+		if temp5 < 8
+			temp5 += 8
+		end if
+	end if
+
+	//Red Time
+	if object.value1 > 7
+		switch saved.timeLimit
+		case 1 // 3 minutes
+			temp1 = 2
+			break
+		case 2 //10 minutes
+			temp1 = 9
+			break
+		default
+			temp1 = 0
+			break
+		end switch
+		if temp1 > 0
+			if stage.minutes >= temp1
+				DrawSpriteScreenXY(11, 17, 25)
+			end if
+		end if			
+	end if
+	
+	if object[0].value0 == 0
+		if object.value1 > 7
+			DrawSpriteScreenXY(12, 17, 41)
+		end if
+	end if
+	temp2 = 104
+	temp2 += temp5
+	DrawNumbers(0, temp2, 9, player.score, 7, 8, 0)
+	
+
+	if saved.Timer == 0
+		temp2 = 67
+		temp2 += temp5
+		DrawSpriteScreenXY(14, temp2, 25)
+		temp2 += 13
+		DrawNumbers(0, temp2, 41, object[0].value0, 3, 8, 0)
+	else
+		temp2 = 67
+		temp2 += temp5
+		DrawSpriteScreenXY(13, temp2, 25)
+		temp2 += 37
+		DrawNumbers(0, temp2, 25, display.milliSeconds, 2, 8, 1)
+		DrawNumbers(0, temp2, 41, object[0].value0, 3, 8, 0)
+	end if
+	
+	temp2 = 80
+	temp2 += temp5
+	DrawNumbers(0, temp2, 25, display.seconds, 2, 8, 1)
+	temp2 -= 24
+	DrawNumbers(0, temp2, 25, display.minutes, 10, 8, 0)
+	
+
+	if stage.debugMode == 1
+		CallFunction(DebugDisplays)
+		CallFunction(DebugExtra)
+	end if
+	
+	//Lives
+	if saved.lives == 0
+		temp0 = stage.playerListPos
+		temp0 += 15
+
+		temp2=screen.xsize
+		temp2-=64
+		
+		CheckEqual(stage.playerListPos, 0)
+		temp1 = checkResult
+		CheckEqual(PlayerObject_SuperState, 1)
+		temp1 &= checkResult
+		if temp1 == 1	
+			if saved.mobile == 1	
+				DrawSpriteScreenXY(38, temp2, 8)	
+			else
+				DrawSpriteScreenXY(38, 16, 216)
+			end if
+		else
+			if stage.playerListPos == 5
+				if saved.mobile == 1
+					DrawSpriteScreenXY(44, temp2, 8)	
+				else	
+					DrawSpriteScreenXY(44, 16, 216)
+				end if
+			else
+				if saved.mobile == 1
+					DrawSpriteScreenXY(temp0, temp2, 8)	
+				else	
+					DrawSpriteScreenXY(temp0, 16, 216)	
+				end if
+			end if
+		end if	
+		temp0 += 6
+		temp2 += 17
+		if stage.playerListPos == 5
+			if saved.mobile == 1
+				DrawSpriteScreenXY(45, temp2, 9)
+			else
+				DrawSpriteScreenXY(45, 33, 217)
+			end if
+		else	
+			if saved.mobile == 1
+				DrawSpriteScreenXY(temp0, temp2, 9)
+			else
+				DrawSpriteScreenXY(temp0, 33, 217)
+			end if
+		end if
+		temp2 += 5
+		if saved.mobile == 1
+			DrawSpriteScreenXY(20, temp2, 18)
+		else
+			DrawSpriteScreenXY(20, 38, 226)
+		end if
+		
+		temp2 += 18
+		
+		if saved.mobile == 1
+			DrawNumbers(24, temp2, 16, player.lives, 2, 8, 0)
+		else
+			DrawNumbers(24, 56, 224, player.lives, 2, 8, 0)
+		end if
+	end if
+end function
+
+function HUD_DrawTimeAttack
+
+	if saved.mobile == 1
+		if options.attractMode == 0
+			CallFunction(TouchControls)
+		end if
+	end if
+
+	//Time
+	temp0 = screen.xcenter
+	temp0 -= 47
+	DrawSpriteScreenXY(39, temp0, 9)
+	temp0 += 49	
+
+	temp1 = stage.minutes
+	while temp1 >= 10
+		temp0 += 8
+		temp1 /= 10
+	loop
+	
+	DrawSpriteScreenXY(13, temp0, 9)
+	temp0 += 37
+	DrawNumbers(0, temp0, 9, stage.milliSeconds, 2, 8, 1)
+	temp0 -= 24
+	DrawNumbers(0, temp0, 9, stage.seconds, 2, 8, 1)
+	temp5 = temp0
+	temp0 -= 24
+	DrawNumbers(0, temp0, 9, stage.minutes, 10, 8, 0)
+	
+	
+	//Rings
+	temp1 = screen.xcenter
+	temp1 -= 34
+	DrawSpriteScreenXY(40, temp1, 25)
+	if object[0].value0 == 0
+		if object.value1 > 7
+			DrawSpriteScreenXY(12, temp1, 25)
+		end if
+	end if
+	temp1 += 60
+	DrawNumbers(0, temp1, 25, object[0].value0, 3, 8, 0)
+	
+
+	
+	if stage.debugMode == 1
+		CallFunction(DebugDisplays)
+		CallFunction(DebugExtra)
+	end if
+
+	
+	//Best
+	temp1 = screen.ysize
+	temp1 -= 19
+	temp0 = screen.xcenter
+	temp0 -= 47
+	DrawSpriteScreenXY(41, temp0, temp1)
+	temp0 += 49
+	
+	object.value3 = object.value2
+	object.value4 = 0
+	object.value5 = 0
+	while object.value3 >= 6000
+		object.value5++
+		object.value3 -= 6000
+	loop
+	
+	while object.value3 >= 100
+		object.value4++
+		object.value3 -= 100
+	loop
+	
+	if object.value5 > 9
+		temp0 += 8
+	end if
+	
+	DrawSpriteScreenXY(13, temp0, temp1)
+	temp0 += 37
+		
+	DrawNumbers(0, temp0, temp1, object.value3, 2, 8, 1)
+	temp0 -= 24
+	DrawNumbers(0, temp0, temp1, object.value4, 2, 8, 1)
+	temp0 -= 24
+	DrawNumbers(0, temp0, temp1, object.value5, 2, 8, 0)
+end function
+
+function HUD_DrawArcadeMode
+	if saved.mobile == 1
+		if options.attractMode == 0
+			CallFunction(TouchControls)
+		end if
+	end if
+	CallFunction(SuperButton)
+
+	DrawSpriteScreenXY(10, 17, 9)
+	temp5 = 0
+	temp1 = stage.minutes
+	while temp1 >= 10
+		temp5 += 8
+		temp1 /= 10
+	loop
+	if player.score >= 1000000
+		if temp5 < 8
+			temp5 += 8
+		end if
+	end if
+
+	//Red Time
+	if object.value1 > 7
+		switch saved.timeLimit
+		case 1 // 3 minutes
+			temp1 = 2
+			break
+		case 2 //10 minutes
+			temp1 = 9
+			break
+		default
+			temp1 = 0
+			break
+		end switch
+		if temp1 > 0
+			if stage.minutes >= temp1
+				DrawSpriteScreenXY(11, 17, 25)
+			end if
+		end if			
+	end if
+	
+	if object[0].value0 == 0
+		if object.value1 > 7
+			DrawSpriteScreenXY(12, 17, 41)
+		end if
+	end if
+	temp2 = 104
+	temp2 += temp5
+	DrawNumbers(0, temp2, 9, player.score, 7, 8, 0)
+	
+
+	
+	if saved.Timer == 0
+		temp2 = 67
+		temp2 += temp5
+		DrawSpriteScreenXY(14, temp2, 25)
+		temp2 += 13
+		DrawNumbers(0, temp2, 41, object[0].value0, 3, 8, 0)
+	else
+		temp2 = 67
+		temp2 += temp5
+		DrawSpriteScreenXY(13, temp2, 25)
+		temp2 += 37
+		DrawNumbers(0, temp2, 25, display.milliSeconds, 2, 8, 1)
+		DrawNumbers(0, temp2, 41, object[0].value0, 3, 8, 0)
+	end if
+	
+	temp2 = 80
+	temp2 += temp5
+	DrawNumbers(0, temp2, 25, display.seconds, 2, 8, 1)
+	temp2 -= 24
+	DrawNumbers(0, temp2, 25, display.minutes, 10, 8, 0)
+	
+	
+	if stage.debugMode == 1
+		CallFunction(DebugDisplays)
+		CallFunction(DebugExtra)
+	end if
+
+
+	
+	//Lives
+	temp0 = stage.playerListPos
+	temp0 += 15
+
+	temp2=screen.xsize
+	temp2-=64
+	
+	CheckEqual(stage.playerListPos, 0)
+	temp1 = checkResult
+	CheckEqual(PlayerObject_SuperState, 1)
+	temp1 &= checkResult
+	if temp1 == 1	
+		if saved.mobile == 1	
+			DrawSpriteScreenXY(38, temp2, 8)	
+		else
+			DrawSpriteScreenXY(38, 16, 216)
+		end if
+	else
+		if stage.playerListPos == 5
+			if saved.mobile == 1
+				DrawSpriteScreenXY(44, temp2, 8)	
+			else	
+				DrawSpriteScreenXY(44, 16, 216)
+			end if
+		else
+			if saved.mobile == 1
+				DrawSpriteScreenXY(temp0, temp2, 8)	
+			else	
+				DrawSpriteScreenXY(temp0, 16, 216)	
+			end if
+		end if
+	end if	
+	temp0 += 6
+	temp2+=17
+	if stage.playerListPos == 5
+		if saved.mobile == 1
+			DrawSpriteScreenXY(45, temp2, 9)
+		else
+			DrawSpriteScreenXY(45, 33, 217)
+		end if
+	else	
+		if saved.mobile == 1
+			DrawSpriteScreenXY(temp0, temp2, 9)
+		else
+			DrawSpriteScreenXY(temp0, 33, 217)
+		end if
+	end if
+	temp2+=5
+	if saved.mobile == 1
+		DrawSpriteScreenXY(20, temp2, 18)
+	else
+		DrawSpriteScreenXY(20, 38, 226)
+	end if
+	temp2+=18
+	if saved.mobile == 1
+		DrawNumbers(24, temp2, 16, 1, 2, 8, 0)
+	else
+		DrawNumbers(24, 56, 224, 1, 2, 8, 0)
+	end if
+
+end function
+
+function HUD_DrawGolf
+	if saved.mobile == 1
+		if options.attractMode == 0
+			CallFunction(TouchControls)
+		end if
+	end if
+
+	DrawSpriteScreenXY(48, 17, 9)	
+	temp2 = 80
+	DrawNumbers(0, temp2, 9, player.score, 7, 8, 0)
+
+	temp2 -= 18
+	DrawNumbers(0,temp2, 25, object.value2, 10, 8, 0)
+	temp2 += 10
+	DrawSpriteScreenXY(43, temp2, 25)
+	temp2 += 8
+	DrawNumbers(0, temp2, 25, 9, 10, 8, 0)
+	
+	//CallFunction(DebugDisplays)
+	//CallFunction(DebugExtra)
+	if saved.mobile == 0
+		if screen.xsize == 320
+			DrawSpriteScreenXY(46, 270, 9) //this is golf
+			DrawSpriteScreenXY(47, 290, 9) //i bet you cant guess what this is (its totally not golf)
+		else
+			DrawSpriteScreenXY(46, 370, 9) //this is golf
+			DrawSpriteScreenXY(47, 390, 9) //i bet you cant guess what this is (its totally not golf)
+		end if
+	end if
+end function
+
+event ObjectMain
+	switch saved.timeLimit
+		case 1
+			display.milliSeconds = 0
+			display.seconds = 0
+			display.minutes = 3
+			
+			display.milliSeconds -= stage.milliSeconds
+			display.seconds -= stage.seconds
+			display.minutes -= stage.minutes
+			
+			while display.milliSeconds < 0
+				display.milliseconds += 100
+				display.seconds--
+			loop
+			
+			while display.seconds < 0
+				display.seconds += 60
+				display.minutes--
+			loop
+			break
+		default
+			display.milliSeconds = stage.milliSeconds
+			display.seconds = stage.seconds
+			display.minutes = stage.minutes
+			break
+	end switch
+
+end event
+
+event ObjectDraw
+	if player.lives > 99
+		player.lives = 99
+	end if
+	if player.continues > 99
+		player.continues = 99
+	end if
+	
+	if object[0].value0 == 0
+		object.value1++
+		if object.value1 == 16
+			object.value1 = 0
+		end if
+	else
+		switch saved.timeLimit
+		case 1 // 3 minutes
+			temp1 = 2
+			break
+		case 2 //10 minutes
+			temp1 = 9
+			break
+		default
+			temp1 = 0
+			break
+		end switch
+		if temp1 > 0
+			if stage.minutes >= temp1
+			object.value1++
+				if object.value1 == 16
+					object.value1 = 0
+				end if
+			end if
+		end if
+	end if
+	CallFunction(object.value0)
+end event
+
+event ObjectStartup	
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(0, 0, 8, 11, 1, 50)
+	SpriteFrame(0, 0, 8, 11, 10, 50)
+	SpriteFrame(0, 0, 8, 11, 19, 50)
+	SpriteFrame(0, 0, 8, 11, 28, 50)
+	SpriteFrame(0, 0, 8, 11, 1, 62)
+	SpriteFrame(0, 0, 8, 11, 10, 62)
+	SpriteFrame(0, 0, 8, 11, 19, 62)
+	SpriteFrame(0, 0, 8, 11, 28, 62)
+	SpriteFrame(0, 0, 8, 11, 1, 74)
+	SpriteFrame(0, 0, 8, 11, 10, 74)
+	SpriteFrame(0, 0, 39, 43, 1, 1)
+	SpriteFrame(0, 0, 31, 11, 1, 119)
+	SpriteFrame(0, 0, 39, 11, 1, 131)
+	SpriteFrame(0, 0, 29, 4, 1, 45)
+	SpriteFrame(0, 0, 3, 11, 37, 50)
+	SpriteFrame(0, 0, 16, 16, 43, 107)
+	SpriteFrame(0, 0, 16, 16, 60, 107)
+	SpriteFrame(0, 0, 16, 16, 77, 107)
+	SpriteFrame(0, 0, 8, 8, 1, 98)
+	SpriteFrame(0, 0, 8, 8, 10, 98)
+	SpriteFrame(0, 0, 6, 6, 19, 98)
+	SpriteFrame(0, 0, 31, 7, 144, 43)
+	if saved.region == 0
+		SpriteFrame(0, 0, 31, 7, 176, 43)
+	else
+		SpriteFrame(0, 0, 31, 7, 176, 51)
+	end if
+	SpriteFrame(0, 0, 31, 7, 144, 51)
+	SpriteFrame(0, 0, 8, 8, 37, 64)
+	SpriteFrame(0, 0, 8, 8, 46, 64)
+	SpriteFrame(0, 0, 8, 8, 55, 64)
+	SpriteFrame(0, 0, 8, 8, 64, 64)
+	SpriteFrame(0, 0, 8, 8, 73, 64)
+	SpriteFrame(0, 0, 8, 8, 82, 64)
+	SpriteFrame(0, 0, 8, 8, 91, 64)
+	SpriteFrame(0, 0, 8, 8, 100, 64)
+	SpriteFrame(0, 0, 8, 8, 109, 64)
+	SpriteFrame(0, 0, 8, 8, 118, 64)
+	SpriteFrame(-16, 0, 8, 8, 127, 64)
+	SpriteFrame(8, 0, 8, 8, 136, 64)
+	SpriteFrame(0, 0, 8, 8, 145, 64)
+	SpriteFrame(0, 0, 8, 8, 154, 64)
+	
+	SpriteFrame(0, 0, 16, 16, 182, 158) //38 SuperSonic Life Icon
+	SpriteFrame(0, 0, 39, 11, 1, 17) //39 "Time"
+	SpriteFrame(0, 0, 39, 11, 1, 33) //40 "Rings"
+	SpriteFrame(0, 0, 36, 11, 46, 192) //41 "Best"
+	SpriteFrame(-2, 0, 10, 8, 163, 64) //42 Infinity
+	SpriteFrame(0, 0, 7, 11, 199, 167) //43 slash
+	SpriteFrame(0, 0, 16, 16, 199, 141) //44 Amy Life Icon
+	SpriteFrame(0, 0, 23, 7, 199, 158) //45 amy name
+
+	SpriteFrame(0, 0, 16, 16, 215, 191) //46 Y button
+	SpriteFrame(0, 0, 16, 16, 232, 191) //47 Flag Icon - Golf
+	SpriteFrame(0, 0, 39, 27, 215, 208) //48 SHOTS HOLE
+
+	SpriteFrame(0,0,64,66,257,1) //49 DPAD
+	SpriteFrame(26,0,12,25,373,65) //50 DPAD up press
+	SpriteFrame(26,0,12,26,373,103) //51 DPAD down press
+	SpriteFrame(0,25,26,13,346,102) //52 DPAD left press
+	SpriteFrame(0,25,26,13,346,116) //53 DPAD right press
+	SpriteFrame(0,0,48,48,322,1) //54 A button
+	SpriteFrame(0,0,48,48,322,50) //55 A button down
+	SpriteFrame(0,0,16,16,329,112) // 56 Pause Button
+	SpriteFrame(0,0,16,16,329,129) // 57 Super Button - Mobile
+	SpriteFrame(0,0,16,16,329,146) // 58 TA Restart Button
+
+	SpriteFrame(20, 0, 16, 16, 249, 191) //59 Super Button - Main
+	
+	
+	foreach (TypeName[HUD], arrayPos0, ALL_ENTITIES)
+		switch options.gameMode
+			case 5 //Golf
+				object[arrayPos0].value0 = HUD_DrawGolf
+				break
+			case 3 //Arcade
+				object[arrayPos0].value0 = HUD_DrawArcadeMode
+				break
+			case 2 //Time Attack
+				switch stage.playerListPos
+					case 0
+						arrayPos1 = 500
+						break
+					case 1
+						arrayPos1 = 530
+						break
+					case 2
+						arrayPos1 = 560
+						break
+					case 5
+						arrayPos1 = 470
+						break						
+				end switch
+				if SuperTimeAttack == 1
+					arrayPos1 = 590
+				end if
+				arraypos1 += stage.listPos
+				
+				//Save Slot override for Extras
+				if stage.activeList == BONUS_STAGE
+					switch stage.listPos
+						case 0
+							//saveRAM[995] = 1
+							arrayPos1 = 650
+							break
+					end switch
+				end if
+				object[arrayPos0].value0 = HUD_DrawTimeAttack
+				object[arrayPos0].value2 = saveRAM[arrayPos1]
+				break
+			default
+				object[arrayPos0].value0 = HUD_DrawUsual
+				break
+			
+		end switch
+		object.priority = PRIORITY_ACTIVE_PAUSED
+	next
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(0, 0, 39, 43, 1, 1)
+	
+	// Strangely enough, this does get set in Stage Setup
+	// It's just an old leftover behaviour from CD, though, and has no real effect on anything
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
+end event

@@ -1,0 +1,342 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Broken Monitor Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias 14 : TYPE_BROKENMONITOR
+
+// Function declarations
+reserve function BrokenMonitor_Function80
+reserve function NoMoreInstashield
+
+// Static Values
+public value BrokenMonitor_value25 = 0;
+
+// Tables
+
+function BrokenMonitor_Function80
+end function
+
+function NoMoreInstashield
+	currentPlayer = 0
+	arrayPos0 = currentPlayer
+	arrayPos0 += playerCount
+	arrayPos0 += playerCount
+	if object[arrayPos0].type == TypeName[Insta Shield]
+		ResetObjectEntity(arrayPos0, TypeName[Blank Object], 0, 0, 0)
+	end if
+	object[currentPlayer].value38 = HITBOX_AUTO
+	object[currentPlayer].value39 = HITBOX_AUTO
+	object[currentPlayer].value40 = HITBOX_AUTO
+	object[currentPlayer].value41 = HITBOX_AUTO
+end function
+
+event ObjectMain
+	switch object.state
+	case 0
+		if object.value1 < 0
+			object.value0 += object.value1
+			object.value1 += 0x1800
+		else
+			object.value1 = 0
+		end if
+		if object.value1 == 0
+			object.state = 1
+			object.inkEffect = INK_ALPHA
+			switch object.propertyValue
+			case 1
+				object[0].value0 += 10
+				if stage.debugMode == 0
+					saveRAM[997] += 10
+					if saveRAM[997] > saveRAM[998]
+						saveRAM[998] = saveRAM[997]
+					end if
+				end if
+				if ringPan == 0
+					PlaySfx(SfxName[Ring L], 0)
+					SetSfxAttributes(SfxName[Ring L], -1, -100)
+					ringPan = 1
+				else
+					PlaySfx(SfxName[Ring R], 0)
+					SetSfxAttributes(SfxName[Ring R], -1, 100)
+					ringPan = 0
+				end if
+				if object[0].value0 > 999
+					object[0].value0 = 999
+				end if
+				if object[0].value0 >= ringExtraLife
+					if options.gameMode < 2
+						if saved.lives == 0
+							player.lives++
+							PlaySfx(SfxName[Life], 0)
+							PauseMusic()
+							ResetObjectEntity(25, TypeName[Music Event], 2, 0, 0)
+							object[25].priority = PRIORITY_ACTIVE
+						end if
+					end if
+					ringExtraLife += 100
+					if ringExtraLife > 300
+						ringExtraLife = 1000
+					end if
+					if stage.debugMode == 0
+						if object[0].value0 >= 200
+							//CallNativeFunction2(SetAchievement, 4, 100)
+							achievement.trigger = 6
+						end if
+					end if
+				end if
+				break
+			case 2
+				CallFunction(NoMoreInstashield)
+				PlaySfx(SfxName[Blue Shield], 0)
+				arrayPos0 = playerCount
+				currentPlayer = 0
+				object[currentPlayer].value37 = 1
+				if PlayerObject_SuperState != 1
+					if object[arrayPos0].type != invincibilityType
+						CallFunction(PlayerObject_RestorePowerup)
+					end if
+				end if
+				break
+			case 3
+				CallFunction(NoMoreInstashield)
+				if PlayerObject_SuperState != 1
+					arrayPos0 = playerCount
+					currentPlayer = 0
+					ResetObjectEntity(arrayPos0, invincibilityType, 0, object[currentPlayer].xpos, object[currentPlayer].ypos)
+					object[arrayPos0].priority = PRIORITY_ACTIVE
+					object[currentPlayer].value7 = 0x4EC
+					PlayMusic(2)
+				end if
+				break
+			case 4
+				currentPlayer = 0
+				if SpeedUpMusic != 0
+					if object[currentPlayer].value6 == 0
+						if saved.Supermusic == 7
+							if PlayerObject_SuperState != 1
+								CallFunction(SpeedUpMusic)							
+							end if
+						else
+							CallFunction(SpeedUpMusic)
+						end if
+					end if
+				end if
+				object[currentPlayer].value6 = 0x528
+				CallFunction(PlayerObject_SwapPhysics)
+				break
+			case 5
+			case 6
+			case 7
+			if options.gameMode == 3
+				player.score += 5000
+				PlaySfx(SfxName[Score Total], 0)
+			else
+				player.lives++
+				PlaySfx(SfxName[Life], 0)
+				PauseMusic()
+				ResetObjectEntity(25, TypeName[Music Event], 2, 0, 0)
+				object[25].priority = PRIORITY_ACTIVE
+			end if
+			break
+			case 8
+				CallFunction(NoMoreInstashield)
+				currentPlayer = 0
+				object[0].value0 += 50
+				if PlayerObject_SuperState != 1
+					object.type = object[0].type
+					CallFunction(PlayerObject_SuperTransform)
+					object.type = TypeName[Broken Monitor]
+				else
+					if ringPan == 0
+						PlaySfx(SfxName[Ring L], 0)
+						SetSfxAttributes(SfxName[Ring L], -1, -100)
+						ringPan = 1
+					else
+						PlaySfx(SfxName[Ring R], 0)
+						SetSfxAttributes(SfxName[Ring R], -1, 100)
+						ringPan = 0
+					end if
+				end if
+				if object[0].value0 > 999
+					object[0].value0 = 999
+				end if
+				if object[0].value0 >= ringExtraLife
+					if options.gameMode < 2
+						if saved.lives == 0
+							player.lives++
+							PlaySfx(SfxName[Life], 0)
+							PauseMusic()
+							ResetObjectEntity(25, TypeName[Music Event], 2, 0, 0)
+							object[25].priority = PRIORITY_ACTIVE
+						end if
+					end if
+					ringExtraLife += 100
+					if ringExtraLife > 300
+						ringExtraLife = 1000
+					end if
+				end if
+				break
+			case 9
+				CallFunction(NoMoreInstashield)
+				PlaySfx(SfxName[Bubble Shield], 0)
+				arrayPos0 = playerCount
+				currentPlayer = 0
+				object[currentPlayer].value37 = 2
+				if PlayerObject_SuperState != 1
+					if object[arrayPos0].type != invincibilityType
+						CallFunction(PlayerObject_RestorePowerup)
+					end if
+				end if
+				if object[currentPlayer].value4 >= 3
+					object[currentPlayer].value3 = 0
+					object[currentPlayer].value4 = 0
+					CallFunction(BrokenMonitor_value25)
+				end if
+				break
+			case 10
+				CallFunction(NoMoreInstashield)
+				PlaySfx(SfxName[Fire Shield], 0)
+				arrayPos0 = playerCount
+				currentPlayer = 0
+				object[currentPlayer].value37 = 3
+				if PlayerObject_SuperState != 1
+					if object[arrayPos0].type != invincibilityType
+						CallFunction(PlayerObject_RestorePowerup)
+					end if
+				end if
+				break
+			case 11
+				CallFunction(NoMoreInstashield)
+				PlaySfx(SfxName[Lightning Shield], 0)
+				arrayPos0 = playerCount
+				currentPlayer = 0
+				object[currentPlayer].value37 = 4
+				if PlayerObject_SuperState != 1
+					if object[arrayPos0].type != invincibilityType
+						CallFunction(PlayerObject_RestorePowerup)
+					end if
+				end if
+				break
+			case 12
+				currentPlayer = 0
+				CallFunction(PlayerObject_Hit)
+				break
+			case 13
+				PlaySfx(SfxName[Catch], 0)
+				arrayPos0 = playerCount
+				currentPlayer = 0
+				object[currentPlayer].value37 = 5
+				if PlayerObject_SuperState != 1
+					if object[arrayPos0].type != invincibilityType
+						CallFunction(PlayerObject_RestorePowerup)
+					end if
+				end if
+				if object[currentPlayer].value4 >= 3
+					object[currentPlayer].value3 = 0
+					object[currentPlayer].value4 = 0
+					CallFunction(BrokenMonitor_value25)
+				end if
+				break
+			case 14
+				PlaySfx(SfxName[Spike], 0)
+				saved.spikeBehavior ^= 1
+				break
+			case 15
+				PlaySfx(SfxName[Lightning Shield], 0)
+				saved.elemental ^= 1
+				break
+			case 16
+				specialStage.emeralds = 63
+				specialStage.listPos = 6
+				break
+			case 17
+				break
+			end switch
+		end if
+		break
+	case 1
+		object.value1++
+		if object.value1 == 30
+			object.value1 = 0
+			object.state = 2
+			object.propertyValue = 0
+			if object.priority != PRIORITY_XBOUNDS_DESTROY
+				object.priority = PRIORITY_ACTIVE_BOUNDS
+			end if
+		else
+			if object.value1 > 14
+				object.alpha -= 16
+			end if
+		end if
+		break
+	end switch
+end event
+
+
+event ObjectDraw
+	if object.drawOrder == 5
+		if object.propertyValue > 0
+			DrawSpriteFX(object.propertyValue, FX_INK, object.xpos, object.value0)
+		end if
+		object.drawOrder = 3
+	else
+		DrawSprite(0)
+		if object.propertyValue > 0
+			AddDrawListEntityRef(5, object.entityPos)
+			object.drawOrder = 5
+		end if
+	end if
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("Global/Items.gif")
+	SpriteFrame(-16, 0, 32, 16, 51, 166)
+	SpriteFrame(-8, -10, 16, 16, 51, 15)
+	SpriteFrame(-8, -10, 16, 16, 68, 15)
+	SpriteFrame(-8, -10, 16, 16, 51, 30)
+	SpriteFrame(-8, -10, 16, 16, 68, 30)
+	if options.gameMode == 3
+			SpriteFrame(-8, -10, 16, 16, 166, 117)
+			SpriteFrame(-8, -10, 16, 16, 166, 117)
+			SpriteFrame(-8, -10, 16, 16, 166, 117)
+	else
+		if saved.lives == 1
+			SpriteFrame(-8, -10, 16, 16, 166, 117)
+			SpriteFrame(-8, -10, 16, 16, 166, 117)
+			SpriteFrame(-8, -10, 16, 16, 166, 117)
+		else
+			if stage.playerListPos == 5
+				SpriteFrame(-8, -10, 16, 16, 35, 99)
+			else
+				SpriteFrame(-8, -10, 16, 16, 51, 45)
+			end if
+			SpriteFrame(-8, -10, 16, 16, 68, 45)
+			SpriteFrame(-8, -10, 16, 16, 51, 60)
+		end if
+	end if	
+	SpriteFrame(-8, -10, 16, 16, 68, 60)
+	SpriteFrame(-8, -10, 16, 16, 51, 90)
+	SpriteFrame(-8, -10, 16, 16, 68, 75)
+	SpriteFrame(-8, -10, 16, 16, 51, 75)
+	SpriteFrame(-8, -10, 16, 16, 68, 90)
+	SpriteFrame(-8, -10, 16, 16, 18, 99)
+	SpriteFrame(-8, -10, 16, 16, 117, 25)
+	SpriteFrame(-8, -10, 16, 16, 117, 40)
+	SpriteFrame(-8, -10, 16, 16, 117, 55)
+	SpriteFrame(-8, -9, 16, 14, 68, 1)
+	BrokenMonitor_value25 = BrokenMonitor_Function80
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Items.gif")
+	SpriteFrame(-16, 0, 32, 16, 51, 166)
+end event

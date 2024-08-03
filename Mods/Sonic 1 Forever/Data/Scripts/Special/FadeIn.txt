@@ -1,0 +1,532 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Fade In Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias 21 : TYPE_FADEIN
+
+
+	private alias object.value28 : ring.tick
+	private alias object.value32 : pause.sel
+	private alias object.value33 : pause.mode
+	private alias object.value34 : pause.xoffset
+	private alias object.value35 : pause.yoffset
+	private alias object.value36 : pause.fade
+	private alias 30 : pause.spacing
+	private alias 16 : emerald.spacing
+	
+	public alias saveRAM[286] : saved.language
+// Static Values
+
+// Tables
+
+event ObjectMain
+	switch object.propertyValue
+	case 10 //Pause
+		//When Game is paused
+		switch object.state
+			case 0 //just pause
+				object.priority = PRIORITY_ACTIVE_PAUSED
+				
+				//Pause Mode
+				//0 is normal
+				//1 is added restart
+				switch options.gameMode
+					case 2
+					case 4
+						pause.mode = 1
+						break
+					default
+						pause.mode = 0
+						break
+				end switch				
+				
+				object.drawOrder = 6
+				PauseMusic()
+				pause.sel = 0
+				pause.fade = 0
+				pause.xoffset = 140
+				pause.yoffset = 40
+				object.state = 50
+				stage.pauseEnabled = 0
+				stage.state = STAGE_PAUSED
+				break
+			case 50
+				object.state = 1
+				PlaySfx(SfxName[Score Add], 0)
+			case 1 //pause in
+				pause.xoffset -= 10
+				if pause.xoffset < 0
+					pause.xoffset = 0
+				end if
+				pause.yoffset -= 5
+				if pause.yoffset < 0
+					pause.yoffset = 0
+				end if
+				if pause.xoffset == 0
+					if pause.yoffset == 0
+						object.state++
+					end if
+				end if
+				break
+			case 2 //pause control
+				temp1=screen.xsize
+				temp2=screen.xsize
+				temp2-=185
+				switch pause.mode
+					case 1
+						if saved.mobile == 1
+							CheckTouchRect(temp2, 120, temp1, 155)
+							if checkResult > -1
+								pause.sel = 0
+								inputDown.buttonA = 1
+							end if
+							CheckTouchRect(temp2, 160, temp1, 200)
+							if checkResult > -1
+								pause.sel = 1
+								inputDown.buttonA = 1
+							end if
+							CheckTouchRect(temp2, 205, temp1, 245)
+								if checkResult > -1
+								pause.sel = 2
+								inputDown.buttonA = 1
+							end if
+							if touchJump == 0
+								inputPress.buttonA |= inputDown.buttonA
+							end if
+							touchJump = inputDown.buttonA	
+						end if
+
+						if inputPress.up == 1
+							PlaySfx(SfxName[Score Add], 0)
+							pause.sel--
+							while pause.sel < 0
+								pause.sel += 3
+							loop
+						end if
+						if inputPress.down == 1
+							PlaySfx(SfxName[Score Add], 0)
+							pause.sel++
+							pause.sel %= 3
+						end if
+						break
+					default
+						if saved.mobile == 1
+							CheckTouchRect(temp2, 150, temp1, 190)
+							if checkResult > -1
+								pause.sel = 0
+								inputDown.buttonA = 1
+							end if
+							CheckTouchRect(temp2, 205, temp1, 245)
+							if checkResult > -1
+								pause.sel = 1
+								if pause.sel == 1
+									pause.sel++
+								end if
+								inputDown.buttonA = 1
+							end if
+							if touchJump == 0
+								inputPress.buttonA |= inputDown.buttonA
+							end if
+							touchJump = inputDown.buttonA	
+						end if
+
+						if inputPress.up == 1
+							PlaySfx(SfxName[Score Add], 0)
+							pause.sel--
+							while pause.sel < 0
+								pause.sel += 3
+							loop
+							if pause.sel == 1
+								pause.sel--
+							end if
+						end if
+						if inputPress.down == 1
+							PlaySfx(SfxName[Score Add], 0)
+							pause.sel++
+							pause.sel %= 3
+							if pause.sel == 1
+								pause.sel++
+							end if
+						end if
+						break
+				end switch
+				
+				CheckEqual(inputPress.buttonA, 1)
+				temp0 = checkResult
+				CheckEqual(inputPress.start, 1)
+				temp0 |= checkResult
+				
+				if temp0 == 1
+					switch pause.sel
+						case 0
+							object.state = 4
+							PlaySfx(SfxName[Lamp Post], 0)
+							break
+						case 1
+							object.state = 3
+							if options.gameMode == 4
+								stage.listPos = 0
+								specialStage.emeralds = 0
+							end if
+							PlaySfx(SfxName[Lamp Post], 0)
+							break
+						case 2
+							stage.activeList = PRESENTATION_STAGE
+							stage.listPos = 6
+							switch options.gameMode
+								case 0
+									if stage.actNum == 8
+										recGoggles = 101
+									end if
+									break
+								case 2
+									stage.listPos = 8
+									break
+								case 3
+									saveRAM[630] = player.score
+									temp0 = stage.playerListPos
+									temp0++
+									saveRAM[640] = temp0
+									stage.listPos = 3
+								case 4
+									recGoggles = 100
+									break
+							end switch
+							object.state = 3
+							PlaySfx(SfxName[Lamp Post], 0)
+							break
+					end switch
+				end if
+				if inputPress.buttonB == 1
+					PlaySfx(SfxName[Lamp Post], 0)
+					object.state = 4
+				end if
+				break
+			case 3
+				if pause.fade < 320
+					pause.fade += 8
+				else
+					WriteSaveRAM()
+					LoadStage()
+				end if
+				break
+			case 4
+				if pause.fade < 20
+					pause.fade++
+				else
+					ResumeMusic()
+					stage.state = STAGE_RUNNING
+					stage.pauseEnabled = 1
+					ResetObjectEntity(object.entityPos, TypeName[Blank Object], 0, 0, 0)
+				end if
+				break
+		end switch
+		temp0 = stage.pauseEnabled
+		temp0 &= stage.timeEnabled
+		break
+	default
+		if object.state == 0
+			object.value1 = fadeColor
+			object.value1 >>= 16
+			object.value2 = fadeColor
+			object.value2 &= 0xFF00
+			object.value2 >>= 8
+			object.value3 = fadeColor
+			object.value3 &= 255
+			object.value0 = 256
+			object.state = 1
+			CheckEqual(options.gameMode, 4)
+			temp0 = checkResult
+			CheckNotEqual(stage.actNum, 1)
+			temp0 &= checkResult
+			if temp0 == 0
+				PlayMusic(0)
+			end if
+		else
+			if object.value0 > 0
+				object.value0 -= 8
+			else
+				object.type = TypeName[Blank Object]
+				object.controlMode = 0
+				stage.timeEnabled = 1
+			end if
+		end if
+		SetScreenFade(object.value1, object.value2, object.value3, object.value0)
+		break
+	end switch
+end event
+
+event ObjectDraw
+	if object.propertyValue == 10
+		if object.state < 50
+			SetActivePalette(7, 0, screen.ysize)
+			//Pause Drawing
+			if object.state > 0
+			
+				temp0 = 0
+				temp0 -= pause.yoffset
+				DrawRect(0, temp0, screen.xsize, 23, 0, 0, 0, 255)
+				temp0 += 23
+				temp1 = 0
+				while temp1 < screen.xsize
+					DrawSpriteScreenXY(1, temp1, temp0)
+					temp1 += 8
+				loop
+				
+				temp0 = screen.ysize
+				temp0 -= 30
+				temp0 += pause.yoffset
+				DrawRect(0, temp0, screen.xsize, 32, 0, 0, 0, 255)
+				temp1 = 0
+				while temp1 < screen.xsize
+					DrawSpriteScreenXY(2, temp1, temp0)
+					temp1 += 8
+				loop
+				temp0 -= 24
+				DrawSpriteScreenXY(3, 36, temp0)
+				
+				temp0 = screen.xsize
+				temp0 += pause.xoffset
+				temp1 = screen.ysize
+				DrawSpriteScreenXY(0, temp0, temp1)
+				
+				//Ring Chain
+				temp4 = 0
+				temp4 -= pause.yoffset
+				DrawSpriteScreenXY(11, screen.xsize, temp4)
+				ring.tick++
+				ring.tick %= 32
+				temp2 = ring.tick
+				temp2 /= 4
+				temp2 %= 8
+				temp2 += 22
+				DrawSpriteScreenXY(temp2, screen.xsize, temp4)
+				DrawNumbers(12, screen.xsize, temp4, saveRAM[997], 10, 8, 0)	
+
+			//Emeralds
+				if options.gameMode != 2
+					temp4 = 9
+					temp4 -= pause.yoffset
+					temp0 = 0
+					temp5 = 25
+					
+					temp1 = saved.superStates
+					temp1 += 6
+					if options.gameMode == 4
+						temp1 = 7
+					end if
+					
+					while temp0 < temp1
+						GetBit(temp2, specialStage.emeralds, temp0)
+						temp3 = 32
+						temp3 += temp0				
+						DrawSpriteScreenXY(39, temp5, temp4)
+						if temp2 == 1
+							DrawSpriteScreenXY(temp3, temp5, temp4)
+						end if
+						temp5 += 16
+						temp0++
+					loop
+				end if
+				
+				temp0 = screen.xsize
+				temp0 += pause.xoffset
+				temp1 = screen.ysize			
+				
+				if object.state > 1
+					switch pause.mode
+						case 1
+							temp1 -= 110
+							DrawSpriteScreenXY(5, temp0, temp1)
+							temp1 += 40
+							DrawSpriteScreenXY(6, temp0, temp1)
+							temp1 += 40
+							DrawSpriteScreenXY(7, temp0, temp1)
+								
+							temp1 = screen.ysize
+							temp1 -= 110
+							temp2 = 0
+							while temp2 < pause.sel
+								temp1 += 40
+								temp2 ++
+							loop
+							temp2 += 8
+							if object.state == 4
+								temp3 = pause.fade
+								temp3 /= 3
+								temp3 %= 2
+								if temp3 == 0
+									DrawSpriteScreenXY(4, temp0, temp1)
+									DrawSpriteScreenXY(temp2, temp0, temp1)
+								end if
+							else
+								DrawSpriteScreenXY(4, temp0, temp1)
+								DrawSpriteScreenXY(temp2, temp0, temp1)
+							
+							end if
+							break
+						default
+							temp1 -= 80
+							DrawSpriteScreenXY(5, temp0, temp1)
+							temp1 += 50
+							DrawSpriteScreenXY(7, temp0, temp1)
+								
+							temp1 = screen.ysize
+							temp1 -= 80
+							temp2 = 0
+							if temp2 < pause.sel
+								temp1 += 50
+								temp2 += 2
+							end if
+							temp2 += 8
+							if object.state == 4
+								temp3 = pause.fade
+								temp3 /= 3
+								temp3 %= 2
+								if temp3 == 0
+									DrawSpriteScreenXY(4, temp0, temp1)
+									DrawSpriteScreenXY(temp2, temp0, temp1)
+								end if
+							else
+								DrawSpriteScreenXY(4, temp0, temp1)
+								DrawSpriteScreenXY(temp2, temp0, temp1)
+							
+							end if
+							break
+						
+					end switch
+				end if
+				
+			end if
+			if object.state == 3 
+				DrawRect(0, 0, screen.xsize, screen.ysize, color6, color7, color6, pause.fade)
+			end if
+			SetActivePalette(0, 0, screen.ysize)
+		end if
+	end if
+end event
+
+event ObjectStartup
+switch saved.language //main code
+	case 0 //english
+	LoadSpriteSheet("Global/Pause.gif")	
+	LoadPalette("Pause.act", 7, 0, 0, 256)
+	
+	//PauseMenu
+	SpriteFrame(-133, -160, 133, 160, 4, 289) // 0 Circle
+	SpriteFrame(0, 0, 8, 8, 158, 450) // 1 Top Border
+	SpriteFrame(0, 0, 8, 8, 149, 450) // 2 Bottom Border
+	if screen.xsize == 320
+		SpriteFrame(-30, 0, 144, 25, 4, 450) // 3 Paused Tab
+	else
+		SpriteFrame(0, 0, 144, 25, 4, 450) // 3 Paused Tab
+	end if
+	SpriteFrame(-28, 0, 18, 18, 138, 346) // 4 Selector Bar
+	
+	
+	SpriteFrame(-126, 0, 96, 18, 138, 383) // 5 Resume
+	SpriteFrame(-141, 0, 111, 18, 138, 402)) // 6 Restart
+	SpriteFrame(-84, 0, 54, 18, 138, 421) // 7 Exit
+	
+	SpriteFrame(-126, 0, 96, 18, 138, 289) // 8 Resume HL
+	SpriteFrame(-141, 0, 111, 18, 138, 308) // 9 Restart HL
+	SpriteFrame(-84, 0, 54, 18, 138, 327) // 10 Exit HL
+	break
+	case 1 //Portuguese
+	LoadSpriteSheet("Global/PausePTBR.gif")		
+	LoadPalette("Pause.act", 7, 0, 0, 256)
+	
+	//PauseMenu
+	SpriteFrame(-133, -160, 133, 160, 4, 289) // 0 Circle
+	SpriteFrame(0, 0, 8, 8, 158, 450) // 1 Top Border
+	SpriteFrame(0, 0, 8, 8, 149, 450) // 2 Bottom Border
+	if screen.xsize == 320
+		SpriteFrame(-30, 0, 144, 25, 4, 450) // 3 Paused Tab
+	else
+		SpriteFrame(0, 0, 144, 25, 4, 450) // 3 Paused Tab
+	end if
+	SpriteFrame(-28, 0, 18, 18, 138, 346) // 4 Selector Bar
+	
+	
+	SpriteFrame(-144, 0, 114, 18, 138, 383) // 5 Resume
+	SpriteFrame(-147, 0, 118, 18, 138, 402) // 6 Restart
+	SpriteFrame(-84, 0, 55, 18, 138, 421) // 7 Exit
+	
+	SpriteFrame(-144, 0, 114, 18, 138, 289) // 8 Resume HL
+	SpriteFrame(-147, 0, 118, 18, 138, 308) // 9 Restart HL
+	SpriteFrame(-84, 0, 54, 18, 138, 327) // 10 Exit HL
+	break
+	case 2 //Spanish
+	LoadSpriteSheet("Global/PauseSP.gif")		
+	LoadPalette("Pause.act", 7, 0, 0, 256)
+	
+	//PauseMenu
+	SpriteFrame(-133, -160, 133, 160, 4, 289) // 0 Circle
+	SpriteFrame(0, 0, 8, 8, 158, 450) // 1 Top Border
+	SpriteFrame(0, 0, 8, 8, 149, 450) // 2 Bottom Border
+	if screen.xsize == 320
+		SpriteFrame(-30, 0, 144, 25, 4, 450) // 3 Paused Tab
+	else
+		SpriteFrame(0, 0, 144, 25, 4, 450) // 3 Paused Tab
+	end if
+	SpriteFrame(-28, 0, 18, 18, 138, 346) // 4 Selector Bar
+	
+	
+	SpriteFrame(-166, 0, 136, 18, 138, 383) // 5 Resume
+	SpriteFrame(-149, 0, 119, 18, 138, 402) // 6 Restart
+	SpriteFrame(-102, 0, 72, 18, 138, 421) // 7 Exit
+	
+	SpriteFrame(-166, 0, 136, 18, 138, 289) // 8 Resume HL
+	SpriteFrame(-149, 0, 119, 18, 138, 308) // 9 Restart HL
+	SpriteFrame(-102, 0, 72, 18, 138, 327) // 10 Exit HL
+	break
+	end switch
+	
+	SpriteFrame(-89, 6, 60, 6, 345, 486) // 11 Text
+	SpriteFrame(-37, 15, 8, 11, 316, 474) // 12 Numbers
+	SpriteFrame(-37, 15, 8, 11, 325, 474) // 13 Numbers
+	SpriteFrame(-37, 15, 8, 11, 334, 474) // 14 Numbers
+	SpriteFrame(-37, 15, 8, 11, 343, 474) // 15 Numbers
+	SpriteFrame(-37, 15, 8, 11, 352, 474) // 16 Numbers
+	SpriteFrame(-37, 15, 8, 11, 361, 474) // 17 Numbers
+	SpriteFrame(-37, 15, 8, 11, 370, 474) // 18 Numbers
+	SpriteFrame(-37, 15, 8, 11, 379, 474) // 19 Numbers
+	SpriteFrame(-37, 15, 8, 11, 388, 474) // 20 Numbers
+	SpriteFrame(-37, 15, 8, 11, 397, 474) // 21 Numbers
+	SpriteFrame(-27, 6, 18, 18, 292, 493) // 22 Ring Frame
+	SpriteFrame(-26, 6, 16, 18, 311, 493) // 23 Ring Frame
+	SpriteFrame(-25, 6, 14, 18, 328, 493) // 24 Ring Frame
+	SpriteFrame(-23, 6, 10, 18, 343, 493) // 25 Ring Frame
+	SpriteFrame(-22, 6, 8, 18, 354, 493) // 26 Ring Frame
+	SpriteFrame(-23, 6, 10, 18, 363, 493) // 27 Ring Frame
+	SpriteFrame(-25, 6, 14, 18, 374, 493) // 28 Ring Frame
+	SpriteFrame(-26, 6, 16, 18, 389, 493) // 29 Ring Frame
+
+	SpriteFrame(0, 0, 0, 0, 0, 0) // 30 Blank
+	SpriteFrame(0, 0, 0, 0, 0, 0) // 31 Blank
+	
+	//Emeralds	
+	SpriteFrame(0, 0, 12, 12, 1, 276) // 32
+	SpriteFrame(0, 0, 12, 12, 14, 276) // 33
+	SpriteFrame(0, 0, 12, 12, 27, 276) // 34
+	SpriteFrame(0, 0, 12, 12, 40, 276) // 35
+	SpriteFrame(0, 0, 12, 12, 53, 276) // 36
+	SpriteFrame(0, 0, 12, 12, 66, 276) // 37
+	SpriteFrame(0, 0, 12, 12, 79, 276) // 38
+
+	//Blank Emeralds
+	SpriteFrame (-1, -1, 14, 14, 1, 261) // 39
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+end event

@@ -1,0 +1,488 @@
+// ----------------------------------
+// RSDK Project: Sonic 1/Sonic 2
+// Script Description: Ring Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+//-------Aliases-------//
+private alias object.value1 : glowtick
+private alias object.value2 : fader
+private alias object.value3 : gemdrop
+private alias object.value4 : collect.ani
+private alias object.value5 : player.prevState
+private alias object.value6 : particletick
+private alias object.value7 : particlespeed
+private alias object.value8 : peek.x
+private alias object.value10 : glowtimer
+
+
+
+// Function declarations
+reserve function TheWay
+reserve function ParticleSpawn
+// Static Values
+
+// Tables
+private table WayTable
+	110, 53, 56, 57, 56, 57, 56, 57, 56, 57, 127, 366, 368, 369, 368, 369, 368, 369, 368, 369, 251, 0, 367, 363, 113, 113, 361, 378, 379, 380, 250, 364, 0, 362, 0, 0, 360, 0, 381, 382, 141, 374, 370, 371, 376, 377, 359, 371, 376, 377, 143, 375, 372, 373, 58, 59, 372, 373, 58, 59
+end table
+
+
+
+event ObjectMain
+			glowtimer++
+			if glowtimer == 6
+				glowtimer = 0
+				glowtick++
+				glowtick %= 6
+			end if
+			
+	switch object.state
+		case 0				
+			CheckEqual(object[0].state, PlayerObject_Knockback)
+			temp0 = checkResult
+			CheckEqual(object[0].state, PlayerObject_Knockback)
+			temp0 = checkResult
+			CheckEqual(object[0].state, PlayerObject_Hurt)
+			temp0 |= checkResult
+			if temp0 == 0
+				BoxCollisionTest(C_TOUCH, object.entityPos, -8, -8, 8, 8, 0, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
+				if checkResult == 1
+					object.state++
+					object[9].value35++
+					PlaySfx(SfxName[Collect], 0)
+				end if
+			end if
+
+			object.frame = glowtick
+			object.frame %= 3
+			break
+		case 1		
+			object.frame = glowtick
+			object.frame%= 2
+			object.frame += 3
+			collect.ani++
+			if collect.ani >= 30
+				object.type = TypeName[Blank Object]
+			end if
+			break
+		case 10
+			if object[9].value35 == 1
+				if saveRAM[996] == 1
+					if object[0].type != TypeName[Debug Mode]
+						BoxCollisionTest(C_TOUCH, object.entityPos, -8, -120, 8, 8, 0, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)	
+						if checkResult == 1
+							object.state++
+							stage.timeEnabled = 0
+							
+							if PlayerObject_SuperState == 1
+								PlayerObject_SuperState = 2
+							end if
+							
+							object[0].xvel = 0
+							object[0].speed = 0
+							object[0].controlMode = -1
+							object[0].value3 = 0
+							object[0].value4 = 0
+							object[0].up = 0
+							object[0].down = 0
+							object[0].left = 0
+							object[0].right = 0
+							object[0].jumpPress = 0
+							object[0].jumpHold = 0
+							if object[0].gravity == GRAVITY_GROUND
+								object[0].animation = ANI_STOPPED
+							end if
+							
+							if stage.player2Enabled == 1
+								object[1].xvel = 0
+								object[1].speed = 0
+								object[1].controlMode = -1
+								object[1].value3 = 0
+								object[1].value4 = 0
+								object[1].up = 0
+								object[1].down = 0
+								object[1].left = 0
+								object[1].right = 0
+								object[1].jumpPress = 0
+								object[1].jumpHold = 0
+								if object[1].gravity == GRAVITY_GROUND
+									object[1].animation = ANI_STOPPED
+								end if
+							end if
+							
+							fader = 0
+							gemdrop = object[0].ypos
+						end if
+					end if
+				end if
+			end if
+			object.frame = 5
+			break
+		case 11
+			gemdrop += 0x8000
+			if gemdrop > object.ypos
+				gemdrop = object.ypos
+				PlaySfx(SfxName[Twinkle], 0)
+				object.state++
+			end if
+			
+			if object[0].gravity == GRAVITY_GROUND
+				object[0].animation = ANI_STOPPED
+			end if
+			
+			object.frame = 5
+			break
+		case 12
+			if fader < 320
+				fader += 3
+				music.volume -= 1
+			else
+				StopMusic()
+				CallFunction(TheWay)
+				object.state++
+			end if
+			SetScreenFade(color6, color7, color6, fader)
+			
+			object.frame = glowtick
+			object.frame %= 2
+			object.frame += 6
+			
+			break
+		case 13
+			if fader > 0
+				fader -= 3
+				if fader < 0
+					fader = 0
+				end if
+			else
+				object[0].controlMode = 0
+				if stage.player2Enabled == 1
+					object[1].controlMode = 0
+				end if
+				object.state++
+				SetMusicTrack("DiamondInTheRough.ogg", 0, 941023)
+				PlayMusic(0)
+			end if
+			
+			SetScreenFade(color6, color7, color6, fader)
+		case 14
+			object.frame = glowtick
+			object.frame %= 3
+			object.frame += 8
+			break
+		case 20
+			object.frame = 11
+			particlespeed = 30
+			
+			foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+				BoxCollisionTest(C_BOX, object.entityPos, -120, -32, 120, 0, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
+				BoxCollisionTest(C_BOX, object.entityPos, -72, -48, 56, 0, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
+				BoxCollisionTest(C_BOX, object.entityPos, 88, -48, 104, 0, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
+				BoxCollisionTest(C_BOX, object.entityPos, -56, -99, 56, 0, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
+				BoxCollisionTest(C_BOX, object.entityPos, -5, -99, 5, 0, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
+				if currentPlayer == 0
+					if object[0].animation == ANI_WALKING
+						if checkResult == 1
+							object.state++
+							
+							object[0].xvel = 0
+							object[0].speed = 0
+							object[0].controlMode = -1
+							object[0].value3 = 0
+							object[0].value4 = 0
+							object[0].up = 0
+							object[0].down = 0
+							object[0].left = 0
+							object[0].right = 0
+							object[0].jumpPress = 0
+							object[0].jumpHold = 0
+							object[0].animation = ANI_STOPPED
+							object[0].state = PlayerObject_Blank
+														
+							screen.cameraEnabled = 0
+							peek.x = object.xpos
+							peek.x >>= 16
+							peek.x -= screen.xcenter
+						end if
+					end if
+				end if
+			next
+			break
+		case 21
+			foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+				BoxCollisionTest(C_BOX, object.entityPos, -120, -32, 120, 0, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
+				BoxCollisionTest(C_BOX, object.entityPos, -72, -48, 56, 0, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
+				BoxCollisionTest(C_BOX, object.entityPos, 88, -48, 104, 0, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
+				BoxCollisionTest(C_BOX, object.entityPos, -56, -99, 56, 0, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
+			next
+			temp0 = glowtimer
+			temp0 %= 2
+			if temp0 == 0
+				if screen.xoffset < peek.x		
+					screen.xoffset++
+				else				
+					if screen.xoffset > peek.x		
+						screen.xoffset--
+					end if			
+				end if
+			end if
+			CallFunction(ParticleSpawn)
+			fader++
+			if fader == 180
+				temp0 = object[0].direction
+				temp1 = object[0].value0
+				ResetObjectEntity(0, TypeName[Shard Key], 0, object[0].xpos, object[0].ypos)
+				object[0].state = 40
+				object[0].drawOrder = 5
+				switch stage.playerListPos
+					case 0
+					case 3
+						object[0].frame = 21
+						break
+					case 1
+						object[0].frame = 22
+						break
+					case 2
+					case 4
+						object[0].frame = 23
+						break
+					case 5
+						object[0].frame = 24
+						break
+				end switch
+				object[0].direction = temp0				
+				object[0].value0 = temp1
+				achievement.trigger = 18
+				saved.gogoplus = 1
+			end if
+			if fader == 320
+				object.state++
+				fader = 0
+			end if
+			break
+		case 22
+			foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+				BoxCollisionTest(C_BOX, object.entityPos, -120, -32, 120, 0, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
+				BoxCollisionTest(C_BOX, object.entityPos, -72, -48, 56, 0, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
+				BoxCollisionTest(C_BOX, object.entityPos, 88, -48, 104, 0, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
+				BoxCollisionTest(C_BOX, object.entityPos, -56, -99, 56, 0, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
+			next
+			CallFunction(ParticleSpawn)
+			if fader < 320
+				fader += 2
+				temp0 = 135
+				temp0 <<= 16
+				FlipSign(temp0)
+				temp0 += object.ypos
+				if object[0].ypos > temp0
+				//	object[0].ypos -= 0x4000
+				end if
+				SetScreenFade(color6, color7, color6, fader)
+			else
+				PlayMusic(1)
+				object[30].type = TypeName[Act Finish]
+				object[30].drawOrder = 6
+				object[30].priority = PRIORITY_ACTIVE
+				object.drawOrder = 6
+				object.state++
+			end if	
+			break
+		case 30
+			object.frame = 12
+			object.state++
+			break
+		case 31
+			particletick++
+			particletick %= 4
+			
+			if particletick == 0
+				object.frame++
+				if object.frame > 20
+					object.type = TypeName[Blank Object]
+				end if
+			end if
+			break
+		case 40
+			if stage.player2Enabled == 1
+				if object[1].gravity == GRAVITY_GROUND
+					object[1].up = 1
+					object[1].state = PlayerObject_LookingUp
+				end if
+			end if
+			switch stage.playerListPos
+				case 0
+				case 3
+					object.frame = 21
+					break
+				case 1
+					object.frame = 22
+					break
+				case 2
+				case 4
+					object.frame = 23
+					break
+				case 5
+					object.frame = 24
+					break
+			end switch
+			break
+	end switch
+end event
+
+
+event ObjectDraw
+	DrawSpriteFX(object.frame, FX_FLIP, object.xpos, object.ypos))
+	switch object.state
+		case 11
+			temp1 = glowtick
+			temp1 %= 3
+			DrawSpriteXY(temp1, object.xpos, gemdrop)
+			break
+		case 23
+			DrawRect(0, 0, screen.xsize, screen.ysize, color6, color7, color6, fader)
+			break		
+	end switch
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("LZ/Objects3.gif")
+	SpriteFrame(-3, -7, 6, 14, 1, 180)
+	SpriteFrame(-3, -7, 6, 14, 8, 180)
+	SpriteFrame(-3, -7, 6, 14, 15, 180)
+	
+	SpriteFrame(-3, -7, 6, 14, 1, 196) //3
+	SpriteFrame(-3, -7, 6, 14, 8, 196)
+	
+	SpriteFrame(-6, -7, 12, 14, 1, 211)
+	
+	SpriteFrame(-6, -7, 12, 14, 1, 226)
+	SpriteFrame(-6, -7, 12, 14, 14, 226)
+	
+	SpriteFrame(-6, -7, 12, 14, 1, 241) //8
+	SpriteFrame(-6, -7, 12, 14, 14, 241)
+	SpriteFrame(-6, -7, 12, 14, 27, 241)
+	
+	
+	SpriteFrame(-120, -120, 240, 120, 1, 9) //11
+	
+	
+	SpriteFrame(0, -25, 2, 25, 109, 130) //12
+	SpriteFrame(0, -25, 2, 25, 111, 130)
+	SpriteFrame(0, -25, 2, 25, 113, 130)
+	SpriteFrame(0, -25, 2, 25, 115, 130)
+	SpriteFrame(0, -25, 2, 25, 117, 130)
+	SpriteFrame(0, -25, 2, 25, 119, 130)
+	SpriteFrame(0, -25, 2, 25, 121, 130)
+	SpriteFrame(0, -25, 2, 25, 123, 130)
+	SpriteFrame(0, -25, 2, 25, 125, 130) //20
+	
+	SpriteFrame(-15, -19, 29, 39, 1, 130) //21
+	SpriteFrame(-16, -16, 31, 32, 31, 130)
+	SpriteFrame(-23, -20, 45, 40, 63, 130)
+	SpriteFrame(-13, -16, 26, 36, 31, 163)
+	
+	
+	if stage.actNum == 1
+		temp1 = 5072
+		temp1 <<= 16
+		temp2 = 1552
+		temp2 <<= 16
+		ResetObjectEntity(21, TypeName[Shard Key], 0, temp1, temp2)
+		object[21].state = 10
+		object[21].priority = PRIORITY_ACTIVE
+		object[21].drawOrder = 5
+		
+		if saveRAM[417] == 0
+			if saveRAM[996] == 1
+				if stage.debugMode == 0
+					switch options.gameMode
+						case 0
+						case 1
+							temp1 = 3760
+							temp1 <<= 16
+							temp2 = 51
+							temp2 <<= 16
+							ResetObjectEntity(20, TypeName[Shard Key], 0, temp1, temp2)
+							object[20].priority = PRIORITY_ACTIVE
+							break			
+					end switch
+				end if
+			end if
+		else
+			object[21].state = 14
+		end if
+	end if
+end event
+
+
+function TheWay				
+
+	temp0 = 0
+	temp1 = 40
+	temp2 = 10
+	
+	while temp0 < 60
+		GetTableValue(temp3, temp0, WayTable)
+		SetTileLayerEntry(temp3, 0, temp1, temp2)
+		temp1++
+		if temp1 > 49
+			temp1 = 40
+			temp2++
+		end if
+	temp0++	
+	loop
+	
+	foreach (TypeName[Harpoon V], arrayPos0, ALL_ENTITIES)
+		object[arrayPos0].type = TypeName[Blank Object]
+	next	
+	foreach (TypeName[Red Spring], arrayPos0, ALL_ENTITIES)
+		object[arrayPos0].type = TypeName[Blank Object]
+	next
+	stage.waterState = 2
+	stage.newWaterLevel = 0x6F80000
+	
+	temp1 = 5760
+	temp1 <<= 16
+	temp2 = 1792
+	temp2 <<= 16
+	ResetObjectEntity(20, TypeName[Shard Key], 0, temp1, temp2)
+	object[20].state = 20
+	object[20].priority = PRIORITY_ACTIVE
+	
+end function
+
+function ParticleSpawn
+	particletick++
+	particletick %= particlespeed
+	if particletick == 0
+		Rand(temp0, 6)
+		temp0 -= 3
+		temp0 -= 120
+		temp0 <<= 16
+		temp0 += object.ypos
+		
+		Rand(temp1, 96)
+		temp1 -= 48
+		temp1 <<= 16
+		temp1 += object.xpos
+		CreateTempObject(TypeName[Shard Key], 0, temp1, temp0)
+		//PlaySfx(SfxName[Collect], 0)
+		object[tempObjectPos].drawOrder = 5
+		object[tempObjectPos].state = 30
+		if particlespeed > 3
+			particlespeed -= 3
+		end if
+	end if
+end function
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Items.gif")
+	SpriteFrame(-8,-8,16,16,1,1)
+end event
