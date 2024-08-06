@@ -150,34 +150,8 @@ event ObjectMain
 		if object.value0 < 20
 			object.value0++
 		else
-			object.value0 = 0
-			//stage.pauseEnabled = 1
-			
-			//spawn them
-			if stage.activeList == REGULAR_STAGE
-				switch stage.listPos		
-					case 13
-						temp1 = 3641
-						temp1 <<= 16
-						temp2 = 748
-						temp2 <<= 16
-						ResetObjectEntity(object.entityPos, TypeName[Lamp Post], 0, temp1, temp2)
-						object.state = 3
-						break
-					case 17
-						temp1 = 1328
-						temp1 <<= 16
-						temp2 = 147
-						temp2 <<= 16
-						ResetObjectEntity(object.entityPos, TypeName[Monitor], 13, temp1, temp2)
-						break
-					default
-						object.type = TypeName[Blank Object]
-						break
-				end switch
-			else
-				object.type = TypeName[Blank Object]
-			end if
+			//stage.pauseEnabled = 1			
+			object.type = TypeName[Blank Object]
 		end if
 		break
 	case 7

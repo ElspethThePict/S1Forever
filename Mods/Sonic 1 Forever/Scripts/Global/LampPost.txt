@@ -27,144 +27,150 @@ end function
 
 
 event ObjectMain
-			foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
-				if object.state == 0
-					BoxCollisionTest(C_TOUCH, object.entityPos, -8, -44, 8, 20, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
-					if checkResult == 1
-						lampPostID = object.entityPos
-						recMilliSeconds = stage.milliSeconds
-						recSeconds = stage.seconds
-						recMinutes = stage.minutes
-						recWaterState = stage.waterState
-						recWaterLevel = stage.waterLevel
-						object.state = 1
-						object.value0 = 384
-						if object.priority != PRIORITY_XBOUNDS_DESTROY
-							object.priority = PRIORITY_ACTIVE
-						end if
-						PlaySfx(SfxName[Lamp Post], 0)
+	switch object.propertyValue
+	case 50 //apparently some lamp posts have property Value 1 despite it appearing nowhere in the code??
+		object.value15++
+		object.value15 %= 137
+		
+		object.value16++
+		object.value16 %= 51
+		
+		foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+			if object.state == 0
+				BoxCollisionTest(C_TOUCH, object.entityPos, -8, -44, 8, 20, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
+				if checkResult == 1
+					if stage.debugMode == 0
+						achievement.trigger = 17
 					end if
-				end if
-			next
-			
-			if object.state == 1
-				Cos(object.value1, object.value0)
-				object.value1 *= -0x500
-				Sin(object.value2, object.value0)
-				object.value2 *= 0x500
-				object.value1 += object.xpos
-				object.value2 += object.ypos
-				object.value2 -= 0x1A0000
-				object.value0 += 32
-				if object.value0 > 0x580
-					object.value0 = 0
-					object.state = 2
+					object.state = 1
+					object.value0 = 384
 					if object.priority != PRIORITY_XBOUNDS_DESTROY
-						object.priority = PRIORITY_ACTIVE_BOUNDS
+						object.priority = PRIORITY_ACTIVE
 					end if
+					PlaySfx(SfxName[BrokenLamp], 0)
 				end if
 			end if
+		next
+		
+		if object.state == 1
+			object.value10++
+			if object.value10 >= 20
+				object.value10 = 0
+				object.value11++
+				object.value13 = 0
+			end if	
 			
-			if object.state > 2
-				object.value15++
-				object.value15 %= 137
-				
-				object.value16++
-				object.value16 %= 51
+			if object.value11 == object.value14
+				object.value11 = 0
+				object.value12++
+				object.value14 += object.value12
+				object.value13 = 1
 			end if
-			
-			foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
-				if object.state == 3
-					BoxCollisionTest(C_TOUCH, object.entityPos, -8, -44, 8, 20, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
-					if checkResult == 1
-						if stage.debugMode == 0
-							achievement.trigger = 17
-						end if
-						object.state = 4
-						object.value0 = 384
-						if object.priority != PRIORITY_XBOUNDS_DESTROY
-							object.priority = PRIORITY_ACTIVE
-						end if
-						PlaySfx(SfxName[BrokenLamp], 0)
+		end if
+		break
+	default
+		foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+			if object.state == 0
+				BoxCollisionTest(C_TOUCH, object.entityPos, -8, -44, 8, 20, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
+				if checkResult == 1
+					lampPostID = object.entityPos
+					recMilliSeconds = stage.milliSeconds
+					recSeconds = stage.seconds
+					recMinutes = stage.minutes
+					recWaterState = stage.waterState
+					recWaterLevel = stage.waterLevel
+					object.state = 1
+					object.value0 = 384
+					if object.priority != PRIORITY_XBOUNDS_DESTROY
+						object.priority = PRIORITY_ACTIVE
 					end if
-				end if
-			next
-			
-			if object.state == 4
-				object.value10++
-				if object.value10 >= 20
-					object.value10 = 0
-					object.value11++
-					object.value13 = 0
-				end if	
-				
-				if object.value11 == object.value14
-					object.value11 = 0
-					object.value12++
-					object.value14 += object.value12
-					object.value13 = 1
+					PlaySfx(SfxName[Lamp Post], 0)
 				end if
 			end if
-			
+		next
+		
+		if object.state == 1
+			Cos(object.value1, object.value0)
+			object.value1 *= -0x500
+			Sin(object.value2, object.value0)
+			object.value2 *= 0x500
+			object.value1 += object.xpos
+			object.value2 += object.ypos
+			object.value2 -= 0x1A0000
+			object.value0 += 32
+			if object.value0 > 0x580
+				object.value0 = 0
+				object.state = 2
+				if object.priority != PRIORITY_XBOUNDS_DESTROY
+					object.priority = PRIORITY_ACTIVE_BOUNDS
+				end if
+			end if
+		end if
+		break
+	end switch
 end event
 
 
 event ObjectDraw
-	switch object.state
-	case 0
-		DrawSprite(0)
-		break
-	case 1
-		DrawSprite(1)
-		DrawSpriteXY(3, object.value1, object.value2)
-		break
-	case 2
-		DrawSprite(1)
-		object.value0++
-		if object.value0 == 8
-			object.value0 = 0
-		end if
-		temp0 = object.ypos
-		temp0 -= 0x240000
-		DrawSpriteXY(3, object.xpos, temp0)
-		break
-	case 3
-	case 4
-		if object.value13 == 1
-			DrawSprite(5)
-		else
-			DrawSprite(4)
-		end if
-		
-		temp0 = object.value15
-		
-		switch temp0
-			case 1
-			case 5
-			case 9
-				DrawSprite(6)
-				break
-			case 3
-			case 7
-			case 11
-				DrawSprite(7)
-				break
+	switch object.propertyValue
+	case 50
+		switch object.state
+		case 0
+		case 1
+			if object.value13 == 1
+				DrawSprite(5)
+			else
+				DrawSprite(4)
+			end if
+			
+			switch object.value15
+				case 1
+				case 5
+				case 9
+					DrawSprite(6)
+					break
+				case 3
+				case 7
+				case 11
+					DrawSprite(7)
+					break
+			end switch
+			
+			switch object.value16
+				case 1
+				case 5
+				case 9
+					DrawSprite(8)
+					break
+				case 3
+				case 7
+				case 11
+					DrawSprite(9)
+					break
+			end switch
 		end switch
-		
-		temp0 = object.value16
-		
-		switch temp0
-			case 1
-			case 5
-			case 9
-				DrawSprite(8)
-				break
-			case 3
-			case 7
-			case 11
-				DrawSprite(9)
-				break
+		break
+	default
+		switch object.state
+		case 0
+			DrawSprite(0)
+			break
+		case 1
+			DrawSprite(1)
+			DrawSpriteXY(3, object.value1, object.value2)
+			break
+		case 2
+			DrawSprite(1)
+			object.value0++
+			if object.value0 == 8
+				object.value0 = 0
+			end if
+			temp0 = object.ypos
+			temp0 -= 0x240000
+			DrawSpriteXY(3, object.xpos, temp0)
+			break
 		end switch
+		break
 	end switch
 end event
 
