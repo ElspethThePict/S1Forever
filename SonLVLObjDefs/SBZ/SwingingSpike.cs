@@ -33,7 +33,7 @@ namespace S1FObjectDefinitions.SBZ
 				(obj) => obj.PropertyValue,
 				(obj, value) => obj.PropertyValue = (byte)((int)value));
 			
-			properties[1] = new PropertySpec("Inverted", typeof(int), "Extended",
+			properties[1] = new PropertySpec("Inverted", typeof(bool), "Extended",
 				"If the Spike's movement should be inverted, compared to other Spikes.", null,
 				(obj) => (((V4ObjectEntry)obj).Direction == RSDKv3_4.Tiles128x128.Block.Tile.Directions.FlipX),
 				(obj, value) => ((V4ObjectEntry)obj).Direction = (RSDKv3_4.Tiles128x128.Block.Tile.Directions)((bool)value ? 1 : 0)); // could be more direct instead of bool>int>Direction but the whole class name is p long, so..

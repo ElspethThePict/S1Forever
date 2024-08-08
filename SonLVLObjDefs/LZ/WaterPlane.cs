@@ -21,10 +21,16 @@ namespace S1FObjectDefinitions.LZ
 				(obj) => obj.PropertyValue & 0x1e,
 				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~0x1e) | Math.Min(Math.Max((int)value & ~1, 2), 0x1e)));
 			
-			// TODO: finish this, or don't depending on if they change it
-			
-			int[] leftPlanes = {1, 0, 1, 0};
-			int[] rightPlanes = {1, 0, 0, 1};
+			// left bit: left draw order
+			// right bit: right draw order
+			// (turns out you can't use 0b, huh)
+			Dictionary<int, int> indexes = new Dictionary<int, int>
+			{
+				{3, 0x00}, // high both sides
+				{0, 0x01}, // low both sides
+				{2, 0x20}, // high left, low right
+				{1, 0x21}  // low left, high right
+			};
 			
 			properties[1] = new PropertySpec("Left Draw Order", typeof(int), "Extended",
 				"Which draw layer is to the left.", null, new Dictionary<string, int>
@@ -32,8 +38,8 @@ namespace S1FObjectDefinitions.LZ
 					{ "Low Layer", 0 },
 					{ "High Layer", 1 }
 				},
-				(obj) => leftPlanes[(int)GetIndex(obj)],
-				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & 0x1e) | (int)value));
+				(obj) => indexes.GetKey(((obj.PropertyValue > 0x1f) ? 0x20 : 0) | (obj.PropertyValue & 1)) >> 1,
+				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & 0x1e) | indexes[((int)value << 1) | (int)properties[2].GetValue(obj)]));
 			
 			properties[2] = new PropertySpec("Right Draw Order", typeof(int), "Extended",
 				"Which draw layer is to the right.", null, new Dictionary<string, int>
@@ -41,8 +47,8 @@ namespace S1FObjectDefinitions.LZ
 					{ "Low Layer", 0 },
 					{ "High Layer", 1 }
 				},
-				(obj) => rightPlanes[(int)GetIndex(obj)],
-				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~0x1e) | (int)value));
+				(obj) => indexes.GetKey(((obj.PropertyValue > 0x1f) ? 0x20 : 0) | (obj.PropertyValue & 1)) & 1,
+				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & 0x1e) | indexes[(int)value | ((int)properties[1].GetValue(obj) << 1)]));
 		}
 
 		public override ReadOnlyCollection<byte> Subtypes
@@ -57,35 +63,12 @@ namespace S1FObjectDefinitions.LZ
 
 		public override string SubtypeName(byte subtype)
 		{
-			return subtype + " nodes";
+			return subtype + " Nodes Tall";
 		}
 		
 		public override PropertySpec[] CustomProperties
 		{
 			get { return properties; }
-		}
-		
-		// bit 0 - direction type
-		// bits 1-4 - (& 0x1e) - size
-		// top 3 bits - (& 0xe0) - should there be checks
-		
-		// left plane: low if bottom set
-		// right plane: low if bottom set 
-		
-		// top empty & bottom empty - high right/left
-		// top empty & bottom set   - low right/left
-		
-		// top set & bottom empty - low right, high left
-		// top set & bottom set   - high right, low left
-		
-		static object GetIndex(ObjectEntry obj)
-		{
-			return (obj.PropertyValue & 1) | ((obj.PropertyValue > 0xe0) ? 2 : 0);
-		}
-		
-		static void SetSpeed(ObjectEntry obj, object value)
-		{
-			
 		}
 		
 		public override Sprite Image

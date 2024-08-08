@@ -1,4 +1,5 @@
 using SonicRetro.SonLVL.API;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
@@ -21,10 +22,10 @@ namespace S1FObjectDefinitions.Enemies
 			
 			sprites[1] = new Sprite(sprites[0], true, false);
 			
-			properties[0] = new PropertySpec("Swim Time", typeof(int), "Extended",
-				"How long the Jaws will swim in a direction at a time, to be multiplied by 64 frames in-game.", null,
-				(obj) => obj.PropertyValue & 0x7f,
-				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~0x7f) | ((int)value & 0x7f)));
+			properties[0] = new PropertySpec("Distance", typeof(int), "Extended",
+				"How far, in pixels, the Jaws will swim.", null,
+				(obj) => (obj.PropertyValue & 0x7f) << 4,
+				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~0x7f) | Math.Min(Math.Max((int)value >> 4, 0), 0x7f)));
 
 			properties[1] = new PropertySpec("Direction", typeof(int), "Extended",
 				"Which way the Jaws will be facing initially.", null, new Dictionary<string, int>
@@ -38,7 +39,12 @@ namespace S1FObjectDefinitions.Enemies
 
 		public override ReadOnlyCollection<byte> Subtypes
 		{
-			get { return new ReadOnlyCollection<byte>(new byte[0]); }
+			get { return new ReadOnlyCollection<byte>(new byte[] {0x06, 0x86, 0x0A, 0x8A, 0x0C, 0x8C}); }
+		}
+		
+		public override byte DefaultSubtype
+		{
+			get { return 6; }
 		}
 		
 		public override PropertySpec[] CustomProperties
@@ -48,7 +54,7 @@ namespace S1FObjectDefinitions.Enemies
 
 		public override string SubtypeName(byte subtype)
 		{
-			return null;
+			return "Swim " + ((subtype & 0x7f) << 4) + " Pixels" + ((subtype > 0x80) ? " (Facing Right)" : " (Facing Left)");
 		}
 
 		public override Sprite Image
@@ -58,12 +64,12 @@ namespace S1FObjectDefinitions.Enemies
 
 		public override Sprite SubtypeImage(byte subtype)
 		{
-			return sprites[0];
+			return sprites[subtype >> 7];
 		}
 
 		public override Sprite GetSprite(ObjectEntry obj)
 		{
-			return sprites[(obj.PropertyValue & 0x80) >> 7];
+			return sprites[obj.PropertyValue >> 7];
 		}
 		
 		public override Sprite GetDebugOverlay(ObjectEntry obj)

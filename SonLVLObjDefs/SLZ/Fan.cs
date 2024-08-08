@@ -87,14 +87,10 @@ namespace S1FObjectDefinitions.SLZ
 				);
 			*/
 			
-			properties[2] = new PropertySpec("Always Active", typeof(int), "Extended",
-				"If the Fan should always be active, as opposed to being powered in cycles.", null, new Dictionary<string, int>
-				{
-					{ "False", 0 },
-					{ "True", 2 }
-				},
-				(obj) => obj.PropertyValue & 2,
-				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~2) | (int)value));
+			properties[2] = new PropertySpec("Always Active", typeof(bool), "Extended",
+				"If the Fan should always be active, as opposed to being powered in cycles.", null,
+				(obj) => (obj.PropertyValue & 2) == 2,
+				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~2) | ((bool)value ? 2 : 0)));
 			
 			// i kind of want to make it clearer that the range increase is toward's the fan's base and not away, but i'm not sure how to say that exactly..
 			// i hope the debug vis shows that good enough anyways?

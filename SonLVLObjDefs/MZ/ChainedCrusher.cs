@@ -79,13 +79,10 @@ namespace S1ObjectDefinitions.MZ
 				}, GetSize,
 				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~0x7f) | ((int)value << 4)));
 			
-			properties[2] = new PropertySpec("Triggered", typeof(int), "Extended", // not a bool because we use the get method for getting array index
-				"If the crusher should be extended by default and retracted with a button, as opposed to moving automatically.", null, new Dictionary<string, int>
-				{
-					{ "False", 0 },
-					{ "True", 1 }
-				}, GetTriggered,
-				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~0x80) | ((int)value << 7)));
+			properties[2] = new PropertySpec("Triggered", typeof(bool), "Extended",
+				"If the crusher should be extended by default and retracted with a button, as opposed to moving automatically.", null,
+				(obj) => (int)GetTriggered(obj) != 0,
+				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~0x80) | ((bool)value ? 0x80 : 0x00)));
 		}
 
 		public override ReadOnlyCollection<byte> Subtypes

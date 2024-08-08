@@ -16,9 +16,9 @@ namespace S1ObjectDefinitions.SLZ
 		{
 			sprite = new Sprite(LevelData.GetSpriteSheet("SLZ/Objects.gif").GetSection(84, 188, 80, 32), -40, -8);
 			
-			// The default values from RisingPlatform_distanceTable ("table28") in the object's script
+			// The default values from RisingPlatform_distanceTable (formerly "table28") in the object's script
 			// If you've modified those, you can simply copy them over.
-			int[] RisingPlatform_distanceTable = new int[15] {0x400000, 0x800000, 0xD00000, 0x400000, 0x800000, 0xD00000, 0x500000, 0x900000, 0xB00000, 0x500000, 0x900000, 0xB00000, 0x800000, 0x800000, 0xC00000};
+			int[] RisingPlatform_distanceTable = {0x400000, 0x800000, 0xD00000, 0x400000, 0x800000, 0xD00000, 0x500000, 0x900000, 0xB00000, 0x500000, 0x900000, 0xB00000, 0x800000, 0x800000, 0xC00000};
 			
 			BitmapBits overlay = new BitmapBits(80, 32);
 			overlay.DrawRectangle(6, 0, 0, 80 - 1, 32 - 1); // LevelData.ColorWhite
@@ -31,6 +31,10 @@ namespace S1ObjectDefinitions.SLZ
 						// Vertical
 						int sign = (i % 6 < 3) ? -1 : 1;
 						debug[i] = new Sprite(overlay, -40, -8 + (sign * (RisingPlatform_distanceTable[i] / 0x10000 * 2)));
+						
+						BitmapBits bitmap = new BitmapBits(2, RisingPlatform_distanceTable[i] / 0x10000 * 2 + 1);
+						bitmap.DrawLine(6, 0, 0, 0, bitmap.Height - 1);
+						debug[i] = new Sprite(debug[i], new Sprite(bitmap, 0, (sign < 0) ? -bitmap.Height : 0));
 						break;
 						
 					case 12:
@@ -38,11 +42,23 @@ namespace S1ObjectDefinitions.SLZ
 						// Diagonal
 						sign = (i == 13) ? -1 : 1;
 						debug[i] = new Sprite(overlay, -40 + (sign * (RisingPlatform_distanceTable[i] / 0x10000 * 2)), -8 + (-sign * (RisingPlatform_distanceTable[i] / 0x10000)));
+						
+						bitmap = new BitmapBits(RisingPlatform_distanceTable[i] / 0x10000 * 2 + 1, RisingPlatform_distanceTable[i] / 0x10000 + 1);
+						bitmap.DrawLine(6, 0, 0, bitmap.Width - 1, bitmap.Height - 1);
+						bitmap.Flip(sign > 0, sign < 0);
+						debug[i] = new Sprite(debug[i], new Sprite(bitmap, (sign < 0) ? -bitmap.Width : 0, (sign < 0) ? 0 : -bitmap.Height));
 						break;
 						
 					case 14:
 						// Spawner
 						debug[i] = new Sprite(overlay, -40, -8 - (RisingPlatform_distanceTable[i] / 0x10000 * 2));
+						
+						// using a dashed line to show that it's a spawner.. not sure if it actually works that well?
+						bitmap = new BitmapBits(2, RisingPlatform_distanceTable[i] / 0x10000 * 2 + 1);
+						for (int j = 0; j < bitmap.Height; j += 14)
+							bitmap.DrawLine(6, 0, j, 0, j + 7);
+						
+						debug[i] = new Sprite(debug[i], new Sprite(bitmap, 0, -bitmap.Height));
 						break;
 				}
 			}
@@ -84,7 +100,7 @@ namespace S1ObjectDefinitions.SLZ
 							obj.PropertyValue = val; // reset the entire prop val, including interval
 							
 							if (obj.PropertyValue == 0x80)
-								obj.PropertyValue |= 0x0A; // let's have a starting interval of 10 frames (0 frames doesn't really play nice, even if it technically works)
+								obj.PropertyValue |= 0x0A; // let's have a starting interval of 60 frames (0 frames doesn't really play nice, even if it technically works)
 						}
 						else // we're a spawner
 						{
@@ -120,21 +136,21 @@ namespace S1ObjectDefinitions.SLZ
 			{
 				switch (subtype & 15)
 				{
-					case 0: return "Up (128px)";
-					case 1: return "Up (256px)";
-					case 2: return "Up (416px)";
-					case 3: return "Down (128px)";
-					case 4: return "Down (256px)";
-					case 5: return "Down (416px)";
-					case 6: return "Up (160px)";
-					case 7: return "Up (288px)";
-					case 8: return "Up (352px)";
-					case 9: return "Down (160px)";
-					case 10: return "Down (288px)";
-					case 11: return "Down (352px)";
+					case 0: return "Upwards (128px)";
+					case 1: return "Upwards (256px)";
+					case 2: return "Upwards (416px)";
+					case 3: return "Downwards (128px)";
+					case 4: return "Downwards (256px)";
+					case 5: return "Downwards (416px)";
+					case 6: return "Upwards (160px)";
+					case 7: return "Upwards (288px)";
+					case 8: return "Upwards (352px)";
+					case 9: return "Downwards (160px)";
+					case 10: return "Downwards (288px)";
+					case 11: return "Downwards (352px)";
 					case 12: return "Up-Right";
 					case 13: return "Down-Left";
-					case 14: return "Disappear"; // this should never be reached
+					case 14: return "Disappear"; // (this should never be used)
 					
 					default: return "Static"; // well yeah it's technically this but it dies upon going offscreen, so
 				}

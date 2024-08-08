@@ -11,7 +11,7 @@
   <ImageSets>
     <ImageSet id="tubecover">
       <ImageRef image="panel" />
-      <ImageRef image="cover" /> <!-- well the game draws the cover twice.. but it's fully opaque so i don't think that actually matters? -->
+      <ImageRef image="cover" /> <!-- well the game (as in Forever) draws the cover twice.. but it's fully opaque so i don't think that actually matters? -->
     </ImageSet>
   </ImageSets>
   <DefaultImage>

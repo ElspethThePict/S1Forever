@@ -24,4 +24,30 @@
   <DefaultImage>
     <ImageSetRef set="frame" />
   </DefaultImage>
+  <Subtypes>
+    <Subtype id="00" name="Frame 0">
+      <ImageSetRef set="frame" />
+    </Subtype>
+    <Subtype id="01" name="Frame 1">
+      <ImageSetRef set="frame" />
+    </Subtype>
+    <Subtype id="02" name="Frame 2">
+      <ImageSetRef set="frame" />
+    </Subtype>
+    <Subtype id="03" name="Frame 3">
+      <ImageSetRef set="frame" />
+    </Subtype>
+    <Subtype id="04" name="Frame 4">
+      <ImageSetRef set="frame" />
+    </Subtype>
+    <Subtype id="05" name="Frame 5">
+      <ImageSetRef set="frame" />
+    </Subtype>
+    <Subtype id="06" name="Frame 6">
+      <ImageSetRef set="frame" />
+    </Subtype>
+    <Subtype id="07" name="Frame 7">
+      <ImageSetRef set="frame" />
+    </Subtype>
+  </Subtypes>
 </ObjDef>

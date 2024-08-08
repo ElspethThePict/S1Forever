@@ -64,7 +64,7 @@ namespace S1ObjectDefinitions.Global
 
 		public override Sprite GetSprite(ObjectEntry obj)
 		{
-			if (obj.PropertyValue <= 1)
+			if (obj.PropertyValue == 0)
 				return sprite;
 			
 			int count = obj.PropertyValue + 1;

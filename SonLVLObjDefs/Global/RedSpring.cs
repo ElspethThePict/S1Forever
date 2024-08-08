@@ -30,7 +30,7 @@ namespace S1ObjectDefinitions.Global
 				(obj) => (obj.PropertyValue & 0x7f),
 				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~0x7f) | (int)value));
 			
-			properties[1] = new PropertySpec("Enabled in Air", typeof(int), "Extended",
+			properties[1] = new PropertySpec("Enabled in Air", typeof(bool), "Extended",
 				"If the Spring should be usable when the player is in the air already. Only affects horizontal springs.", null,
 				(obj) => (obj.PropertyValue >= 0x80),
 				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~0x80) | ((bool)value ? 0x80 : 0x00)));

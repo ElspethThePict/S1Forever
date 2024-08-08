@@ -78,13 +78,13 @@ namespace S1ObjectDefinitions.Global
 			
 			properties[5] = new PropertySpec("Grounded", typeof(bool), "Extended",
 				"If only grounded players should be affected.", null,
-				(obj) => (obj.PropertyValue > 128),
+				(obj) => (obj.PropertyValue > 127),
 				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~128) | ((bool)value ? 128 : 0)));
 		}
 		
 		public override ReadOnlyCollection<byte> Subtypes
 		{
-			get { return new ReadOnlyCollection<byte>(new byte[0]); }
+			get { return new ReadOnlyCollection<byte>(new byte[] {0, 1, 2, 3}); } // putting every single combination here would be kinda too much, but let's have Size here
 		}
 		
 		public override bool Debug
@@ -99,7 +99,7 @@ namespace S1ObjectDefinitions.Global
 
 		public override string SubtypeName(byte subtype)
 		{
-			return null;
+			return properties[0].Enumeration.GetKey(subtype & 3) + " Tall";
 		}
 
 		public override Sprite Image

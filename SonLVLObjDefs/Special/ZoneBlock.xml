@@ -24,7 +24,7 @@
     </ImageFromSheet>
   </Images>
   <Properties>
-    <Property name="Zone ID" description="The Zone number to be displayed on the Block." type="zones" startbit="0" length="4" />
+    <Property name="Zone" description="The Zone number to be displayed on the Block." type="zones" startbit="0" length="4" />
   </Properties>
   <Enums>
     <Enum name="zones">

@@ -20,9 +20,9 @@
     </Enum>
   </Enums>
   <Subtypes>
-    <Subtype id="00" name="Platform (Collapse From Left)" image="cfloor" />
-    <Subtype id="01" name="Platform (Collapse From Bottom)" image="cfloor" />
-    <Subtype id="02" name="Solid (Collapse From Left)" image="cfloor" />
-    <Subtype id="03" name="Solid (Collapse From Bottom)" image="cfloor" />
+    <Subtype id="00" name="Top Solid (Collapse From Left)" image="cfloor" />
+    <Subtype id="01" name="Top Solid (Collapse From Bottom)" image="cfloor" />
+    <Subtype id="02" name="All Solid (Collapse From Left)" image="cfloor" />
+    <Subtype id="03" name="All Solid (Collapse From Bottom)" image="cfloor" />
   </Subtypes>
 </ObjDef>

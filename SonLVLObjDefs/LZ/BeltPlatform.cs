@@ -201,7 +201,23 @@ namespace S1ObjectDefinitions.LZ
 			if (index >= debug.Length)
 				return null;
 			
-			return new Sprite(debug[obj.PropertyValue >> 4], -obj.X, -obj.Y);
+			Sprite dbg = new Sprite(debug[obj.PropertyValue >> 4], -obj.X, -obj.Y);
+			
+			for (int i = LevelData.Objects.IndexOf(obj); i >= 0; --i)
+			{
+				switch (LevelData.Objects[i].Name)
+				{
+					case "Belt Activation": // well technically any object can work.. but how about we don't loop around the entire object list every time
+						LevelData.Objects[i].UpdateDebugOverlay();
+						break;
+					case "Belt Platform":
+						break;
+					default:
+						return dbg;
+				}
+			}
+			
+			return dbg;
 		}
 	}
 }

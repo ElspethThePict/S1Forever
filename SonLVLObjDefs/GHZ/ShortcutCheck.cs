@@ -24,6 +24,11 @@ namespace S1FObjectDefinitions.GHZ
 			get { return new ReadOnlyCollection<byte>(new byte[0]); }
 		}
 		
+		public override bool Debug
+		{
+			get { return true; }
+		}
+		
 		public override string SubtypeName(byte subtype)
 		{
 			return null;

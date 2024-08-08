@@ -9,6 +9,16 @@ namespace S1ObjectDefinitions.LZ
 	class CorkActivation : LZ.BeltActivation
 	{
 		public override string targetName { get { return "Cork"; } }
+		
+		public override ReadOnlyCollection<byte> Subtypes
+		{
+			get { return new ReadOnlyCollection<byte>(new byte[] {3}); }
+		}
+		
+		public override byte DefaultSubtype
+		{
+			get { return 3; }
+		}
 	}
 	
 	class BeltActivation : ObjectDefinition
@@ -31,6 +41,11 @@ namespace S1ObjectDefinitions.LZ
 		public override ReadOnlyCollection<byte> Subtypes
 		{
 			get { return new ReadOnlyCollection<byte>(new byte[] {8, 9, 10, 11, 12}); }
+		}
+		
+		public override bool Debug
+		{
+			get { return true; }
 		}
 		
 		public override byte DefaultSubtype
@@ -72,9 +87,12 @@ namespace S1ObjectDefinitions.LZ
 			{
 				int index = LevelData.Objects.IndexOf(obj) + 1;
 				while (LevelData.Objects[index].Name != targetName)
-					index++;
-				index--;
-				List<ObjectEntry> objs = LevelData.Objects.Skip(index).TakeWhile(a => LevelData.Objects.IndexOf(a) <= (index + obj.PropertyValue)).ToList();
+				{
+					if (++index >= LevelData.Objects.Count)
+						return null;
+				}
+				
+				List<ObjectEntry> objs = LevelData.Objects.Skip(index - 1).Take(obj.PropertyValue + 1).ToList();
 				if (objs.Count == 0)
 					return null;
 				

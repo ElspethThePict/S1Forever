@@ -36,21 +36,23 @@ namespace S1ObjectDefinitions.MZ
 			debug[0,1] = new Sprite(debug[0,0], 0, -64, false, true);
 			debug[1,1] = new Sprite(debug[1,0], 0, -64, false, true);
 			
-			properties[0] = new PropertySpec("Frame", typeof(int), "Extended",
-				"What sprite this Pillar should display.", null, new Dictionary<string, int>
+			// (hitbox is the same regardless of size btw)
+			properties[0] = new PropertySpec("Size", typeof(int), "Extended",
+				"How large this Pillar is.", null, new Dictionary<string, int>
 				{
-					{ "Long", 0 },
-					{ "Medium", 0x10 }
+					{ "Large", 0 },
+					{ "Small", 0x10 }
 				},
 				(obj) => obj.PropertyValue & 0x10,
 				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~0x10) | (int)value));
 			
-			properties[1] = new PropertySpec("Movement", typeof(bool), "Extended",
-				"What pattern this Pillar's movement should follow.", null, new Dictionary<string, int>
+			// kinda weird-ish way of doin it, but
+			properties[1] = new PropertySpec("Start From", typeof(bool), "Extended",
+				"Which side this platform should start from, given that it moves at all.", null, new Dictionary<string, int>
 				{
 					{ "Static", 0 },
-					{ "Vertical", 1 },
-					{ "Vertical (Reverse)", 2 }
+					{ "Bottom", 1 },
+					{ "Top", 2 }
 				},
 				(obj) => ((obj.PropertyValue & 7) > 5) ? 0 : (obj.PropertyValue & 7), // where'd that 5 come from? yeah, i'm wondering the same thing too..
 				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~7) | (int)value));
@@ -68,9 +70,9 @@ namespace S1ObjectDefinitions.MZ
 
 		public override string SubtypeName(byte subtype)
 		{
-			string[] styles = {"Static", "Vertical", "Vertical (Reverse)"};
+			string[] styles = {"Static", "Start From Bottom", "Start From Top"};
 			string name = styles[((subtype & 7) > 5) ? 0 : (subtype & 7)];
-			name += ((subtype & 0x10) == 0x10) ? " (Medium)" : " (Long)";
+			name += ((subtype & 0x10) == 0x10) ? " (Small)" : " (Large)";
 			return name;
 		}
 
@@ -91,6 +93,7 @@ namespace S1ObjectDefinitions.MZ
 		
 		public override Sprite GetDebugOverlay(ObjectEntry obj)
 		{
+			if ((obj.PropertyValue & 7) == 0) return null;
 			return debug[(obj.PropertyValue & 0x10) >> 4,((obj.PropertyValue & 7) == 2) ? 1 : 0];
 		}
 	}

@@ -34,18 +34,20 @@ namespace S1FObjectDefinitions.Global
 				(obj) => (obj.PropertyValue & 0x0f) + 1,
 				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~0x0f) | Math.Min(Math.Max((int)value - 1, 0), 15)));
 			
+			// Some time between Forever 1.5.0 and the project going public on Github, they changed the Knuckles eject type from 7 to 3
+			// that's kind of.. bad news for us, but let's just stick with the new ID instead of the old one
 			properties[2] = new PropertySpec("Mode", typeof(int), "Extended",
 				"How this Invisible Block will act.", null, new Dictionary<string, int>
 				{
 					{ "Solid", 0 },
 					{ "Eject Left", 1 },
 					{ "Eject Right", 2 },
-					{ "Ledge Eject Left", 7 }, // new #Forever type
-					{ "Ledge Eject Right", 0x107 } // let's keep them together here for simplicity's sake
+					{ "Ledge Eject Left", 3 }, // new #Forever type
+					{ "Ledge Eject Right", 0x103 } // let's keep them together here for simplicity's sake
 				},
 				(obj) => {
 						int result = ((V4ObjectEntry)obj).State;
-						if (result == 7) // Knuckles eject type?
+						if (result == 3) // Knuckles eject type?
 							result |= (((int)((V4ObjectEntry)obj).Direction == 0) ? 0 : 1) << 8;
 						return result;
 					},
@@ -101,7 +103,7 @@ namespace S1FObjectDefinitions.Global
 			
 			int index = (((V4ObjectEntry)obj).State < 3) ? ((V4ObjectEntry)obj).State : 0;
 			
-			if (((V4ObjectEntry)obj).State == 7)
+			if (((V4ObjectEntry)obj).State == 3)
 				index = (((V4ObjectEntry)obj).Direction == RSDKv3_4.Tiles128x128.Block.Tile.Directions.FlipNone) ? 3 : 4;
 			
 			Sprite row = new Sprite();

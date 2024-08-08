@@ -17,7 +17,7 @@ namespace S1FObjectDefinitions.MBZ
 			sprites[1] = new Sprite(new Sprite(sheet.GetSection(18, 438, 16, 32), -16, -16), new Sprite(sheet.GetSection(29, 393, 12, 12), -7, -6));
 			
 			properties[0] = new PropertySpec("Direction", typeof(int), "Extended",
-				"Which way the Harpoon is pointing.", null, new Dictionary<string, int>
+				"Which way the Gargoyle is pointing.", null, new Dictionary<string, int>
 				{
 					{ "Left", 0 },
 					{ "Right", 1 }

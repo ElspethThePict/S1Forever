@@ -65,7 +65,7 @@ namespace S1FObjectDefinitions.Enemies
 		{
 			if (LevelData.StageInfo.folder.EndsWith("BossRush"))
 				return new Sprite(LevelData.GetSpriteSheet("MBZ/Objects.gif").GetSection(88, 217, 24, 46), -12, -24);
-			else if (LevelData.StageInfo.folder.EndsWith("BossRush"))
+			else if (LevelData.StageInfo.folder.EndsWith("Zone00"))
 				return new Sprite(LevelData.GetSpriteSheet("GHZ/Objects3.gif").GetSection(88, 217, 24, 46), -12, -24);
 			else
 				return new Sprite(LevelData.GetSpriteSheet("LZ/Objects.gif").GetSection(92, 68, 24, 46), -12, -24);
@@ -134,7 +134,7 @@ namespace S1FObjectDefinitions.Enemies
 			else if (LevelData.StageInfo.folder.EndsWith("Zone00"))
 				return new Sprite(LevelData.GetSpriteSheet("GHZ/Objects3.gif").GetSection(211, 220, 4, 4), -2, -2);
 			else
-				return new Sprite(LevelData.GetSpriteSheet("GHZ/Objects2.gif").GetSection(143, 235, 4, 4), -2, -2);
+				return new Sprite(LevelData.GetSpriteSheet("GHZ/Objects.gif").GetSection(143, 235, 4, 4), -2, -2);
 		}
 		
 		public override bool Hidden { get { return true; } }

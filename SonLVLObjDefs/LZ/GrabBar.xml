@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ObjDef xmlns="http://www.sonicretro.org" Image="bar">
+<ObjDef xmlns="http://www.sonicretro.org" Image="bar" DefaultSubtype="04">
   <Images>
     <ImageFromSheet id="bar" sheet="LZ/Objects.gif" sourcex="35" sourcey="1" width="8" height="64">
       <Offset X="-4" Y="-32" />
@@ -8,4 +8,9 @@
   <Properties>
     <Property name="Grab Duration" description="How long, in seconds, the player is able to hang on this bar for."  type="int" startbit="0" length="8" />
   </Properties>
+  <Subtypes>
+    <Subtype id="03" name="3 Second Grab Duration" image="bar" />
+    <Subtype id="04" name="4 Second Grab Duration" image="bar" />
+    <Subtype id="05" name="5 Second Grab Duration" image="bar" />
+  </Subtypes>
 </ObjDef>

@@ -10,14 +10,19 @@ namespace S1ObjectDefinitions.SBZ
 	{
 		private Sprite sprite;
 		
+		public override void Init(ObjectData data)
+		{
+			sprite = new Sprite(LevelData.GetSpriteSheet("Global/Display.gif").GetSection(239, 239, 16, 16), -8, -8);
+		}
+		
 		public override ReadOnlyCollection<byte> Subtypes
 		{
 			get { return new ReadOnlyCollection<byte>(new byte[0]); }
 		}
-
-		public override void Init(ObjectData data)
+		
+		public override bool Debug
 		{
-			sprite = new Sprite(LevelData.GetSpriteSheet("Global/Display.gif").GetSection(239, 239, 16, 16), -8, -8);
+			get { return true; }
 		}
 		
 		public override string SubtypeName(byte subtype)

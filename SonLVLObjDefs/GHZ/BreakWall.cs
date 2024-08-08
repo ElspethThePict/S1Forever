@@ -31,7 +31,7 @@ namespace S1ObjectDefinitions.GHZ
 					{ "Right", 2 },
 				},
 				(obj) => (int)obj.PropertyValue,
-				(obj, value) => obj.PropertyValue = (byte)(int)value);
+				(obj, value) => obj.PropertyValue = (byte)((int)value));
 		}
 		
 		public override ReadOnlyCollection<byte> Subtypes

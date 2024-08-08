@@ -16,7 +16,7 @@ namespace S1ObjectDefinitions.LZ
 			sprites[1] = new Sprite(sprites[0], true, false);
 			
 			properties[0] = new PropertySpec("Direction", typeof(int), "Extended",
-				"Which way the Harpoon is pointing.", null, new Dictionary<string, int>
+				"Which way the Gargoyle is pointing.", null, new Dictionary<string, int>
 				{
 					{ "Left", 0 },
 					{ "Right", 1 }

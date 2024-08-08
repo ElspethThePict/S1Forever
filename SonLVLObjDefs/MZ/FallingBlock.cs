@@ -28,7 +28,7 @@ namespace S1ObjectDefinitions.MZ
 			properties[0] = new PropertySpec("Behaviour", typeof(int), "Extended",
 				"How this Block should act.", null, new Dictionary<string, int>
 				{
-					{ "Idle", 0 },
+					{ "Static", 0 },
 					{ "Floating (Hover)", 1 },
 					{ "Floating (Drop)", 2 },
 					// 3 is the falling state, but we don't wanna spawn that
@@ -52,7 +52,7 @@ namespace S1ObjectDefinitions.MZ
 		{
 			if (subtype > 4) subtype = 0;
 			
-			string[] names = {"Idle", "Floating (Hover)", "Floating (Drop)", "Falling", "Floating (In Lava)"}; // falling shouldn't be used
+			string[] names = {"Static", "Floating (Hover)", "Floating (Drop)", "Falling", "Floating (In Lava)"}; // falling shouldn't be used
 			return names[subtype];
 		}
 

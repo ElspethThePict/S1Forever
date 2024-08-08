@@ -94,8 +94,8 @@ namespace S1ObjectDefinitions.Global
 			properties[0] = new PropertySpec("Count", typeof(int), "Extended",
 				"How many Spikes there will be.", null, new Dictionary<string, int>
 				{
-					{ "3 Spikes", 0 },
 					{ "1 Spike", 4 },
+					{ "3 Spikes", 0 },
 					{ "3 Spikes - Spaced", 8 },
 					{ "6 Spikes - Spaced", 12 }
 				},
