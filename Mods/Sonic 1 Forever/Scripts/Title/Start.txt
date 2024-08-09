@@ -247,7 +247,7 @@ event ObjectMain
 		lselect.characterSel = 0
 		break
 	case START_HANDLECLVLSEL // Handle the Classic Level Select. 
-		if saved.mobile == 1     // If Touch Controls are active / you are on mobile, the code below handles the touch inputs.
+		if saved.mobile == 1     // If Touch Controls are active / you are on mobile, the code below handles the touch input's delay.
 			if touch.delay == 0
 				CheckTouchRect(0, 96, screen.xcenter, screen.ysize)
 				if checkResult > -1
