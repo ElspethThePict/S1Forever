@@ -1,46 +1,69 @@
 // ----------------------------------
-// RSDK Project: Sonic 1/Sonic 2
+// RSDK Project: Sonic the Hedgehog Forever
 // Script Description: Start Message Object
-// Script Author: Christian Whitehead/Simon Thomley
+// Script Author: Christian Whitehead "The Taxman" / Simon Thomley "Stealth", Team Forever
 // Unpacked by Rubberduckycooly's script unpacker
 // ----------------------------------
 
 
 //-------Aliases-------//
 private alias 4 : TYPE_STARTMESSAGE
-private alias object.value11 : character.sel
+
+private alias object.value0 : start.timer
+private alias object.value1 : lselect.scrollDelayUp
+private alias object.value2 : lselect.scrollDelayDown
+private alias object.value3 : lselect.menuIndex
+private alias object.value4 : start.attractTimer // also soundTestIndex
+private alias object.value5 : lselect.specialIndex
+private alias object.value6 : lselect.emeraldCount
+private alias object.value8 : lselect.emeraldCheatPos
+private alias object.value9 : lselect.emeraldsEnabled
+private alias object.value11 : lselect.characterSel
 private alias object.value12 : touch.delay
 private alias object.value13 : touch.fade
 
 public alias saveRAM[286] : saved.language
-public alias saveRAM[295]: saved.mobile
-public alias saveRAM[296]: saved.transmobile
+public alias saveRAM[295] : saved.mobile
+public alias saveRAM[296] : saved.transmobile
+
+private alias 0 : START_FLASH
+private alias 1 : START_STARTGAME
+private alias 2 : START_STARTLVLSEL
+private alias 3 : START_STARTLVLSEL_OLD
+private alias 4 : START_STARTATTRACT
+private alias 5 : START_SETUPCLVLSEL
+private alias 6 : START_HANDLECLVLSEL
+private alias 7 : START_CLVLSEL_LOADSTAGE
+private alias 8 : START_CLVLSEL_LOADSS
+private alias 9 : START_EXITTOMAINMENU
 
 // Function declarations
-reserve function TouchControls
+reserve function Start_HandleTouchControls
 
 // Tables
-private table CharLoad
+private table LSelect_CharacterLoad
 	0, 1, 2, 5, 3, 4
 end table
 
-function TouchControls
+function Start_HandleTouchControls
 	LoadSpriteSheet("LevelSelect/Touch.gif")
 
 	object.inkEffect = INK_ALPHA
-		CheckTouchRect(0, 0, screen.xsize, screen.ysize)
-		if checkResult > -1
-			touch.fade = 0
-		else
-			touch.fade++
+	CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+
+	if checkResult > -1
+		touch.fade = 0
+	else
+		touch.fade++
+	end if
+	if touch.fade >= 400
+		if object.alpha > 0
+				object.alpha -= 15
 		end if
-		if touch.fade >= 400
-			if object.alpha > 0
-   				 object.alpha -= 15
-			end if
-		else
-			object.alpha = 255
-		end if	
+	else
+		object.alpha = 255
+	end if
+
 	temp0 = screen.xsize
 	temp0 -= 44
 	temp0 -= 39
@@ -85,7 +108,7 @@ end function
 
 event ObjectMain
 	switch object.state
-	case 0
+	case START_FLASH // handles the "PRESS START BUTTON" / Touch message.
 		CheckTouchRect(0, 0, screen.xsize, screen.ysize)
 		temp0 = 0
 		if checkResult > -1
@@ -109,55 +132,55 @@ event ObjectMain
 		end if
 		if temp0 == 1
 			if options.stageSelectFlag == 1
-				object.state = 5
+				object.state = START_SETUPCLVLSEL
 			else
-				object.state = 1
+				object.state = START_STARTGAME
 			end if
 		else
-			object.value4++
-			if object.value4 == 720
+			start.attractTimer++
+			if start.attractTimer == 720
 				if object.xpos == screen.xcenter
 					object.state = 4
 				end if
 			end if
 		end if
 		break
-	case 1
-		object.value0 += 8
+	case START_STARTGAME // Loads the Main Menu
+		start.timer += 8
 		music.volume -= 2
-		if object.value0 == 320
+		if start.timer == 320
 			StopMusic()
 			stage.activeList = PRESENTATION_STAGE
 			stage.listPos = 6
 			LoadStage()
 		end if
-		SetScreenFade(0, 0, 0, object.value0)
+		SetScreenFade(0, 0, 0, start.timer)
 		break
-	case 2
-		object.value0 += 8
+	case START_STARTLVLSEL // 2013 Level Select... unused code moment!
+		start.timer += 8
 		music.volume -= 2
-		if object.value0 == 320
+		if start.timer == 320
 			StopMusic()
 			stage.activeList = PRESENTATION_STAGE
 			stage.listPos = 5
 			LoadStage()
 		end if
-		SetScreenFade(0, 0, 0, object.value0)
+		SetScreenFade(0, 0, 0, start.timer)
 		break
-	case 3
-		object.value0 += 8
+	case START_STARTLVLSEL_OLD // this is a leftover state from Sonic CD 2011, this would go to the Level Select there.
+		start.timer += 8
 		music.volume -= 2
-		if object.value0 == 320
+		if start.timer == 320
 			StopMusic()
 			stage.listPos = 4
 			LoadStage()
 		end if
-		SetScreenFade(0, 0, 0, object.value0)
+		SetScreenFade(0, 0, 0, start.timer)
 		break
-	case 4
-		object.value0 += 8
+	case START_STARTATTRACT // we do demo stuff here!!
+		start.timer += 8
 		music.volume -= 2
-		if object.value0 == 320
+		if start.timer == 320
 			StopMusic()
 			if attract.stage == 3
 				stage.activeList = SPECIAL_STAGE
@@ -178,12 +201,12 @@ event ObjectMain
 			credits.screen = 0
 			LoadStage()
 		end if
-		SetScreenFade(0, 0, 0, object.value0)
+		SetScreenFade(0, 0, 0, start.timer)
 		break
-	case 5 // level select
+	case START_SETUPCLVLSEL // sets up the classic level select from Genesis S1.
 		LoadPalette("LevelSel.act", 0, 0, 0, 256)
 		stage[0].activeLayer = 0
-		object.value10 = 1
+		object.value10 = 1 // this is set but not used...? what was this?
 		LoadSpriteSheet("LevelSelect/TextOG.gif")
 		SetupMenu(MENU_1, 0, 1, 2)
 		AddMenuEntry(MENU_1, "GREEN HILL ZONE  STAGE 1", 1)
@@ -211,123 +234,125 @@ event ObjectMain
 		AddMenuEntry(MENU_1, "PLAYER             SONIC", 0)
 		stage.playerListPos = 0
 		menu1.selection = 0
-		object.state = 6
-		object.value1 = 0
-		object.value2 = 0
-		object.value3 = 0
-		object.value4 = 0
-		object.value5 = 0
-		object.value6 = 6
-		object.value6 += saved.superStates
+		object.state = START_HANDLECLVLSEL
+		lselect.scrollDelayUp = 0
+		lselect.scrollDelayDown = 0
+		lselect.menuIndex = 0
+		start.attractTimer = 0   // soundTestIndex
+		lselect.specialIndex = 0 // Wipe the potentially last selected special stage.
+		lselect.emeraldCount = 6 // set the emerald total count to 6.
+		lselect.emeraldCount += saved.superStates // add the extra chaos emerald if the 7th one is enabled.
 		object.value7 = 5
 		object.value7 += SaveRAM[412]
-		character.sel = 0
+		lselect.characterSel = 0
 		break
-	case 6
-
-	if saved.mobile == 1
-				if touch.delay == 0
-					CheckTouchRect(0, 96, screen.xcenter, screen.ysize)
-					if checkResult > -1
-						arrayPos0 = checkResult
-						temp0 = touchscreen[arrayPos0].xpos
-						temp0 -= 56
-						temp1 = touchscreen[arrayPos0].ypos
-						temp1 -= 184
-						ATan2(temp2, temp0, temp1)
-						temp2 += 42
-						temp2 &= 255
-						temp2 >>= 6
-						switch temp2
-						case 0
-							inputPress.right = 1
-							touch.delay = -10
-							break
-						case 1
-							inputDown.down = 1
-							touch.delay = -10
-							break
-						case 2
-							inputPress.left = 1
-							touch.delay = -10
-							break
-						case 3
-							inputDown.up = 1
-							touch.delay = -10
-							break
-						end switch
-					end if
-					CheckTouchRect(screen.xcenter, 96, screen.xsize, 240)
-					if checkResult > -1
-						inputDown.buttonA = 1
-					end if
-					if touchJump == 0
-						inputPress.buttonA |= inputDown.buttonA
-					end if
-					touchJump = inputDown.buttonA
-
-					CheckTouchRect(0, 0, 40, 40)
-					if checkResult > -1
+	case START_HANDLECLVLSEL // Handle the Classic Level Select. 
+		if saved.mobile == 1     // If Touch Controls are active / you are on mobile, the code below handles the touch inputs.
+			if touch.delay == 0
+				CheckTouchRect(0, 96, screen.xcenter, screen.ysize)
+				if checkResult > -1
+					arrayPos0 = checkResult
+					temp0 = touchscreen[arrayPos0].xpos
+					temp0 -= 56
+					temp1 = touchscreen[arrayPos0].ypos
+					temp1 -= 184
+					ATan2(temp2, temp0, temp1)
+					temp2 += 42
+					temp2 &= 255
+					temp2 >>= 6
+					switch temp2
+					case 0
+						inputPress.right = 1
 						touch.delay = -10
-						inputPress.buttonB = 1
-					end if
-				else
-					touch.delay++
+						break
+					case 1
+						inputDown.down = 1
+						touch.delay = -10
+						break
+					case 2
+						inputPress.left = 1
+						touch.delay = -10
+						break
+					case 3
+						inputDown.up = 1
+						touch.delay = -10
+						break
+					end switch
 				end if
-	end if
+				CheckTouchRect(screen.xcenter, 96, screen.xsize, 240)
+				if checkResult > -1
+					inputDown.buttonA = 1
+				end if
+				if touchJump == 0
+					inputPress.buttonA |= inputDown.buttonA
+				end if
+				touchJump = inputDown.buttonA
+
+				CheckTouchRect(0, 0, 40, 40)
+				if checkResult > -1
+					touch.delay = -10
+					inputPress.buttonB = 1
+				end if
+			else
+				touch.delay++
+			end if
+		end if
 
 
-		if inputPress.buttonB == 1
-			object.state = 9
+		if inputPress.buttonB == 1               // If you press B
+			object.state = START_EXITTOMAINMENU  // Back out to the game's Main Menu.
 		end if
 		
-		if inputDown.down == 1
-			object.value1 = 0
-			object.value2++
-			if object.value2 == 1
-				object.value3++
+		if inputDown.down == 1                 // This code handles the menu navigation delay.
+			lselect.scrollDelayUp = 0
+			lselect.scrollDelayDown++
+			if lselect.scrollDelayDown == 1
+				lselect.menuIndex++
 			end if
-			object.value2 %= 12
+			lselect.scrollDelayDown %= 12
 		else
 			if inputDown.up == 1
-				object.value2 = 0
-				object.value1++
-				if object.value1 == 1
-					object.value3--
+				lselect.scrollDelayDown = 0
+				lselect.scrollDelayUp++
+				if lselect.scrollDelayUp == 1
+					lselect.menuIndex--
 				end if
-				object.value1 %= 12
+				lselect.scrollDelayUp %= 12
 			else
-				object.value1 = 0
-				object.value2 = 0
+				lselect.scrollDelayUp = 0
+				lselect.scrollDelayDown = 0
 			end if
 		end if
-		while object.value3 < 0
-			object.value3 += 22
+
+		while lselect.menuIndex < 0
+			lselect.menuIndex += 22
 		loop
-		object.value3 %= 22
+
+		lselect.menuIndex %= 22
 		
-		menu1.selection = object.value3
+		menu1.selection = lselect.menuIndex
+
 		if menu1.selection == 21
 			menu1.selection++
 		end if
 		
-		switch object.value3
+		switch lselect.menuIndex
 			case 20
 				temp1 = 0
 				if inputPress.left == 1
-					object.value4--
+					start.attractTimer--    // if you're curious about why this is used here, this value is reused for Sound Test controls, as it's no longer used to time the demo to start.
 					temp1 = 1
 				end if
 				if inputPress.right == 1
-					object.value4++
+					start.attractTimer++
 					temp1 = 1
 				end if
-				while object.value4 < 0
-					object.value4 += 20
+				while start.attractTimer < 0
+					start.attractTimer += 20
 				loop
-				object.value4 %= 20
+				start.attractTimer %= 20
 				if temp1 == 1
-					switch object.value4
+					switch start.attractTimer
 						case 0
 							EditMenuEntry(MENU_1, "SOUND SELECT    00      ", 20, 1)
 							break
@@ -394,19 +419,19 @@ event ObjectMain
 			case 19
 				temp1 = 0
 				if inputPress.left == 1
-					object.value5--
+					lselect.specialIndex--
 					temp1 = 1
 				end if
 				if inputPress.right == 1
-					object.value5++
+					lselect.specialIndex++
 					temp1 = 1
 				end if
-				while object.value5 < 0
-					object.value5 += object.value6
+				while lselect.specialIndex < 0
+					lselect.specialIndex += lselect.emeraldCount
 				loop
-				object.value5 %= object.value6
+				lselect.specialIndex %= lselect.emeraldCount
 				if temp1 == 1
-					switch object.value5
+					switch lselect.specialIndex
 						case 0
 							EditMenuEntry(MENU_1, "SPECIAL STAGE   01      ", 19, 1)
 							break
@@ -434,19 +459,19 @@ event ObjectMain
 			case 21
 				temp1 = 0
 				if inputPress.left == 1
-					character.sel--
+					lselect.characterSel--
 					temp1 = 1
 				end if
 				if inputPress.right == 1
-					character.sel++
+					lselect.characterSel++
 					temp1 = 1
 				end if
-				while character.sel < 0
-					character.sel += object.value7
+				while lselect.characterSel < 0
+					lselect.characterSel += object.value7
 				loop
-				character.sel %= object.value7
+				lselect.characterSel %= object.value7
 				if temp1 == 1
-					switch character.sel
+					switch lselect.characterSel
 						case 0
 							EditMenuEntry(MENU_1, "PLAYER             SONIC", 22, 1)
 							break
@@ -477,10 +502,10 @@ event ObjectMain
 		if temp0 == 1
 			WriteSaveRam()
 			options.attractMode = 0
-			switch object.value3
+			switch lselect.menuIndex
 				case 19 //special stage
 					stage.activeList = SPECIAL_STAGE
-					stage.listPos = object.value5
+					stage.listPos = lselect.specialIndex
 					PlaySfx(SfxName[Warp], 0)
 					fadeColor = 208
 					fadeColor <<= 16
@@ -489,12 +514,12 @@ event ObjectMain
 					fadeColor += temp0
 					fadeColor += 224
 					object.state = 8					
-					if object.value9 == 1
+					if lselect.emeraldsEnabled == 1
 						specialStage.emeralds = 127
 					end if
 					break
-				case 20 //sound select
-					switch object.value4
+				case 20 // Sound Test selection.
+					switch start.attractTimer // this switch dictates what will happen on a sound test selection.
 						case 0
 							StopMusic()
 							break
@@ -578,37 +603,37 @@ event ObjectMain
 							PlayMusic(0)
 							break
 					end switch
-					
-					if object.value9 == 0
-						switch object.value4
-							case 1
-								if object.value8 == 1
-									object.value8 = 2
+
+					if lselect.emeraldsEnabled == 0 // if chaos emeralds are not active
+						switch start.attractTimer // handle cheat code inputs. sound test selection.
+							case 1 // second input.
+								if lselect.emeraldCheatPos == 1
+									lselect.emeraldCheatPos = 2
 								else
-									object.value8 = 0
+									lselect.emeraldCheatPos = 0
 								end if
 								break
-							case 2
-								if object.value8 == 2
-									object.value8 = 3
+							case 2 // third input.
+								if lselect.emeraldCheatPos == 2
+									lselect.emeraldCheatPos = 3
 								else
-									object.value8 = 0
+									lselect.emeraldCheatPos = 0
 								end if
 								break
-							case 4
-								object.value8 = 1
+							case 4 // first input.
+								lselect.emeraldCheatPos = 1
 								break
-							case 6
-								if object.value8 == 3
-									object.value8 = 4
-									object.value9 = 1
+							case 6 // WOO CHAOS!!!!!!!!! :exploder:
+								if lselect.emeraldCheatPos == 3
+									lselect.emeraldCheatPos = 4
+									lselect.emeraldsEnabled = 1
 									PlaySfx(SfxName[Emerald], 0)
 								else
-									object.value8 = 0
+									lselect.emeraldCheatPos = 0
 								end if
 								break
 							default
-								object.value8 = 0
+								lselect.emeraldCheatPos = 0
 								break
 						end switch
 					end if
@@ -617,8 +642,8 @@ event ObjectMain
 					break
 				default
 					stage.activeList = REGULAR_STAGE
-					stage.listPos = object.value3
-					if object.value9 == 1
+					stage.listPos = lselect.menuIndex
+					if lselect.emeraldsEnabled == 1
 						specialStage.emeralds = 127
 					end if
 					object.state = 7
@@ -626,40 +651,40 @@ event ObjectMain
 			end switch
 		end if		
 		break
-	case 7
-		if object.value0 < 256
+	case START_CLVLSEL_LOADSTAGE // Load a selected stage!
+		if start.timer < 256
 			music.volume -= 10
-			object.value0 += 16
-			SetScreenFade(0, 0, 0, object.value0)
+			start.timer += 16
+			SetScreenFade(0, 0, 0, start.timer)
 		else
-			GetTableValue(stage.playerListPos, character.sel, CharLoad)
+			GetTableValue(stage.playerListPos, lselect.characterSel, LSelect_CharacterLoad)
 			LoadStage()
 			SetScreenFade(0, 0, 0, 255)
 		end if
 		break
-	case 8
-		if object.value0 < 768
+	case START_CLVLSEL_LOADSS // Load a selected Special Stage!
+		if start.timer < 768
 			music.volume -= 10
-			object.value0 += 8
-			SetScreenFade(color6, color7, color6, object.value0)
+			start.timer += 8
+			SetScreenFade(color6, color7, color6, start.timer)
 		else
-			GetTableValue(stage.playerListPos, character.sel, CharLoad)
+			GetTableValue(stage.playerListPos, lselect.characterSel, LSelect_CharacterLoad)
 			StopMusic()
 			LoadPalette("SpecialStage.act",0,0,0,128)
 			LoadStage()
 			SetScreenFade(color6, color7, color6, 255)
 		end if
 		break
-	case 9
-		object.value0 += 8
+	case START_EXITTOMAINMENU // Leaving the classic level select, boot to Main Menu.
+		start.timer += 8
 		music.volume -= 2
-		if object.value0 == 320
+		if start.timer == 320
 			StopMusic()
 			stage.activeList = PRESENTATION_STAGE
 			stage.listPos = 6
 			LoadStage()
 		end if
-		SetScreenFade(0, 0, 0, object.value0)
+		SetScreenFade(0, 0, 0, start.timer)
 		break
 	end switch
 end event
@@ -667,13 +692,12 @@ end event
 
 event ObjectDraw
 	switch object.state
-		//case 5
-		case 6
-		case 7
-		case 8
-		case 9
+		case START_HANDLECLVLSEL
+		case START_CLVLSEL_LOADSTAGE
+		case START_CLVLSEL_LOADSS
+		case START_EXITTOMAINMENU
 			if saved.mobile == 1
-				CallFunction(TouchControls)
+				CallFunction(Start_HandleTouchControls)
 			end if
 			temp0 = screen.xcenter
 			DrawMenu(MENU_1, temp0, 40)
