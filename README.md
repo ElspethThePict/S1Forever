@@ -27,7 +27,7 @@ ElspethThePict
 Tania
 with contributions by
 	Leonx254
-	GeffGeff (Video Player)
+	GeffGeff
 
 Artists:
 AlyStyle
