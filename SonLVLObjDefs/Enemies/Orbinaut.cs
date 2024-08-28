@@ -63,14 +63,10 @@ namespace S1FObjectDefinitions.Enemies
 				(obj) => obj.PropertyValue & 1,
 				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~1) | (int)value));
 			
-			properties[1] = new PropertySpec("Fire Orbs", typeof(int), "Extended",
-				"If the Orbinaut should fire its orbs or not.", null, new Dictionary<string, int>
-				{
-					{ "True", 0 }, // just a little something
-					{ "False", 2 }
-				},
-				(obj) => obj.PropertyValue & 2,
-				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & ~2) | (int)value));
+			properties[1] = new PropertySpec("Fire Orbs", typeof(bool), "Extended",
+				"If the Orbinaut should fire its orbs or not.", null,
+				(obj) => (obj.PropertyValue & ~1) > 1,
+				(obj, value) => obj.PropertyValue = (byte)((obj.PropertyValue & 1) | ((bool)value ? 2 : 0)));
 		}
 
 		public override ReadOnlyCollection<byte> Subtypes

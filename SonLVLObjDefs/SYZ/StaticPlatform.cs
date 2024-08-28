@@ -19,10 +19,10 @@ namespace S1ObjectDefinitions.SYZ
 			overlay.DrawLine(6, 32, 0, 32, 511); // LevelData.ColorWhite
 			debug = new Sprite(overlay, -32, -511);
 			
-			properties[0] = new PropertySpec("Button Triggered", typeof(bool), "Extended",
+			properties[0] = new PropertySpec("Elevator", typeof(bool), "Extended",
 				"If this Platform should rise vertically when button[-1] is pressed.", null,
 				(obj) => (obj.PropertyValue == 1),
-				(obj, value) => obj.PropertyValue = (byte)(((bool)value) ? 1 : 0));
+				(obj, value) => obj.PropertyValue = (byte)((bool)value ? 1 : 0));
 		}
 		
 		public override ReadOnlyCollection<byte> Subtypes
@@ -37,7 +37,7 @@ namespace S1ObjectDefinitions.SYZ
 
 		public override string SubtypeName(byte subtype)
 		{
-			return (subtype == 1) ? "Button Triggered" : "Static";
+			return (subtype == 1) ? "Elevator" : "Static";
 		}
 
 		public override Sprite Image
