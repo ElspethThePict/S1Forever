@@ -36,72 +36,74 @@ event ObjectMain
 		CheckEqual(object[currentPlayer].state, PlayerObject_Hurt)
 		temp0 |= checkResult
 		if temp0 == 0
-			BoxCollisionTest(C_TOUCH, object.entityPos, -8, -8, 8, 8, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
-			if checkResult == 1
-				object.type = TypeName[Ring Sparkle]
-				if stage.debugMode == 0
-					saveRAM[997]++
-					if saveRAM[997] > saveRAM[998]
-						saveRAM[998] = saveRAM[997]
-					end if
-				end if
-				object[0].value0++
-				if object[0].value0 > 999
-					object[0].value0 = 999
-				end if
-				if object[0].value0 >= ringExtraLife
-					if options.gameMode < 2
-						if saved.lives == 0
-							player.lives++
-							PlaySfx(SfxName[Life], 0)
-							PauseMusic()
-							ResetObjectEntity(25, TypeName[Music Event], 2, 0, 0)
-							object[25].priority = PRIORITY_ACTIVE
+			if object.type = TypeName[Ring]
+				BoxCollisionTest(C_TOUCH, object.entityPos, -8, -8, 8, 8, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
+				if checkResult == 1
+					object.type = TypeName[Ring Sparkle]
+					if stage.debugMode == 0
+						saveRAM[997]++
+						if saveRAM[997] > saveRAM[998]
+							saveRAM[998] = saveRAM[997]
 						end if
 					end if
-					if stage.debugMode == 0
-						if object[0].value0 >= 200
-							achievement.trigger = 6
-							//CallNativeFunction2(SetAchievement, 4, 100)
+					object[0].value0++
+					if object[0].value0 > 999
+						object[0].value0 = 999
+					end if
+					if object[0].value0 >= ringExtraLife
+						if options.gameMode < 2
+							if saved.lives == 0
+								player.lives++
+								PlaySfx(SfxName[Life], 0)
+								PauseMusic()
+								ResetObjectEntity(25, TypeName[Music Event], 2, 0, 0)
+								object[25].priority = PRIORITY_ACTIVE
+							end if
+						end if
+						if stage.debugMode == 0
+							if object[0].value0 >= 200
+								achievement.trigger = 6
+								//CallNativeFunction2(SetAchievement, 4, 100)
+							end if
+						end if
+						ringExtraLife += 100
+						if ringExtraLife > 300
+							ringExtraLife = 1000
 						end if
 					end if
-					ringExtraLife += 100
-					if ringExtraLife > 300
-						ringExtraLife = 1000
-					end if
-				end if
-				if object.propertyValue == 1
-					if stage.debugMode == 0
-						if options.attractMode == 0
-							if currentPlayer == 0
-								if object[0].animation == ANI_JUMPING
-									achieveRingCount++
-									if achieveRingCount == 30
-										//CallNativeFunction2(SetAchievement, 0, 100)
-										achievement.trigger = 2
-										achieveRingCount = 0
+					if object.propertyValue == 1
+						if stage.debugMode == 0
+							if options.attractMode == 0
+								if currentPlayer == 0
+									if object[0].animation == ANI_JUMPING
+										achieveRingCount++
+										if achieveRingCount == 30
+											//CallNativeFunction2(SetAchievement, 0, 100)
+											achievement.trigger = 2
+											achieveRingCount = 0
+										end if
 									end if
 								end if
 							end if
 						end if
 					end if
-				end if
-				if ringPan == 0
-					PlaySfx(SfxName[Ring L], 0)
-					SetSfxAttributes(SfxName[Ring L], -1, -100)
-					ringPan = 1
+					if ringPan == 0
+						PlaySfx(SfxName[Ring L], 0)
+						SetSfxAttributes(SfxName[Ring L], -1, -100)
+						ringPan = 1
+					else
+						PlaySfx(SfxName[Ring R], 0)
+						SetSfxAttributes(SfxName[Ring R], -1, 100)
+						ringPan = 0
+					end if
 				else
-					PlaySfx(SfxName[Ring R], 0)
-					SetSfxAttributes(SfxName[Ring R], -1, 100)
-					ringPan = 0
-				end if
-			else
-				if object.state == 0
-					if object[currentPlayer].value37 == 4
-						BoxCollisionTest(C_TOUCH, object.entityPos, -64, -64, 64, 64, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
-						if checkResult == 1
-							object.state = 1
-							object.value1 = currentPlayer
+					if object.state == 0
+						if object[currentPlayer].value37 == 4
+							BoxCollisionTest(C_TOUCH, object.entityPos, -64, -64, 64, 64, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
+							if checkResult == 1
+								object.state = 1
+								object.value1 = currentPlayer
+							end if
 						end if
 					end if
 				end if
