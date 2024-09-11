@@ -58,7 +58,7 @@ event ObjectMain
 			CheckEqual(object[currentPlayer].state, PlayerObject_Hurt)
 			temp0 |= checkResult
 			if temp0 == 0
-				if object.type = TypeName[Lose Ring]
+				if object.type == TypeName[Lose Ring]
 					BoxCollisionTest(C_TOUCH, object.entityPos, -8, -8, 8, 8, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
 					if checkResult == 1
 						object.type = TypeName[Ring Sparkle]
