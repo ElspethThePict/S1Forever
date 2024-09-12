@@ -301,6 +301,19 @@ event ObjectStartup
 	temp0 |= checkResult
 	if temp0 == 1
 		switch stage.listPos
+		case 0 // (Boss Rush)
+			if stage.activeList == BONUS_STAGE
+				switch object[arrayPos0].propertyValue
+				case 9
+					object[arrayPos0].propertyValue = 2
+					break
+				case 10
+				case 11
+					object[arrayPos0].type = TypeName[Blank Object]
+					break				
+				end switch
+			end if
+			break
 		case 12
 		case 13
 		case 17
