@@ -1329,7 +1329,6 @@ function datamang.menu
 				StopSfx(SfxName[Warn], 0)
 			end if
 			break
-			break
 	end switch
 end function
 
