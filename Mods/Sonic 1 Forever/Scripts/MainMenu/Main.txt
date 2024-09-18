@@ -404,9 +404,11 @@ function touch.controls
 							touch.X2Pos += 128
 							CheckTouchRect(touch.X1Pos, touch.Y1Pos, touch.X2Pos, touch.Y2Pos)
 							if checkResult > -1
-								delete.check = true
+								if delete.check == 0
+									PlaySfx(SfxName[Warn], 0)
+									delete.check = 1
+								end if
 								inputDown.buttonA = true
-								delete.ticker++
 							end if
 						end if
 					end if

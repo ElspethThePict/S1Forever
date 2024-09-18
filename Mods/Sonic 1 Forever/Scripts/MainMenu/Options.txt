@@ -1061,6 +1061,8 @@ function datamang.menu
 	if inputPress.up == 1
 		menu.highlight--
 		delete.check = 0
+		delete.ticker = 0
+		StopSfx(SfxName[Warn], 0)
 		if menu.highlight < 0
 			menu.highlight = 9
 		end if
@@ -1068,6 +1070,8 @@ function datamang.menu
 		if inputPress.down == 1
 			menu.highlight++
 			delete.check = 0
+			delete.ticker = 0
+		StopSfx(SfxName[Warn], 0)
 			if menu.highlight > 9
 				menu.highlight = 0
 			end if
@@ -1096,99 +1100,235 @@ function datamang.menu
 			end if
 			break
 		case 1 // Restore Option Default
-			temp0 = inputPress.buttonA
-			if temp0 == 1
-				delete.check = 1
+			if inputPress.buttonA == 1
 				PlaySfx(SfxName[Warn], 0)
+				delete.check = 1
 			end if
-			if delete.check == 2
-				CallFunction(option.restore)
+			
+			if inputDown.buttonA == 1
+				if delete.check == 1
+					delete.ticker++
+					if delete.ticker >= 110
+						delete.ticker = 110
+						if delete.check < 2
+							delete.check = 2
+							CallFunction(option.restore)
+							PlaySfx(SfxName[Cleared], 0)
+							StopSfx(SfxName[Warn], 0)
+						end if
+					end if
+				end if
+			else
+				delete.check = 0
+				delete.ticker = 0
+				StopSfx(SfxName[Warn], 0)
 			end if
 			break
 		case 2 // Clear All
-			temp0 = inputPress.buttonA
-			if temp0 == 1
-				delete.check = 1
+			if inputPress.buttonA == 1
 				PlaySfx(SfxName[Warn], 0)
+				delete.check = 1
 			end if
-			if delete.check == 2
-				CallFunction(delete.save)
-				CallFunction(delete.ta)
-				CallFunction(delete.arcade)
-				CallFunction(delete.golf)
-				CallFunction(delete.extras)
-				CallFunction(delete.achieve)
+			
+			if inputDown.buttonA == 1
+				if delete.check == 1
+					delete.ticker++
+					if delete.ticker >= 110
+						delete.ticker = 110
+						if delete.check < 2
+							delete.check = 2
+							CallFunction(delete.save)
+							CallFunction(delete.ta)
+							CallFunction(delete.arcade)
+							CallFunction(delete.golf)
+							CallFunction(delete.extras)
+							CallFunction(delete.achieve)
+							PlaySfx(SfxName[Cleared], 0)
+							StopSfx(SfxName[Warn], 0)
+						end if
+					end if
+				end if
+			else
+				delete.check = 0
+				delete.ticker = 0
+				StopSfx(SfxName[Warn], 0)
 			end if
 			break
-		case 3 // Clear Saves	
-			temp0 = inputPress.buttonA
-			if temp0 == 1
-				delete.check = 1
+		case 3 // Clear Saves
+			if inputPress.buttonA == 1
 				PlaySfx(SfxName[Warn], 0)
+				delete.check = 1
 			end if
-			if delete.check == 2
-				CallFunction(delete.save)
+			
+			if inputDown.buttonA == 1
+				if delete.check == 1
+					delete.ticker++
+					if delete.ticker >= 110
+						delete.ticker = 110
+						if delete.check < 2
+							delete.check = 2
+							CallFunction(delete.save)
+							PlaySfx(SfxName[Cleared], 0)
+							StopSfx(SfxName[Warn], 0)
+						end if
+					end if
+				end if
+			else
+				delete.check = 0
+				delete.ticker = 0
+				StopSfx(SfxName[Warn], 0)
 			end if
 			break
 		case 4 // Clear TA		
-			temp0 = inputPress.buttonA
-			if temp0 == 1
-				delete.check = 1
+			if inputPress.buttonA == 1
 				PlaySfx(SfxName[Warn], 0)
+				delete.check = 1
 			end if
-			if delete.check == 2
-				CallFunction(delete.ta)
+			
+			if inputDown.buttonA == 1
+				if delete.check == 1
+					delete.ticker++
+					if delete.ticker >= 110
+						delete.ticker = 110
+						if delete.check < 2
+							delete.check = 2
+							CallFunction(delete.ta)
+							PlaySfx(SfxName[Cleared], 0)
+							StopSfx(SfxName[Warn], 0)
+						end if
+					end if
+				end if
+			else
+				delete.check = 0
+				delete.ticker = 0
+				StopSfx(SfxName[Warn], 0)
 			end if
 			break
 		case 5 // Clear Arcade
-			temp0 = inputPress.buttonA
-			if temp0 == 1
-				delete.check = 1
+			if inputPress.buttonA == 1
 				PlaySfx(SfxName[Warn], 0)
+				delete.check = 1
 			end if
-			if delete.check == 2
-				CallFunction(delete.arcade)
+			
+			if inputDown.buttonA == 1
+				if delete.check == 1
+					delete.ticker++
+					if delete.ticker >= 110
+						delete.ticker = 110
+						if delete.check < 2
+							delete.check = 2
+							CallFunction(delete.arcade)
+							PlaySfx(SfxName[Cleared], 0)
+							StopSfx(SfxName[Warn], 0)
+						end if
+					end if
+				end if
+			else
+				delete.check = 0
+				delete.ticker = 0
+				StopSfx(SfxName[Warn], 0)
 			end if
 			break
 		case 6 // Clear Golf
-			temp0 = inputPress.buttonA
-			if temp0 == 1
-				delete.check = 1
+			if inputPress.buttonA == 1
 				PlaySfx(SfxName[Warn], 0)
+				delete.check = 1
 			end if
-			if delete.check == 2
-				CallFunction(delete.golf)
+			
+			if inputDown.buttonA == 1
+				if delete.check == 1
+					delete.ticker++
+					if delete.ticker >= 110
+						delete.ticker = 110
+						if delete.check < 2
+							delete.check = 2
+							CallFunction(delete.golf)
+							PlaySfx(SfxName[Cleared], 0)
+							StopSfx(SfxName[Warn], 0)
+						end if
+					end if
+				end if
+			else
+				delete.check = 0
+				delete.ticker = 0
+				StopSfx(SfxName[Warn], 0)
 			end if
 			break
 		case 7 // Clear Extras
-			temp0 = inputPress.buttonA
-			if temp0 == 1
-				delete.check = 1
+			if inputPress.buttonA == 1
 				PlaySfx(SfxName[Warn], 0)
+				delete.check = 1
 			end if
-			if delete.check == 2
-				CallFunction(delete.extras)
+			
+			if inputDown.buttonA == 1
+				if delete.check == 1
+					delete.ticker++
+					if delete.ticker >= 110
+						delete.ticker = 110
+						if delete.check < 2
+							delete.check = 2
+							CallFunction(delete.extras)
+							PlaySfx(SfxName[Cleared], 0)
+							StopSfx(SfxName[Warn], 0)
+						end if
+					end if
+				end if
+			else
+				delete.check = 0
+				delete.ticker = 0
+				StopSfx(SfxName[Warn], 0)
 			end if
 			break
 		case 8 // Clear Achieve
-			temp0 = inputPress.buttonA
-			if temp0 == 1
-				delete.check = 1
+			if inputPress.buttonA == 1
 				PlaySfx(SfxName[Warn], 0)
+				delete.check = 1
 			end if
-			if delete.check == 2
-				CallFunction(delete.achieve)
+			
+			if inputDown.buttonA == 1
+				if delete.check == 1
+					delete.ticker++
+					if delete.ticker >= 110
+						delete.ticker = 110
+						if delete.check < 2
+							delete.check = 2
+							CallFunction(delete.achieve)
+							PlaySfx(SfxName[Cleared], 0)
+							StopSfx(SfxName[Warn], 0)
+						end if
+					end if
+				end if
+			else
+				delete.check = 0
+				delete.ticker = 0
+				StopSfx(SfxName[Warn], 0)
 			end if
 			break
 		case 9 // Clear Secret
-			temp0 = inputPress.buttonA
-			if temp0 == 1
-				delete.check = 1
+			if inputPress.buttonA == 1
 				PlaySfx(SfxName[Warn], 0)
+				delete.check = 1
 			end if
-			if delete.check == 2
-				CallFunction(delete.secret)
+			
+			if inputDown.buttonA == 1
+				if delete.check == 1
+					delete.ticker++
+					if delete.ticker >= 110
+						delete.ticker = 110
+						if delete.check < 2
+							delete.check = 2
+							CallFunction(delete.secret)
+							PlaySfx(SfxName[Cleared], 0)
+							StopSfx(SfxName[Warn], 0)
+						end if
+					end if
+				end if
+			else
+				delete.check = 0
+				delete.ticker = 0
+				StopSfx(SfxName[Warn], 0)
 			end if
+			break
 			break
 	end switch
 end function
@@ -3052,36 +3192,8 @@ event ObjectDraw
 	//Delete Highlight
 	if delete.check == 1
 		if inputDown.buttonA == 1
-			temp3 = 0
-				if delete.ticker != 110
-					if delete.ticker <= 110
-							delete.ticker++
-					end if
-				end if	
-			temp3 += delete.ticker
-			DrawRect(temp1, temp2, temp3, 17, 255,0,0, 255) // RED
-			if temp3 == 110
-				StopSfx(SfxName[Warn], 0)
-				delete.check = 2
-				PlaySfx(SfxName[Cleared], 0)
-
-				temp3 = 0
-				delete.ticker = 0
-			end if
-		else
-			StopSfx(SfxName[Warn], 0)
-			temp3 = 0
-			delete.ticker = 0
-			delete.check = 0
+			DrawRect(temp1, temp2, delete.ticker, 17, color7, 0, 0, 255) // RED
 		end if
-	end if
-	temp4 = inputPress.up
-	temp4 |= inputPress.down
-	if temp4 == 1
-		StopSfx(SfxName[Warn], 0)
-		temp3 = 0
-		delete.ticker = 0
-		delete.check = 0
 	end if
 	//Delete Highlight Ended
 
