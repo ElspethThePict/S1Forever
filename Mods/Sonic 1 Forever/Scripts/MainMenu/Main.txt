@@ -380,28 +380,18 @@ function touch.controls
 						end if
 					else
 						if options.curMenu != 6
-							touch.X1Pos  = screen.xsize
-							touch.X1Pos -= 32
-							touch.X2Pos  = touch.X1Pos
-							touch.X2Pos += 32
+							touch.X2Pos = screen.xsize
+							touch.X1Pos = screen.xsize
+							touch.X1Pos -= 122
 							CheckTouchRect(touch.X1Pos, touch.Y1Pos, touch.X2Pos, touch.Y2Pos)
 							if checkResult > -1
 								touch.inputReset = true
 								inputPress.right = true
 							end if
-							touch.X1Pos -= 80
-							touch.X2Pos  = touch.X1Pos
-							touch.X2Pos += 32
-							CheckTouchRect(touch.X1Pos, touch.Y1Pos, touch.X2Pos, touch.Y2Pos)
-							if checkResult > -1
-								touch.inputReset = true
-								inputPress.left = true
-							end if
 						else
 							touch.X1Pos  = screen.xsize
-							touch.X1Pos -= 128
-							touch.X2Pos  = touch.X1Pos
-							touch.X2Pos += 128
+							touch.X1Pos -= 122
+							touch.X2Pos  = screen.xsize
 							CheckTouchRect(touch.X1Pos, touch.Y1Pos, touch.X2Pos, touch.Y2Pos)
 							if checkResult > -1
 								if delete.check == 0
