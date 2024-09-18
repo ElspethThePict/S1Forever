@@ -670,12 +670,12 @@ end function
 
 function main.load
 	fade.effect += 16
-	music.volume -= 4
+	music.volume -= 8
 	SetScreenFade(0, 0, 0, fade.effect)
 	if fade.effect >= 384
 		options.gameMode = 0
 		stage.playerListPos = 0
-
+		StopMusic()
 		options.attractMode = 0
 		player.lives = 3
 		player.continues = 0
