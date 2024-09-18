@@ -723,15 +723,17 @@ event ObjectStartup
 	
 	//Background 
 	SpriteFrame(0, 0, 28, 26, 396, 1) //10 Border Top
-	if saved.language == 0
+	switch saved.language
+	default
 		SpriteFrame(-105, 0, 212, 47, 183, 1) //11 Time Attack Sign
-	end if
-	if saved.language == 1
+		break
+	case 1
 		SpriteFrame(-105, 0, 212, 47, 510, 0) //11 Time Attack Sign
-	end if	
-	if saved.language == 2
+		break
+	case 2
 		SpriteFrame(-121, 0, 243, 47, 510, 48) //11 Time Attack Sign
-	end if
+		break
+	end switch
 	SpriteFrame(0, -22, 28, 22, 154, 1) //12 Bottom ZigZags
 	SpriteFrame(-73, -73, 152, 149, 1, 1) //13 Large Circle
 	SpriteFrame(-3, -70, 5, 70, 1, 151) //14 Minute Hand
@@ -825,21 +827,23 @@ event ObjectStartup
 	SpriteFrame(0, 0, 148, 30, 17, 168) //77 Banner Text Area
 	SpriteFrame(0, 0, 8, 5, 128, 211) //78 Double Inverted Commas
 	SpriteFrame(0, 0, 4, 5, 128, 211) //79 Single Inverted Comma
-	if saved.language == 0
+	switch saved.language
+	default
 		SpriteFrame(-33, 0, 27, 11, 102, 332) //80 "Act"
 		SpriteFrame(-89, 0, 96, 11, 102, 344) //81 "Current Best"
 		SpriteFrame(-74, 0, 81, 11, 102, 356) //82 "Total Best"
-	end if
-	if saved.language == 1
+		break
+	case 1
 		SpriteFrame(-33, 0, 29, 11, 130, 332) //80 "Act"
 		SpriteFrame(-97, 0, 104, 11, 199, 344) //81 "Current Best"
 		SpriteFrame(-96, 0, 103, 11, 199, 356) //82 "Total Best"
-	end if
-	if saved.language == 2
+		break
+	case 2
 		SpriteFrame(-41, 0, 37, 11, 160, 332) //80 "Act"
 		SpriteFrame(-94, 0, 101, 11, 304, 344) //81 "Current Best"
 		SpriteFrame(-85, 0, 92, 11, 304, 356) //82 "Total Best"
-	end if	
+		break
+	end switch
 	
 	SpriteFrame(-109, 0, 116, 11, 102, 236) //83 "Green Hill"
 	SpriteFrame(-83, 0, 90, 11, 102, 248) //84 "Marble"

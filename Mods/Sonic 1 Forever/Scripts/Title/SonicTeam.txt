@@ -76,7 +76,7 @@ event ObjectStartup
 	LoadSpriteSheet("Title/SonicTeam.gif")
 	LoadSpriteSheet("Title/Title.gif")
 	switch saved.language
-			case 0
+			default
 				SpriteFrame(-76, -24, 148, 40, 174, 259)
 				break
 			case 1 //PTBR

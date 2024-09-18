@@ -953,7 +953,7 @@ event ObjectStartup
 	SpriteFrame(0, 0, 12, 12, 152, 1) //0 Background
 	SpriteFrame(0, 0, 106, 118, 405, 393) //1 Header Star
 	switch saved.language
-	case 0
+	default
 		SpriteFrame(-75, 0, 150, 18, 1, 1) //2 Title
 		break
 	case 1
@@ -966,7 +966,7 @@ event ObjectStartup
 	
 	//No Save
 	switch saved.language
-	case 0
+	default
 		SpriteFrame(0, -55, 66, 55, 1, 261) //3 No Save Frame
 		SpriteFrame(13, -44, 38, 26, 1, 372) //4 Red X
 		SpriteFrame(6, -13, 53, 11, 166, 261) //5 No Save Text
@@ -989,7 +989,7 @@ event ObjectStartup
 	SpriteFrame(13, -44, 38, 26, 118, 344) //10 Sonic and Tails
 	SpriteFrame(13, -44, 38, 26, 157, 344) //11 Knuckles and Tails
 	switch saved.language
-	case 0
+	default
 		SpriteFrame(7, -46, 50, 28, 115, 261) //12 Select Arrow 
 		break
 	case 1
@@ -1003,7 +1003,7 @@ event ObjectStartup
 	
 	//Delete
 	switch saved.language
-	case 0
+	default
 		SpriteFrame(0, -55, 46, 55, 68, 261) //14 Frame	
 		SpriteFrame(12, -44, 24, 26, 40, 317) //15 Robotnik
 		SpriteFrame(1, -13, 44, 11, 166, 273) //16 Delete Text

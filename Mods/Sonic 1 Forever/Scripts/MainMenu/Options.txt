@@ -371,13 +371,13 @@ function displaystndrd.menu
 				if inputPress.left == 1
 					saved.language--
 					if saved.language < 0
-						saved.language = 2
+						saved.language = 3
 					end if
 					CallFunction(Lang_Init)
 				end if
 				if inputPress.right == 1
 					saved.language++
-					if saved.language > 2
+					if saved.language > 3
 						saved.language = 0
 					end if
 					CallFunction(Lang_Init)
@@ -507,13 +507,13 @@ function displaymob.menu
 			if inputPress.left == 1
 				saved.language--
 				if saved.language < 0
-					saved.language = 2
+					saved.language = 3
 				end if
 				CallFunction(Lang_Init)
 			end if
 			if inputPress.right == 1
 				saved.language++
-				if saved.language > 2
+				if saved.language > 3
 					saved.language = 0
 				end if
 				CallFunction(Lang_Init)

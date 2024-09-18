@@ -719,7 +719,7 @@ event ObjectStartup
 	switch saved.mobile
 	case 0
 		switch saved.language
-			case 0
+			default
 				SpriteFrame(-72, -4, 144, 8, 1, 274)
 				break
 			case 1 //PTBR
