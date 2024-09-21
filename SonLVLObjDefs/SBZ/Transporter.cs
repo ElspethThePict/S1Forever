@@ -112,12 +112,12 @@ namespace S1ObjectDefinitions.SBZ
 				  0x0F940000, 0x4E80000,
 				  0x0F940000, 0x5900000 },
 				new int[] { 0x12940000, 0x4900000 },
-				new int[] { 0x15940000, 0x7E80000, // looks weird (goes from the top of the level to the bottom) but idk what to do about it so
+				new int[] { 0x15940000, 0x7E80000,
 				  0x15840000, 0x7C00000,
 				  0x15600000, 0x7AC0000,
 				  0x14D00000, 0x7AC0000,
 				  0x14A40000, 0x7980000,
-				  0x14940000, 0x7700000,
+				  0x14940000, 0x7700000, // looks weird (goes from the top of the level to the bottom) but idk what to do about it, so..
 				  0x14940000, 0x5900000 },
 				new int[] { 0x8940000, 0x900000 }
 			};

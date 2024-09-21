@@ -136,7 +136,7 @@ namespace S1ObjectDefinitions.SBZ
 		
 		public override Sprite GetDebugOverlay(ObjectEntry obj)
 		{
-			return debug[obj.PropertyValue];
+			return sprites[(sprites.Length > 1) ? obj.PropertyValue : 0];
 		}
 	}
 }

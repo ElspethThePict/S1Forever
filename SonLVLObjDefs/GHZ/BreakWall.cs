@@ -72,7 +72,7 @@ namespace S1ObjectDefinitions.GHZ
 
 		public override Sprite GetSprite(ObjectEntry obj)
 		{
-			return sprites[obj.PropertyValue];
+			return sprites[(obj.PropertyValue < 3) ? obj.PropertyValue : 1];
 		}
 		
 		public override Sprite GetDebugOverlay(ObjectEntry obj)
