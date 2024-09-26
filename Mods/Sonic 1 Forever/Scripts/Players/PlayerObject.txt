@@ -1771,12 +1771,17 @@ function PlayerObject_StartJump
 		object.yvel >>= 8
 		object.speed = object.xvel
 		object.scrollTracking = 1
-		object.angle = 0
-		object.collisionMode = CMODE_FLOOR
-		object.value1 = 1
 		if temp2 == 1
 			if saved.AmyMoveset == 0
-				object.yvel += player.jumpStrength
+                object.collisionMode = CMODE_FLOOR
+		        object.value1 = 1
+                if object.angle >= 64
+                    if object.angle <= 192
+                        object.yvel -= player.jumpStrength
+                    end if
+                else 
+                    object.yvel += player.jumpStrength
+                end if
 				object.animation = ANI_HAMMER_JUMP
 				PlaySfx(SfxName[Thud], 0)
 				object.value1 = 0
@@ -1784,6 +1789,9 @@ function PlayerObject_StartJump
 				player.animationReserve = ANI_FALL
 			end if
 		else
+            object.angle = 0
+            object.collisionMode = CMODE_FLOOR
+		    object.value1 = 1
 			object.animation = ANI_JUMPING
 			if object.propertyValue == 5
 				if saved.AmyMoveset == 1
