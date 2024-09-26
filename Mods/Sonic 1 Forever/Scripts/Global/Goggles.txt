@@ -19,7 +19,7 @@ private table Goggles_Sonic
 	 0, 53,  0, 55,  0,  0,  0,  0,  0,  0
 	 0,  0,  0,  0,  0, 39,  0,  0,  0,  0
 	 0,  0,  0, 57, 62, 66,  0,  0,  0,  0
-	 70
+	70
 end table
 
 private table Goggles_Tails
@@ -31,11 +31,11 @@ private table Goggles_Tails
 end table
 
 private table Goggles_Knuckles
-	 1,  2,  0, 15, 18, 21, 29, 33,  93,  0
+	 1,  2,  0, 15, 18, 21, 29, 33, 94,  0
 	35, 43, 44,  0,  0, 45, 50, 51, 55, 55
 	 0, 67,  0, 69,  0,  0,  0,  0, 71, 74
 	76, 78, 84,  0,  0, 92,  0,  0,  0,  0
-	 0,  0,  0, 87,  0,  95
+	 0,  0,  0, 87,  0, 96
 end table
 
 private table Goggles_Amy
@@ -44,7 +44,7 @@ private table Goggles_Amy
 	 0,  0,  0, 59,  0,  0,  0,  0,  0,  0
 	 0,  0,  0,  0,  0, 43,  0,  0,  0,  0
 	 0,  0,  0, 61, 66,  0, 99, 70, 72, 73
-	 0,  0,  78
+	84, 89, 78
 end table
 
 event ObjectMain
@@ -98,140 +98,150 @@ event ObjectDraw
 			object.frame = 0
 		else
 			object.frame += temp0
-			if object.value1 == Goggles_Tails
+			if object.value1 == Goggles_Sonic
 				if object[currentPlayer].animation == ANI_WAITING
-					if object[currentPlayer].frame <= 20
-						object.frame = 1
-					else
-						if object[currentPlayer].frame <= 36
-							object.frame = 2
-						else
-							if object[currentPlayer].frame == 37
-								object.frame = 3
-							else
-								if object[currentPlayer].frame == 48
-									object.frame = 3
-								else
-									object.frame = 4
-								end if
-							end if
-						end if
-					end if
-				else
-					if object[currentPlayer].animation == ANI_FLYINGTIRED
-						object.frame = object[currentPlayer].frame
-						object.frame /= 6
-						object.frame += 48
-					end if
+					object.frame = 2
 				end if
 			else
-				if object.value1 == Goggles_Knuckles
+				if object.value1 == Goggles_Tails
 					if object[currentPlayer].animation == ANI_WAITING
-						if object[currentPlayer].frame <= 53
+						if object[currentPlayer].frame <= 20
 							object.frame = 1
 						else
-							if object[currentPlayer].frame <= 58
+							if object[currentPlayer].frame <= 36
 								object.frame = 2
 							else
-								if object[currentPlayer].frame == 59
+								if object[currentPlayer].frame == 37
 									object.frame = 3
 								else
-									if object[currentPlayer].frame <= 91
-										object.frame = object[currentPlayer].frame
-										object.frame -= 60
-										object.frame &= 3
-										object.frame += 4
+									if object[currentPlayer].frame == 48
+										object.frame = 3
 									else
-										object.frame = object[currentPlayer].frame
-										object.frame -= 92
-										object.frame += 8
+										object.frame = 4
 									end if
 								end if
 							end if
 						end if
 					else
-						CheckEqual(object[currentPlayer].animation, ANI_FLAILING1)
-						temp0 = checkResult
-						CheckEqual(object[currentPlayer].animation, ANI_FLAILING2)
-						temp0 |= checkResult
-						if temp0 == 1
-							if object[currentPlayer].frame < 12
-								object.frame = object[currentPlayer].frame
-								object.frame >>= 1
-								object.frame += 55
+						if object[currentPlayer].animation == ANI_FLYINGTIRED
+							object.frame = object[currentPlayer].frame
+							object.frame /= 6
+							object.frame += 48
+						end if
+					end if
+				else
+					if object.value1 == Goggles_Knuckles
+						if object[currentPlayer].animation == ANI_WAITING
+							if object[currentPlayer].frame <= 53
+								object.frame = 1
 							else
-								if object[currentPlayer].frame < 27
-									object.frame = 61
+								if object[currentPlayer].frame <= 58
+									object.frame = 2
 								else
-									if object[currentPlayer].frame < 30
-										object.frame = 62
+									if object[currentPlayer].frame == 59
+										object.frame = 3
 									else
-										if object[currentPlayer].frame < 33
-											object.frame = 63
+										if object[currentPlayer].frame <= 91
+											object.frame = object[currentPlayer].frame
+											object.frame -= 60
+											object.frame &= 3
+											object.frame += 4
 										else
 											object.frame = object[currentPlayer].frame
-											object.frame -= 33
-											object.frame >>= 1
-											object.frame %= 3
-											object.frame += 64
+											object.frame -= 92
+											object.frame += 8
 										end if
 									end if
 								end if
 							end if
 						else
-							if object[currentPlayer].animation == ANI_GLIDING
-								if object[currentPlayer].frame == 3
-									object.frame--
+							CheckEqual(object[currentPlayer].animation, ANI_FLAILING1)
+							temp0 = checkResult
+							CheckEqual(object[currentPlayer].animation, ANI_FLAILING2)
+							temp0 |= checkResult
+							if temp0 == 1
+								temp0 = object[currentPlayer].frame
+								if object[currentPlayer].animation == ANI_FLAILING2
+									temp0 += 6
+								end if
+								if temp0 < 12
+									object.frame = temp0
+									object.frame >>= 1
+									object.frame += 55
+								else
+									if temp0 < 27
+										object.frame = 61
+									else
+										if temp0 < 30
+											object.frame = 62
+										else
+											if temp0 < 33
+												object.frame = 63
+											else
+												object.frame = temp0
+												object.frame -= 33
+												object.frame >>= 1
+												object.frame %= 3
+												object.frame += 64
+											end if
+										end if
+									end if
+								end if
+							else
+								if object[currentPlayer].animation == ANI_GLIDING
+									if object[currentPlayer].frame == 3
+										object.frame--
+									end if
 								end if
 							end if
 						end if
-					end if
-				else
-					if object.value1 == Goggles_Amy
-						if object[currentPlayer].animation == 46
-							switch object[currentPlayer].frame
-								case 0
-								case 1
-								case 2
-								case 3
-								case 4
-								case 5
-								case 6
-								case 7
-								case 8
-								case 9
-								case 10
-								case 11
-								case 12
-								case 13
-								case 14
-								case 15
-								case 16
-									object.frame = 80
-									break
-								case 17
-								case 18
-								case 19
-								case 20
-								case 21
-									object.frame = 81
-									break
-								case 22
-								case 23
-								case 24
-								case 25
-								case 26
-								case 27
-									object.frame = 82
-									break
-								case 28
-								case 29
-								case 30
-								case 31
-								case 32
-									object.frame = 83
-									break
-							end switch
+					else
+						if object.value1 == Goggles_Amy
+							if object[currentPlayer].animation == 46
+								switch object[currentPlayer].frame
+									case 0
+									case 1
+									case 2
+									case 3
+									case 4
+									case 5
+									case 6
+									case 7
+									case 8
+									case 9
+									case 10
+									case 11
+									case 12
+									case 13
+									case 14
+									case 15
+									case 16
+										object.frame = 80
+										break
+									case 17
+									case 18
+									case 19
+									case 20
+									case 21
+										object.frame = 81
+										break
+									case 22
+									case 23
+									case 24
+									case 25
+									case 26
+									case 27
+										object.frame = 82
+										break
+									case 28
+									case 29
+									case 30
+									case 31
+									case 32
+										object.frame = 83
+										break
+								end switch
+							end if
 						end if
 					end if
 				end if
@@ -258,95 +268,95 @@ event ObjectStartup
 		case 0
 		case 3
 			//Sonic Stopped
-			SpriteFrame(-4, -12, 12, 9, 118, 71)	//1
+			SpriteFrame(-4, -12, 12, 9, 19, 15)	//1
 			
 			//Sonic Waiting
-			SpriteFrame(-7, -11, 15, 9, 118, 81)	//2
-			SpriteFrame(-7, -11, 15, 9, 118, 81)	//3
-			SpriteFrame(-7, -11, 15, 9, 118, 81)	//4
-			SpriteFrame(-7, -11, 15, 9, 118, 81)	//5
-			SpriteFrame(-7, -11, 15, 9, 118, 81)	//6
-			SpriteFrame(-7, -11, 15, 9, 118, 81)	//7
+			SpriteFrame(-7, -11, 15, 9, 19, 5)	//2
+			SpriteFrame(-7, -11, 15, 9, 19, 5)	//3
+			SpriteFrame(-7, -11, 15, 9, 19, 5)	//4
+			SpriteFrame(-7, -11, 15, 9, 19, 5)	//5
+			SpriteFrame(-7, -11, 15, 9, 19, 5)	//6
+			SpriteFrame(-7, -11, 15, 9, 19, 5)	//7
 			
 			//Sonic Looking Up
-			SpriteFrame(-4, -12, 12, 9, 118, 71)	//8
-			SpriteFrame(-5, -12, 12, 10, 127, 102)	//9
-			SpriteFrame(-6, -13, 12, 10, 127, 102)	//10
+			SpriteFrame(-4, -12, 12, 9, 19, 15)	//8
+			SpriteFrame(-5, -12, 12, 10, 35, 1)	//9
+			SpriteFrame(-6, -13, 12, 10, 35, 1)	//10
 			
 			//Sonic Crouching
-			SpriteFrame(-4, -12, 12, 9, 118, 71)	//11
-			SpriteFrame(-1, -4, 14, 11, 150, 118)	//12
-			SpriteFrame(-1, 10, 9, 8, 140, 102)	//13
+			SpriteFrame(-4, -12, 12, 9, 19, 15)	//11
+			SpriteFrame(-1, -4, 14, 11, 3, 30)	//12
+			SpriteFrame(-1, 10, 9, 8, 8, 21)	//13
 			
 			//Sonic Walking
-			SpriteFrame(0, -11, 12, 9, 118, 71)	//14
-			SpriteFrame(0, -12, 12, 9, 118, 71)	//15
-			SpriteFrame(0, -11, 12, 9, 118, 71)	//16
-			SpriteFrame(3, -11, 8, 9, 118, 102)	//17
-			SpriteFrame(3, -12, 8, 9, 118, 102)	//18
-			SpriteFrame(3, -11, 8, 9, 118, 102)	//19
+			SpriteFrame(0, -11, 12, 9, 19, 15)	//14
+			SpriteFrame(0, -12, 12, 9, 19, 15)	//15
+			SpriteFrame(0, -11, 12, 9, 19, 15)	//16
+			SpriteFrame(3, -11, 8, 9, 8, 11)	//17
+			SpriteFrame(3, -12, 8, 9, 8, 11)	//18
+			SpriteFrame(3, -11, 8, 9, 8, 11)	//19
 			
 			//Sonic Running
-			SpriteFrame(3, -9, 12, 9, 118, 71)	//20
-			SpriteFrame(3, -9, 12, 9, 118, 71)	//21
-			SpriteFrame(3, -9, 12, 9, 118, 71)	//22
-			SpriteFrame(3, -9, 12, 9, 118, 71)	//23
+			SpriteFrame(3, -9, 12, 9, 19, 15)	//20
+			SpriteFrame(3, -9, 12, 9, 19, 15)	//21
+			SpriteFrame(3, -9, 12, 9, 19, 15)	//22
+			SpriteFrame(3, -9, 12, 9, 19, 15)	//23
 			
 			//Sonic Skidding
-			SpriteFrame(-6, -9, 15, 9, 118, 81)	//24
-			SpriteFrame(-6, -9, 15, 9, 118, 81)	//25
+			SpriteFrame(-6, -9, 15, 9, 19, 5)	//24
+			SpriteFrame(-6, -9, 15, 9, 19, 5)	//25
 			
 
 			//Sonic CD peelout
-			SpriteFrame(7, -4, 12, 9, 118, 71)	//26
-			SpriteFrame(7, -4, 12, 9, 118, 71)	//27
-			SpriteFrame(7, -4, 12, 9, 118, 71)	//28
-			SpriteFrame(7, -4, 12, 9, 118, 71)	//29 		
+			SpriteFrame(7, -4, 12, 9, 19, 15)	//26
+			SpriteFrame(7, -4, 12, 9, 19, 15)	//27
+			SpriteFrame(7, -4, 12, 9, 19, 15)	//28
+			SpriteFrame(7, -4, 12, 9, 19, 15)	//29 		
 			
 			//Sonic Jump
 			SpriteFrame(0, 0, 1, 1, 1, 1)	//30
-			SpriteFrame(3, -7, 8, 9, 118, 102)	//31
+			SpriteFrame(3, -7, 8, 9, 8, 11)	//31
 			SpriteFrame(0, 0, 1, 1, 1, 1)	//32
-			SpriteFrame(-1, 3, 9, 8, 140, 102)	//33
+			SpriteFrame(-1, 3, 9, 8, 8, 21)	//33
 			SpriteFrame(0, 0, 1, 1, 1, 1)	//34
-			SpriteFrame(-11, -2, 8, 9, 142, 92)	//35
+			SpriteFrame(-11, -2, 8, 9, 18, 25)	//35
 			SpriteFrame(0, 0, 1, 1, 1, 1)	//36
-			SpriteFrame(-8, -11, 9, 8, 118, 123)	//37
+			SpriteFrame(-8, -11, 9, 8, 27, 25)	//37
 			
 			//Sonic Bouncing
-			SpriteFrame(-2, -19, 12, 10, 127, 102)	//38
+			SpriteFrame(-2, -19, 12, 10, 35, 1)	//38
 			
 			//Sonic Waterslide
-			SpriteFrame(-10, -4, 15, 9, 118, 81)	//39
-			SpriteFrame(-10, -4, 15, 9, 118, 81)	//40
+			SpriteFrame(-10, -4, 15, 9, 19, 5)	//39
+			SpriteFrame(-10, -4, 15, 9, 19, 5)	//40
 			
 			//Sonic Fan Rotate
-			SpriteFrame(9, -5, 12, 9, 118, 71)	//41
-			SpriteFrame(-8, -4, 16, 8, 118, 113)	//42
-			SpriteFrame(-21, -5, 12, 9, 130, 92)	//43
+			SpriteFrame(9, -5, 12, 9, 19, 15)	//41
+			SpriteFrame(-8, -4, 16, 8, 32, 15)	//42
+			SpriteFrame(-21, -5, 12, 9, 37, 25)	//43
 			SpriteFrame(0, 0, 1, 1, 1, 1)	//44
 			SpriteFrame(0, 0, 1, 1, 1, 1)	//45
 			
 			//Sonic Breathing
-			SpriteFrame(-4, -18, 12, 10, 127, 102)	//46
+			SpriteFrame(-4, -18, 12, 10, 35, 1)	//46
 			
 			//Sonic Pushing
-			SpriteFrame(-5, -7, 15, 9, 118, 81)		//47
-			SpriteFrame(-5, -8, 15, 9, 118, 81)		//48
-			SpriteFrame(-5, -7, 15, 9, 118, 81)		//49
-			SpriteFrame(-5, -8, 15, 9, 118, 81)		//50
+			SpriteFrame(-5, -7, 15, 9, 19, 5)		//47
+			SpriteFrame(-5, -8, 15, 9, 19, 5)		//48
+			SpriteFrame(-5, -7, 15, 9, 19, 5)		//49
+			SpriteFrame(-5, -8, 15, 9, 19, 5)		//50
 			
 			//Sonic Flailing
-			SpriteFrame(-10, -13, 15, 9, 118, 81)	//51
-			SpriteFrame(-8, -12, 15, 9, 118, 81)	//52
+			SpriteFrame(-10, -13, 15, 9, 19, 5)	//51
+			SpriteFrame(-8, -12, 15, 9, 19, 5)	//52
 			
 			//Sonic Hanging
-			SpriteFrame(-3, -9, 12, 9, 118, 71)		//53
-			SpriteFrame(-3, -9, 12, 9, 118, 71)		//54
+			SpriteFrame(-3, -11, 12, 9, 19, 15)		//53
+			SpriteFrame(-3, -11, 12, 9, 19, 15)		//54
 			
 			//Sonic Clinging On
-			SpriteFrame(-13, -10, 14, 13, 135, 113)	//55
-			SpriteFrame(-12, -10, 14, 13, 135, 113)	//56
+			SpriteFrame(-12, -9, 14, 13, 18, 35)	//55
+			SpriteFrame(-13, -9, 14, 13, 18, 35)	//56
 						
 			//Sonic CD Spring Twirl
 			SpriteFrame(-5, -21, 6, 7, 1, 1)	//57
@@ -356,66 +366,66 @@ event ObjectStartup
 			SpriteFrame(-5, -21, 10, 4, 8, 1)	//61
 						
 			//Sonic S2 peelout 2
-			SpriteFrame(12, -7, 12, 9, 118, 71)	//62
-			SpriteFrame(12, -7, 12, 9, 118, 71)	//63
-			SpriteFrame(12, -7, 12, 9, 118, 71)	//64
-			SpriteFrame(12, -7, 12, 9, 118, 71)	//65
+			SpriteFrame(12, -7, 12, 9, 19, 15)	//62
+			SpriteFrame(12, -7, 12, 9, 19, 15)	//63
+			SpriteFrame(12, -7, 12, 9, 19, 15)	//64
+			SpriteFrame(12, -7, 12, 9, 19, 15)	//65
 			
 			//Sonic Mania Peelout
-			SpriteFrame(7, -6, 12, 9, 118, 71)	//66
-			SpriteFrame(7, -6, 12, 9, 118, 71)	//67
-			SpriteFrame(7, -6, 12, 9, 118, 71)	//68
-			SpriteFrame(7, -6, 12, 9, 118, 71)	//69
+			SpriteFrame(7, -6, 12, 9, 19, 15)	//66
+			SpriteFrame(7, -6, 12, 9, 19, 15)	//67
+			SpriteFrame(7, -6, 12, 9, 19, 15)	//68
+			SpriteFrame(7, -6, 12, 9, 19, 15)	//69
 									
 			//Sonic S2 peelout 1
-			SpriteFrame(8, -7, 12, 9, 118, 71)	//70
-			SpriteFrame(8, -7, 12, 9, 118, 71)	//71
-			SpriteFrame(8, -7, 12, 9, 118, 71)	//72
-			SpriteFrame(8, -7, 12, 9, 118, 71)	//73
+			SpriteFrame(8, -7, 12, 9, 19, 15)	//70
+			SpriteFrame(8, -7, 12, 9, 19, 15)	//71
+			SpriteFrame(8, -7, 12, 9, 19, 15)	//72
+			SpriteFrame(8, -7, 12, 9, 19, 15)	//73
 		case 1
 			//Tails Stopped
-			SpriteFrame(-5, -10, 12, 9, 118, 71)	//1
+			SpriteFrame(-5, -10, 12, 9, 19, 15)	//1
 			
 			//Tails Waiting
-			SpriteFrame(-9, -10, 16, 9, 118, 113)	//2
-			SpriteFrame(-9, -11, 16, 9, 118, 113)	//3
-			SpriteFrame(-9, -12, 16, 9, 118, 113)	//4
+			SpriteFrame(-9, -10, 16, 9, 32, 15)	//2
+			SpriteFrame(-9, -11, 16, 9, 32, 15)	//3
+			SpriteFrame(-9, -12, 16, 9, 32, 15)	//4
 			
 			//Tails Up and Down
-			SpriteFrame(-5, -12, 12, 9, 118, 71)	//5
-			SpriteFrame(0, 1, 12, 9, 118, 71)		//6
+			SpriteFrame(-5, -12, 12, 9, 19, 15)	//5
+			SpriteFrame(0, 1, 12, 9, 19, 15)		//6
 
 			//Tails Walking
-			SpriteFrame(1, -10, 8, 9, 118, 102)		//7
-			SpriteFrame(1, -12, 8, 9, 118, 102)	//8
-			SpriteFrame(0, -13, 8, 9, 118, 102)	//9
-			SpriteFrame(1, -10, 8, 9, 118, 102)	//10
-			SpriteFrame(1, -10, 8, 9, 118, 102)		//11
-			SpriteFrame(1, -12, 8, 9, 118, 102)		//12
-			SpriteFrame(0, -14, 8, 9, 118, 102)	//13
-			SpriteFrame(1, -10, 8, 9, 118, 102)	//14
+			SpriteFrame(1, -10, 8, 9, 8, 11)		//7
+			SpriteFrame(1, -12, 8, 9, 8, 11)	//8
+			SpriteFrame(0, -13, 8, 9, 8, 11)	//9
+			SpriteFrame(1, -10, 8, 9, 8, 11)	//10
+			SpriteFrame(1, -10, 8, 9, 8, 11)		//11
+			SpriteFrame(1, -12, 8, 9, 8, 11)		//12
+			SpriteFrame(0, -14, 8, 9, 8, 11)	//13
+			SpriteFrame(1, -10, 8, 9, 8, 11)	//14
 			
 			//Tails Running
-			SpriteFrame(2, -11, 8, 9, 118, 102)	//15
-			SpriteFrame(2, -11, 8, 9, 118, 102)	//16
-			SpriteFrame(2, -11, 8, 9, 118, 102)	//17
-			SpriteFrame(2, -11, 8, 9, 118, 102)	//18	
+			SpriteFrame(2, -11, 8, 9, 8, 11)	//15
+			SpriteFrame(2, -11, 8, 9, 8, 11)	//16
+			SpriteFrame(2, -11, 8, 9, 8, 11)	//17
+			SpriteFrame(2, -11, 8, 9, 8, 11)	//18	
 			
 			//Tails Skidding
-			SpriteFrame(-2, -11, 12, 9, 118, 71)	//19
-			SpriteFrame(-2, -11, 12, 9, 118, 71)	//20
+			SpriteFrame(-4, -11, 12, 9, 19, 15)	//19
+			SpriteFrame(-4, -11, 12, 9, 19, 15)	//20
 			
 			//Tails S2 Max Dash
-			SpriteFrame(3, -10, 8, 9, 118, 102)	//21
-			SpriteFrame(3, -10, 8, 9, 118, 102)	//22
+			SpriteFrame(3, -10, 8, 9, 8, 11)	//21
+			SpriteFrame(3, -10, 8, 9, 8, 11)	//22
 			
 			//Tails Bouncing
-			SpriteFrame(-1, -18, 9, 8, 118, 123)	//23
-			SpriteFrame(-1, -18, 9, 8, 118, 123)	//24
+			SpriteFrame(-1, -18, 9, 8, 27, 25)	//23
+			SpriteFrame(-1, -18, 9, 8, 27, 25)	//24
 			
 			//Tails Waterslide
-			SpriteFrame(-6, -11, 12, 9, 118, 71)	//25
-			SpriteFrame(-6, -11, 12, 9, 118, 71)	//26
+			SpriteFrame(-6, -11, 12, 9, 19, 15)	//25
+			SpriteFrame(-6, -11, 12, 9, 19, 15)	//26
 			
 			//Tails CD Spring Twirl
 			SpriteFrame(-6, -19, 6, 7, 1, 1)	//27
@@ -425,187 +435,187 @@ event ObjectStartup
 			SpriteFrame(-6, -16, 10, 4, 8, 1)	//31
 			
 			//Tails Fan Rotate
-			SpriteFrame(7, -5, 12, 9, 118, 71)	//32
-			SpriteFrame(-8, -5, 16, 8, 118, 113)	//33
-			SpriteFrame(-19, -5, 12, 9, 130, 92)	//34
+			SpriteFrame(7, -5, 12, 9, 19, 15)	//32
+			SpriteFrame(-8, -5, 16, 8, 32, 15)	//33
+			SpriteFrame(-19, -5, 12, 9, 37, 25)	//34
 			SpriteFrame(0, 0, 1, 1, 1, 1)	//35
 			SpriteFrame(0, 0, 1, 1, 1, 1)	//36
 			
 			//Tails Breathe
-			SpriteFrame(-2, -16, 12, 10, 127, 102)	//37
+			SpriteFrame(-2, -16, 12, 10, 35, 1)	//37
 			
 			//Tails Pushing
-			SpriteFrame(-2, -8, 15, 9, 118, 81)	//38
-			SpriteFrame(-2, -8, 15, 9, 118, 81)	//39
-			SpriteFrame(-2, -8, 15, 9, 118, 81)	//40
-			SpriteFrame(-2, -8, 15, 9, 118, 81)	//41	
+			SpriteFrame(-2, -8, 15, 9, 19, 5)	//38
+			SpriteFrame(-2, -8, 15, 9, 19, 5)	//39
+			SpriteFrame(-2, -8, 15, 9, 19, 5)	//40
+			SpriteFrame(-2, -8, 15, 9, 19, 5)	//41	
 			
 			//Tails Flailing
-			SpriteFrame(-10, -10, 16, 9, 118, 113)	//42
-			SpriteFrame(-10, -10, 16, 9, 118, 113)	//43
+			SpriteFrame(-10, -10, 16, 9, 32, 15)	//42
+			SpriteFrame(-10, -10, 16, 9, 32, 15)	//43
 			
 			//Tails Clinging On
-			SpriteFrame(-18, -9, 14, 13, 135, 113)	//44
-			SpriteFrame(-19, -9, 14, 13, 135, 113)	//45
+			SpriteFrame(-14, -9, 14, 13, 18, 35)	//44
+			SpriteFrame(-13, -9, 14, 13, 18, 35)	//45
 			
 			//Tails Flying
-			SpriteFrame(-1, -5, 12, 9, 118, 71)	//46
-			SpriteFrame(-1, -5, 12, 9, 118, 71)	//47
+			SpriteFrame(-1, -5, 12, 9, 19, 15)	//46
+			SpriteFrame(-1, -5, 12, 9, 19, 15)	//47
 			
 			//Tails Flying Tired
-			SpriteFrame(-1, -3, 12, 9, 118, 71)	//48
-			SpriteFrame(-1, -4, 12, 9, 118, 71)	//49
+			SpriteFrame(-1, -3, 12, 9, 19, 15)	//48
+			SpriteFrame(-1, -4, 12, 9, 19, 15)	//49
 			
 			//Tails Swimming
-			SpriteFrame(-2, -5, 12, 9, 118, 71)	//50
-			SpriteFrame(-2, -5, 12, 9, 118, 71)	//51
-			SpriteFrame(-2, -5, 12, 9, 118, 71)	//52
-			SpriteFrame(-2, -5, 12, 9, 118, 71)	//53
-			SpriteFrame(-2, -5, 12, 9, 118, 71)	//54
+			SpriteFrame(-2, -5, 12, 9, 19, 15)	//50
+			SpriteFrame(-2, -5, 12, 9, 19, 15)	//51
+			SpriteFrame(-2, -5, 12, 9, 19, 15)	//52
+			SpriteFrame(-2, -5, 12, 9, 19, 15)	//53
+			SpriteFrame(-2, -5, 12, 9, 19, 15)	//54
 						
 			//Tails Swim Tired
-			SpriteFrame(-1, -6, 12, 9, 118, 71)	//55
-			SpriteFrame(-1, -6, 12, 9, 118, 71)	//56
-			SpriteFrame(-1, -6, 12, 9, 118, 71)	//57
-			SpriteFrame(-1, -6, 12, 9, 118, 71)	//58
+			SpriteFrame(-1, -6, 12, 9, 19, 15)	//55
+			SpriteFrame(-1, -6, 12, 9, 19, 15)	//56
+			SpriteFrame(-1, -6, 12, 9, 19, 15)	//57
+			SpriteFrame(-1, -6, 12, 9, 19, 15)	//58
 			
 			//Tails Mania Max Dash
-			SpriteFrame(3, -10, 8, 9, 118, 102)	//59
-			SpriteFrame(3, -10, 8, 9, 118, 102)	//60
+			SpriteFrame(3, -10, 8, 9, 8, 11)	//59
+			SpriteFrame(3, -10, 8, 9, 8, 11)	//60
 			
 			//Tails Forever Max Dash
-			SpriteFrame(4, -9, 8, 9, 118, 102)	//61
-			SpriteFrame(4, -9, 8, 9, 118, 102)	//62
+			SpriteFrame(4, -9, 8, 9, 8, 11)	//61
+			SpriteFrame(4, -9, 8, 9, 8, 11)	//62
 			break
 		case 2
 		case 4
 			//Knuckles Stopped
-			SpriteFrame(-6, -17, 15, 9, 118, 81)	//100 1
+			SpriteFrame(-6, -17, 15, 9, 19, 5)	//100 1
 			
 			//Knuckles Waiting
-			SpriteFrame(-7, -16, 15, 9, 118, 81)	//101 2
-			SpriteFrame(-4, -17, 15, 9, 118, 81)	//102 3
-			SpriteFrame(-5, -16, 15, 9, 118, 81)	//103 4
-			SpriteFrame(-4, -16, 15, 9, 118, 81)	//104 5
-			SpriteFrame(-3, -15, 15, 9, 118, 81)	//105 6
-			SpriteFrame(-4, -15, 15, 9, 118, 81)	//106 7
-			SpriteFrame(-5, -15, 15, 9, 118, 81)	//107 8
-			SpriteFrame(-4, -15, 15, 9, 118, 81)	//108 9
-			SpriteFrame(-5, -15, 15, 9, 118, 81)	//109 10
-			SpriteFrame(-4, -15, 15, 9, 118, 81)	//110 11
-			SpriteFrame(7, -15, 8, 9, 118, 102)	//111 12
-			SpriteFrame(-5, -16, 15, 9, 118, 81)	//112 13
-			SpriteFrame(-4, -17, 15, 9, 118, 81)	//113 14
+			SpriteFrame(-7, -16, 15, 9, 19, 5)	//101 2
+			SpriteFrame(-4, -17, 15, 9, 19, 5)	//102 3
+			SpriteFrame(-5, -16, 15, 9, 19, 5)	//103 4
+			SpriteFrame(-4, -16, 15, 9, 19, 5)	//104 5
+			SpriteFrame(-3, -15, 15, 9, 19, 5)	//105 6
+			SpriteFrame(-4, -15, 15, 9, 19, 5)	//106 7
+			SpriteFrame(-5, -15, 15, 9, 19, 5)	//107 8
+			SpriteFrame(-4, -15, 15, 9, 19, 5)	//108 9
+			SpriteFrame(-5, -15, 15, 9, 19, 5)	//109 10
+			SpriteFrame(-4, -15, 15, 9, 19, 5)	//110 11
+			SpriteFrame(7, -15, 8, 9, 8, 11)	//111 12
+			SpriteFrame(-5, -16, 15, 9, 19, 5)	//112 13
+			SpriteFrame(-4, -17, 15, 9, 19, 5)	//113 14
 			
 			//Knuckles Looking Up
-			SpriteFrame(-6, -17, 15, 9, 118, 81)	//114 15
-			SpriteFrame(-6, -19, 12, 10, 127, 102)	//115 16
-			SpriteFrame(-7, -20, 12, 10, 127, 102)	//116 17
+			SpriteFrame(-6, -17, 15, 9, 19, 5)	//114 15
+			SpriteFrame(-6, -19, 12, 10, 35, 1)	//115 16
+			SpriteFrame(-7, -20, 12, 10, 35, 1)	//116 17
 			
 			//Knuckles Crouched
-			SpriteFrame(-6, -17, 15, 9, 118, 81)	//117 18
-			SpriteFrame(-3, -9, 12, 9, 118, 71)	//118 19
-			SpriteFrame(-2, -1, 12, 9, 118, 71)	//119 20
+			SpriteFrame(-6, -17, 15, 9, 19, 5)	//117 18
+			SpriteFrame(-3, -9, 12, 9, 19, 15)	//118 19
+			SpriteFrame(-2, -1, 12, 9, 19, 15)	//119 20
 			
 			//Knuckles Walking
-			SpriteFrame(-1, -11, 12, 9, 118, 71)	//120 21
-			SpriteFrame(3, -12, 8, 9, 118, 102)	//121 22
-			SpriteFrame(3, -14, 8, 9, 118, 102)	//122 23
-			SpriteFrame(0, -12, 12, 9, 118, 71)	//123 24
-			SpriteFrame(-3, -12, 12, 9, 118, 71)	//124 25
-			SpriteFrame(-4, -13, 15, 9, 118, 81)	//125 26
-			SpriteFrame(-4, -14, 15, 9, 118, 81)	//126 27
-			SpriteFrame(-2, -13, 12, 9, 118, 71)	//127 28
+			SpriteFrame(-1, -11, 12, 9, 19, 15)	//120 21
+			SpriteFrame(3, -12, 8, 9, 8, 11)	//121 22
+			SpriteFrame(3, -14, 8, 9, 8, 11)	//122 23
+			SpriteFrame(0, -12, 12, 9, 19, 15)	//123 24
+			SpriteFrame(-3, -12, 12, 9, 19, 15)	//124 25
+			SpriteFrame(-4, -13, 15, 9, 19, 5)	//125 26
+			SpriteFrame(-4, -14, 15, 9, 19, 5)	//126 27
+			SpriteFrame(-2, -13, 12, 9, 19, 15)	//127 28
 			
 			//Knuckles Running
-			SpriteFrame(-1, -12, 12, 9, 118, 71)	//128 29
-			SpriteFrame(-1, -12, 12, 9, 118, 71)	//129 30
-			SpriteFrame(-1, -12, 12, 9, 118, 71)	//130 31
-			SpriteFrame(-1, -12, 12, 9, 118, 71)	//131 32
+			SpriteFrame(-1, -12, 12, 9, 19, 15)	//128 29
+			SpriteFrame(-1, -12, 12, 9, 19, 15)	//129 30
+			SpriteFrame(-1, -12, 12, 9, 19, 15)	//130 31
+			SpriteFrame(-1, -12, 12, 9, 19, 15)	//131 32
 			
 			//Knuckles Skidding
-			SpriteFrame(-5, -13, 15, 9, 118, 81)	//132 33
-			SpriteFrame(-10, -12, 15, 9, 118, 81)	//133 34
+			SpriteFrame(-5, -13, 15, 9, 19, 5)	//132 33
+			SpriteFrame(-10, -12, 15, 9, 19, 5)	//133 34
 			
 			//Knuckles Jumping
 			SpriteFrame(0, 0, 1, 1, 1, 1)	//134 35
-			SpriteFrame(2, -11, 8, 9, 118, 102)	//135 36
+			SpriteFrame(2, -11, 8, 9, 8, 11)	//135 36
 			SpriteFrame(0, 0, 1, 1, 1, 1)	//136 37
-			SpriteFrame(2, 1, 9, 8, 140, 102)	//137 38
+			SpriteFrame(2, 1, 9, 8, 8, 21)	//137 38
 			SpriteFrame(0, 0, 1, 1, 1, 1)	//138 39
-			SpriteFrame(-10, 2, 8, 9, 142, 92)	//139 40
+			SpriteFrame(-10, 2, 8, 9, 18, 25)	//139 40
 			SpriteFrame(0, 0, 1, 1, 1, 1)	//140 41
-			SpriteFrame(-11, -10, 9, 8, 118, 123)	//141 42
+			SpriteFrame(-11, -10, 9, 8, 27, 25)	//141 42
 			
 			//Knuckles Bouncing
-			SpriteFrame(-6, -17, 9, 8, 118, 123)	//142 43
+			SpriteFrame(-6, -17, 9, 8, 27, 25)	//142 43
 			
-			//Knuckles Waterslide
-			SpriteFrame(-8, -16, 15, 9, 118, 81)	//143 44
+			//Knuckles Hurt
+			SpriteFrame(-6, -15, 15, 9, 19, 5)	//143 44
 			
 			//Knuckles Fan Rotate
-			SpriteFrame(2, -8, 15, 9, 118, 81)	//145 45
-			SpriteFrame(-7, -5, 16, 9, 118, 113)	//146 46
-			SpriteFrame(-17, -8, 15, 9, 69, 106)	//147 47
+			SpriteFrame(2, -8, 15, 9, 19, 5)	//145 45
+			SpriteFrame(-7, -5, 16, 9, 32, 15)	//146 46
+			SpriteFrame(-17, -8, 15, 9, 33, 35)	//147 47
 			SpriteFrame(0, 0, 1, 1, 1, 1)	//148	 48
 			SpriteFrame(0, 0, 1, 1, 1, 1)	//149 49
 			
 			//Knuckles Breathing
-			SpriteFrame(-3, -17, 15, 9, 118, 81)	//155 50
+			SpriteFrame(-3, -17, 15, 9, 19, 5)	//155 50
 			
 			//Knuckles Pushing
-			SpriteFrame(1, -13, 12, 9, 118, 71)	//156 51
-			SpriteFrame(-4, -14, 15, 9, 118, 81)	//157 52
-			SpriteFrame(1, -13, 12, 9, 118, 71)	//158 53
-			SpriteFrame(4, -14, 8, 9, 118, 102)	//159 54
+			SpriteFrame(1, -13, 12, 9, 19, 15)	//156 51
+			SpriteFrame(-4, -14, 15, 9, 19, 5)	//157 52
+			SpriteFrame(1, -13, 12, 9, 19, 15)	//158 53
+			SpriteFrame(4, -14, 8, 9, 8, 11)	//159 54
 			
 			//Knuckles Flailing
-			SpriteFrame(1, -10, 12, 9, 118, 71)	//160 55
-			SpriteFrame(2, -15, 15, 9, 118, 81)	//161 56
-			SpriteFrame(5, -12, 16, 9, 118, 113)	//162 57
-			SpriteFrame(3, -26, 14, 13, 135, 113)	//163 58
-			SpriteFrame(7, -16, 6, 7, 128, 123)	//164 59
-			SpriteFrame(3, -16, 11, 10, 118, 91)	//165 60
-			SpriteFrame(-1, -22, 14, 13, 135, 113)	//166 61
-			SpriteFrame(4, -20, 14, 13, 135, 113)	//167 62
-			SpriteFrame(6, -18, 14, 13, 135, 113)	//168 63
-			SpriteFrame(5, -20, 14, 13, 135, 113)	//169 64
-			SpriteFrame(3, -21, 14, 13, 135, 113)	//170 65
-			SpriteFrame(3, -20, 14, 13, 135, 113)	//171 66
+			SpriteFrame(1, -10, 12, 9, 19, 15)	//160 55
+			SpriteFrame(2, -15, 15, 9, 19, 5)	//161 56
+			SpriteFrame(5, -12, 16, 9, 32, 15)	//162 57
+			SpriteFrame(3, -26, 14, 13, 18, 35)	//163 58
+			SpriteFrame(7, -16, 6, 7, 1, 17)	//164 59
+			SpriteFrame(3, -16, 11, 10, 1, 42)	//165 60
+			SpriteFrame(-1, -22, 14, 13, 18, 35)	//166 61
+			SpriteFrame(4, -20, 14, 13, 18, 35)	//167 62
+			SpriteFrame(6, -18, 14, 13, 18, 35)	//168 63
+			SpriteFrame(5, -20, 14, 13, 18, 35)	//169 64
+			SpriteFrame(3, -21, 14, 13, 18, 35)	//170 65
+			SpriteFrame(3, -20, 14, 13, 18, 35)	//171 66
 						
 			//Knuckles Hanging
-			SpriteFrame(-7, -13, 15, 9, 118, 81)	//222 67
-			SpriteFrame(-7, -14, 15, 9, 118, 81)	//223 68
+			SpriteFrame(-7, -13, 15, 9, 19, 5)	//222 67
+			SpriteFrame(-7, -14, 15, 9, 19, 5)	//223 68
 
 			//Knuckles Clinging On
-			SpriteFrame(-16, -4, 11, 10, 118, 91)	//172 69
-			SpriteFrame(-15, -3, 11, 10, 118, 91)	//173 70
+			SpriteFrame(-16, -4, 11, 10, 1, 42)	//172 69
+			SpriteFrame(-15, -3, 11, 10, 1, 42)	//173 70
 			
 			//Knuckles Gliding
-			SpriteFrame(-7, -5, 16, 9, 118, 113)	//174 71
-			SpriteFrame(-2, -7, 15, 9, 118, 81)	//175 72
-			SpriteFrame(2, -8, 12, 9, 118, 71)	//176 73
+			SpriteFrame(-7, -5, 16, 9, 32, 15)	//174 71
+			SpriteFrame(-2, -7, 15, 9, 19, 5)	//175 72
+			SpriteFrame(2, -8, 12, 9, 19, 15)	//176 73
 			
 			//Knuckles Gliding Drop
-			SpriteFrame(2, -13, 12, 9, 118, 71)	//177 74
-			SpriteFrame(1, -16, 12, 9, 118, 71)	//178 75
+			SpriteFrame(2, -13, 12, 9, 19, 15)	//177 74
+			SpriteFrame(1, -16, 12, 9, 19, 15)	//178 75
 			
 			//Knuckles Gliding Stop
-			SpriteFrame(3, -3, 12, 9, 118, 71)	//179 76
-			SpriteFrame(-4, -6, 15, 9, 118, 81)	//180 77
+			SpriteFrame(3, -3, 12, 9, 19, 15)	//179 76
+			SpriteFrame(-4, -6, 15, 9, 19, 5)	//180 77
 			
 			//Knuckles Climbing
-			SpriteFrame(-12, -15, 10, 10, 127, 102)	//181 78
-			SpriteFrame(-13, -15, 10, 10, 127, 102)	//182 79
-			SpriteFrame(-12, -16, 10, 10, 127, 102)	//183 80
-			SpriteFrame(-12, -15, 10, 10, 127, 102)	//184 81
-			SpriteFrame(-13, -15, 10, 10, 127, 102)	//185 82
-			SpriteFrame(-12, -16, 10, 10, 127, 102)	//186 83
+			SpriteFrame(-12, -15, 10, 10, 35, 1)	//181 78
+			SpriteFrame(-13, -15, 10, 10, 35, 1)	//182 79
+			SpriteFrame(-12, -16, 10, 10, 35, 1)	//183 80
+			SpriteFrame(-12, -15, 10, 10, 35, 1)	//184 81
+			SpriteFrame(-13, -15, 10, 10, 35, 1)	//185 82
+			SpriteFrame(-12, -16, 10, 10, 35, 1)	//186 83
 			
 			//Knuckles Ledge Pull Up
-			SpriteFrame(-4, -20, 8, 9, 118, 102)	//187 84
-			SpriteFrame(-3, -21, 8, 9, 118, 102)	//188 85
-			SpriteFrame(-8, -23, 15, 9, 118, 81)	//189 86
+			SpriteFrame(-4, -20, 8, 9, 8, 11)	//187 84
+			SpriteFrame(-3, -21, 8, 9, 8, 11)	//188 85
+			SpriteFrame(-8, -23, 15, 9, 19, 5)	//189 86
 						
 			//Knuckles CD Spring Twirl
 			SpriteFrame(-5, -18, 6, 7, 1, 1)	//234 87
@@ -614,112 +624,114 @@ event ObjectStartup
 			SpriteFrame(1, -18, 6, 7, 1, 1)		//237 90
 			SpriteFrame(-2, -18, 6, 7, 1, 9)	//238 91
 			
-			SpriteFrame(-6, -10, 15, 9, 118, 81)	//92	
+			//Knuckles Water Slide
+			SpriteFrame(-9, -10, 15, 9, 19, 5)	//92
+			SpriteFrame(-8, -10, 15, 9, 19, 5)	//93	
 						
 			//Knuckles Chaotix Max Dash
-			SpriteFrame(3, -6, 12, 9, 118, 71)	//128 93
-			SpriteFrame(3, -6, 12, 9, 118, 71)	//129 94
+			SpriteFrame(3, -6, 12, 9, 19, 15)	//128 94
+			SpriteFrame(3, -6, 12, 9, 19, 15)	//129 95
 			
 			//Knuckles Mania Max Dash
-			SpriteFrame(1, -10, 12, 9, 118, 71)	//130 95
-			SpriteFrame(1, -10, 12, 9, 118, 71)	//131 96
-			SpriteFrame(1, -10, 12, 9, 118, 71)	//130 97
-			SpriteFrame(1, -10, 12, 9, 118, 71)	//131 98
+			SpriteFrame(1, -10, 12, 9, 19, 15)	//130 96
+			SpriteFrame(1, -10, 12, 9, 19, 15)	//131 97
+			SpriteFrame(1, -10, 12, 9, 19, 15)	//130 98
+			SpriteFrame(1, -10, 12, 9, 19, 15)	//131 99
 			break
 		case 5
 			//Amy Stopped
-			SpriteFrame(-4, -9, 12, 9, 118, 71)	//1
+			SpriteFrame(-4, -9, 12, 9, 19, 15)	//1
 
 			//Amy Waiting
-			SpriteFrame(-4, -9, 12, 9, 118, 71)	//2
-			SpriteFrame(-4, -9, 12, 9, 118, 71)	//3
-			SpriteFrame(-4, -9, 12, 9, 118, 71)	//4
-			SpriteFrame(-4, -10, 12, 9, 118, 71)//5
-			SpriteFrame(-4, -10, 12, 9, 118, 71)//6
-			SpriteFrame(-4, -9, 12, 9, 118, 71)	//7
-			SpriteFrame(-5, -9, 12, 9, 118, 71)	//8
-			SpriteFrame(-5, -9, 12, 9, 118, 71)	//9
-			SpriteFrame(-5, -9, 12, 9, 118, 71)	//10
+			SpriteFrame(-4, -9, 12, 9, 19, 15)	//2
+			SpriteFrame(-4, -9, 12, 9, 19, 15)	//3
+			SpriteFrame(-4, -9, 12, 9, 19, 15)	//4
+			SpriteFrame(-4, -10, 12, 9, 19, 15)//5
+			SpriteFrame(-4, -10, 12, 9, 19, 15)//6
+			SpriteFrame(-4, -9, 12, 9, 19, 15)	//7
+			SpriteFrame(-5, -9, 12, 9, 19, 15)	//8
+			SpriteFrame(-5, -9, 12, 9, 19, 15)	//9
+			SpriteFrame(-5, -9, 12, 9, 19, 15)	//10
 
 			//Amy Looking Up
-			SpriteFrame(-4, -9, 12, 9, 118, 71)	//11
-			SpriteFrame(-4, -11, 12, 10, 127, 102)	//12
-			SpriteFrame(-5, -11, 12, 10, 127, 102)	//13
+			SpriteFrame(-4, -9, 12, 9, 19, 15)	//11
+			SpriteFrame(-4, -11, 12, 10, 35, 1)	//12
+			SpriteFrame(-5, -11, 12, 10, 35, 1)	//13
 			
 			//Amy Crouching
-			SpriteFrame(-4, -9, 12, 9, 118, 71)	//14
-			SpriteFrame(-1, -5, 12, 9, 118, 71)	//15
-			SpriteFrame(-1, -2, 12, 9, 118, 71)	//16
+			SpriteFrame(-4, -9, 12, 9, 19, 15)	//14
+			SpriteFrame(-1, -5, 12, 9, 19, 15)	//15
+			SpriteFrame(-1, -2, 12, 9, 19, 15)	//16
 			
 			//Amy Walking
-			SpriteFrame(-4, -7, 12, 9, 118, 71)	//17
-			SpriteFrame(-4, -9, 12, 9, 118, 71)	//18
-			SpriteFrame(-4, -8, 12, 9, 118, 71)	//19
-			SpriteFrame(-3, -7, 12, 9, 118, 71)	//20
-			SpriteFrame(-3, -9, 12, 9, 118, 71)	//21
-			SpriteFrame(-3, -8, 12, 9, 118, 71)	//22
+			SpriteFrame(-4, -7, 12, 9, 19, 15)	//17
+			SpriteFrame(-4, -9, 12, 9, 19, 15)	//18
+			SpriteFrame(-4, -8, 12, 9, 19, 15)	//19
+			SpriteFrame(-3, -7, 12, 9, 19, 15)	//20
+			SpriteFrame(-3, -9, 12, 9, 19, 15)	//21
+			SpriteFrame(-3, -8, 12, 9, 19, 15)	//22
 			
 			//Amy Running
-			SpriteFrame(-4, -6, 12, 9, 118, 71)	//23
-			SpriteFrame(-4, -6, 12, 9, 118, 71)	//24
-			SpriteFrame(-4, -6, 12, 9, 118, 71)	//25
-			SpriteFrame(-4, -6, 12, 9, 118, 71)	//26
+			SpriteFrame(0, -4, 12, 9, 19, 15)	//23
+			SpriteFrame(0, -5, 12, 9, 19, 15)	//24
+			SpriteFrame(0, -6, 12, 9, 19, 15)	//25
+			SpriteFrame(0, -5, 12, 9, 19, 15)	//26
 			
 			//Amy Skidding
-			SpriteFrame(-11, -6, 15, 9, 118, 81)	//27
-			SpriteFrame(-11, -6, 15, 9, 118, 81)	//28			
+			SpriteFrame(-11, -6, 15, 9, 19, 5)	//27
+			SpriteFrame(-11, -6, 15, 9, 19, 5)	//28			
 
 			//Amy Absolute Dash
-			SpriteFrame(-3, -9, 12, 10, 127, 102)	//29
-			SpriteFrame(-3, -9, 12, 10, 127, 102)	//30
-			SpriteFrame(-3, -9, 12, 10, 127, 102)	//31
-			SpriteFrame(-3, -9, 12, 10, 127, 102)	//32 		
+			SpriteFrame(-3, -9, 12, 10, 35, 1)	//29
+			SpriteFrame(-3, -9, 12, 10, 35, 1)	//30
+			SpriteFrame(-3, -9, 12, 10, 35, 1)	//31
+			SpriteFrame(-3, -9, 12, 10, 35, 1)	//32 		
 			
 			//Amy Jump
 			SpriteFrame(0, 0, 1, 1, 1, 1)	//33
-			SpriteFrame(-1, -7, 8, 9, 118, 102)	//34
+			SpriteFrame(-1, -7, 8, 9, 8, 11)	//34
 			SpriteFrame(0, 0, 1, 1, 1, 1)	//35
-			SpriteFrame(-1, 3, 9, 8, 140, 102)	//36
+			SpriteFrame(-1, 3, 9, 8, 8, 21)	//36
 			SpriteFrame(0, 0, 1, 1, 1, 1)	//37
-			SpriteFrame(-8, -1, 8, 9, 142, 92)	//38
+			SpriteFrame(-8, -1, 8, 9, 18, 25)	//38
 			SpriteFrame(0, 0, 1, 1, 1, 1)	//39
-			SpriteFrame(-7, -10, 9, 8, 118, 123)	//40
+			SpriteFrame(-7, -10, 9, 8, 27, 25)	//40
 			
 			//Amy Bouncing
-			SpriteFrame(-2, -15, 12, 10, 127, 102)	//41
-			SpriteFrame(-2, -15, 12, 10, 127, 102)	//42
+			SpriteFrame(-2, -15, 12, 10, 35, 1)	//41
+			SpriteFrame(-2, -15, 12, 10, 35, 1)	//42
 			
 			//Sonic Waterslide
-			SpriteFrame(-6, -6, 12, 10, 127, 102)	//43
-			SpriteFrame(-6, -6, 12, 10, 127, 102)	//44
+			SpriteFrame(-6, -6, 12, 10, 35, 1)	//43
+			SpriteFrame(-6, -6, 12, 10, 35, 1)	//44
 			
 			//Amy Fan Rotate
-			SpriteFrame(8, -3, 12, 9, 118, 71)	//45
-			SpriteFrame(-8, -4, 16, 8, 118, 113)	//46
-			SpriteFrame(-20, -3, 12, 9, 130, 92)	//47
+			SpriteFrame(8, -3, 12, 9, 19, 15)	//45
+			SpriteFrame(-8, -4, 16, 8, 32, 15)	//46
+			SpriteFrame(-20, -3, 12, 9, 37, 25)	//47
 			SpriteFrame(0, 0, 1, 1, 1, 1)	//48
 			SpriteFrame(0, 0, 1, 1, 1, 1)	//49
 			
 			//Amy Breathing
-			SpriteFrame(-4, -14, 15, 9, 118, 81)	//50
+			SpriteFrame(-4, -14, 15, 9, 19, 5)	//50
 			
 			//Amy Pushing
-			SpriteFrame(-2, -6, 12, 9, 118, 71)	//51
-			SpriteFrame(-2, -7, 12, 9, 118, 71)	//52
-			SpriteFrame(-2, -6, 12, 9, 118, 71)	//53
-			SpriteFrame(-2, -7, 12, 9, 118, 71)	//54
+			SpriteFrame(-2, -6, 12, 9, 19, 15)	//51
+			SpriteFrame(-2, -7, 12, 9, 19, 15)	//52
+			SpriteFrame(-2, -6, 12, 9, 19, 15)	//53
+			SpriteFrame(-2, -7, 12, 9, 19, 15)	//54
 			
 			//Amy Flailing
-			SpriteFrame(-6, -8, 11, 9, 118, 81)	//55
-			SpriteFrame(-4, -7, 11, 9, 118, 81)	//56
+			SpriteFrame(-6, -8, 11, 9, 19, 5)	//55
+			SpriteFrame(-4, -7, 11, 9, 19, 5)	//56
 			
 			//Sonic Hanging
-			SpriteFrame(-3, -9, 12, 9, 118, 71)		//57
-			SpriteFrame(-3, -9, 12, 9, 118, 71)		//58
+			SpriteFrame(-3, -9, 12, 9, 19, 15)		//57
+			SpriteFrame(-3, -9, 12, 9, 19, 15)		//58
 			
 			//Amy Clinging On
-			SpriteFrame(-13, -8, 14, 13, 135, 113)	//59
-			SpriteFrame(-13, -8, 14, 13, 135, 113)	//60
+			SpriteFrame(-13, -8, 14, 13, 18, 35)	//59
+			SpriteFrame(-13, -8, 14, 13, 18, 35)	//60
 						
 			//Amy CD Spring Twirl
 			SpriteFrame(-5, -16, 6, 7, 1, 1)	//61
@@ -729,34 +741,49 @@ event ObjectStartup
 			SpriteFrame(-5, -16, 10, 4, 8, 1)	//65
 								
 			//Amy Forever Dash
-			SpriteFrame(-3, -7, 12, 9, 118, 71)	//66
-			SpriteFrame(-3, -7, 12, 9, 118, 71)	//67
-			SpriteFrame(-3, -7, 12, 9, 118, 71)	//68
-			SpriteFrame(-3, -7, 12, 9, 118, 71)	//69
+			SpriteFrame(-3, -7, 12, 9, 19, 15)	//66
+			SpriteFrame(-3, -7, 12, 9, 19, 15)	//67
+			SpriteFrame(-3, -7, 12, 9, 19, 15)	//68
+			SpriteFrame(-3, -7, 12, 9, 19, 15)	//69
 			
 			//Amy Falling
-			SpriteFrame(-3, -10, 11, 9, 118, 81)	//70
-			SpriteFrame(-3, -10, 11, 9, 118, 81)	//71
+			SpriteFrame(-3, -10, 11, 9, 19, 5)	//70
+			SpriteFrame(-3, -10, 11, 9, 19, 5)	//71
 			
 			//Amy Hammer Jump
-			SpriteFrame(-3, -5, 11, 9, 118, 81)	//72
+			SpriteFrame(-3, -5, 11, 9, 19, 5)	//72
 			
 			//Amy Hammer Spin
-			SpriteFrame(-10, -9, 12, 9, 118, 71)//73
-			SpriteFrame(-9, -9, 16, 9, 118, 113)//74
-			SpriteFrame(-4, -9, 12, 9, 130, 92)	//75
+			SpriteFrame(-10, -9, 12, 9, 19, 15)//73
+			SpriteFrame(-9, -9, 16, 9, 32, 15)//74
+			SpriteFrame(-4, -9, 12, 9, 37, 25)	//75
 			SpriteFrame(0, 0, 1, 1, 1, 1)	//76
 			SpriteFrame(0, 0, 1, 1, 1, 1)	//77
 			
 			//Amy Fall 2			
-			SpriteFrame(-5, -6, 12, 9, 118, 71)//78
-			SpriteFrame(-5, -6, 12, 9, 118, 71)//79
+			SpriteFrame(-5, -6, 12, 9, 19, 15)//78
+			SpriteFrame(-5, -6, 12, 9, 19, 15)//79
 			
 			//Amy outta Here
-			SpriteFrame(-6, -8, 15, 9, 118, 81) //80
-			SpriteFrame(-6, -6, 15, 9, 118, 81) //81
-			SpriteFrame(-4, -6, 15, 9, 118, 81) //82
-			SpriteFrame(-5, -7, 15, 9, 118, 81) //83
+			SpriteFrame(-6, -8, 15, 9, 19, 5) //80
+			SpriteFrame(-6, -6, 15, 9, 19, 5) //81
+			SpriteFrame(-4, -6, 15, 9, 19, 5) //82
+			SpriteFrame(-5, -7, 15, 9, 19, 5) //83
+			
+			//Amy Hop			
+			SpriteFrame(-1, -5, 12, 9, 19, 15)	//84
+			SpriteFrame(-1, -9, 12, 9, 19, 15)	//85
+			SpriteFrame(-2, -9, 12, 9, 19, 15)	//86
+			SpriteFrame(-1, -9, 12, 9, 19, 15)	//87
+			SpriteFrame(-1, -9, 12, 9, 19, 15)	//88
+			
+			//Amy Hammer Swing		
+			SpriteFrame(-6, -8, 12, 9, 19, 15)	//89
+			SpriteFrame(-11, -7, 12, 9, 19, 15)	//90
+			SpriteFrame(-11, -7, 12, 9, 19, 15)	//91
+			SpriteFrame(-4, -5, 12, 9, 19, 15)	//92
+			SpriteFrame(-3, -5, 12, 9, 19, 15)	//93
+			SpriteFrame(-3, -5, 12, 9, 19, 15)	//94
 			break
 	end switch
 	
