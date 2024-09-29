@@ -15,10 +15,115 @@ private alias object.value7 : ring.offset
 private alias object.value8 : perfect.offset
 private alias object.value10 : perfect.bonus
 private alias object.value20 : player.perfect
+public alias saveRAM[294] : saved.graphics
+
+reserve function Special_FadetoWhite
+reserve function Special_processColor
+reserve function Special_getColorAdd
 
 // Static Values
 
 // Tables
+
+function Special_FadetoWhite
+	temp0 = 0
+	while temp0 < 8
+		temp1 = 0
+		while temp1 < 256
+			GetPaletteEntry(temp0, temp1, object.value11)			
+			CallFunction(Special_processColor)			
+			SetPaletteEntry(temp0, temp1, object.value11)
+			temp1++
+		loop
+	temp0++
+	loop	
+end function
+
+function Special_processColor	
+	temp3 = object.value11
+	temp3 >>= 16
+	temp3 &= 0xFF
+	temp4 = object.value11
+	temp4 >>= 8
+	temp4 &= 0xFF
+	temp5 = object.value11
+	temp5 &= 0xFF
+	
+	if temp3 < color7
+		temp6 = temp3
+		CallFunction(Special_getColorAdd)
+		temp3 += temp2
+		if temp3 > color7
+			temp3 = color7
+		end if
+	else
+		if temp4 < color7
+			temp6 = temp4
+			CallFunction(Special_getColorAdd)
+			temp4 += temp2
+			if temp4 > color7
+				temp4 = color7
+			end if
+		else
+			if temp5 < color7
+				temp6 = temp5
+				CallFunction(Special_getColorAdd)
+				temp5 += temp2
+				if temp5 > color7
+					temp5 = color7
+				end if
+			else
+				temp3 = color7
+				temp4 = color7
+				temp5 = color7
+			end if
+		end if	
+	end if
+	
+	object.value11 = temp3
+	object.value11 <<= 8
+	object.value11 += temp4
+	object.value11 <<= 8
+	object.value11 += temp5
+end function
+
+function Special_getColorAdd
+	if saved.graphics == 2
+		if temp6 <= color7
+			temp2 = color7
+			temp2 -= temp6
+		end if
+		if temp6 <= color6
+			temp2 = color7
+			temp2 -= color6
+		end if
+		if temp6 <= color5
+			temp2 = color6
+			temp2 -= color5
+		end if
+		if temp6 <= color4
+			temp2 = color5
+			temp2 -= color4
+		end if
+		if temp6 <= color3
+			temp2 = color4
+			temp2 -= color3
+		if temp6 <= color2
+			temp2 = color3
+			temp2 -= color2
+		end if
+		if temp6 <= color1
+			temp2 = color2
+			temp2 -= color1
+		end if
+		end if
+		if temp6 == 0
+			temp2 = color1
+		end if
+	else
+		temp2 = color1
+	end if
+end function
 
 event ObjectMain
 	switch object.state
@@ -285,14 +390,15 @@ event ObjectMain
 	case 8
 		if object[0].type == TypeName[Blank Object]
 			object.value0 += 8			
-			SetScreenFade(color6, color7, color6, object.value0)
+			//SetScreenFade(color6, color7, color6, object.value0)
+			CallFunction(Special_FadetoWhite)
 			if object.value0 == 0x400
-				fadeColor = 208
+				fadeColor = color7
 				fadeColor <<= 16
-				temp0 = 255
+				temp0 = color7
 				temp0 <<= 8
 				fadeColor += temp0
-				fadeColor += 224
+				fadeColor += color7
 				object.direction = FLIP_NONE
 				object.value0 = 0
 				lampPostID = 0

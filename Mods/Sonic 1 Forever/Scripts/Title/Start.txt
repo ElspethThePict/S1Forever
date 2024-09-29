@@ -23,6 +23,7 @@ private alias object.value12 : touch.delay
 private alias object.value13 : touch.fade
 
 public alias saveRAM[286] : saved.language
+public alias saveRAM[294] : saved.graphics
 public alias saveRAM[295] : saved.mobile
 public alias saveRAM[296] : saved.transmobile
 
@@ -39,11 +40,114 @@ private alias 9 : START_EXITTOMAINMENU
 
 // Function declarations
 reserve function Start_HandleTouchControls
+reserve function Special_FadetoWhite
+reserve function Special_processColor
+reserve function Special_getColorAdd
 
 // Tables
 private table LSelect_CharacterLoad
 	0, 1, 2, 5, 3, 4
 end table
+
+function Special_FadetoWhite
+	temp0 = 0
+	while temp0 < 8
+		temp1 = 0
+		while temp1 < 256
+			GetPaletteEntry(temp0, temp1, object.value11)			
+			CallFunction(Special_processColor)			
+			SetPaletteEntry(temp0, temp1, object.value11)
+			temp1++
+		loop
+	temp0++
+	loop	
+end function
+
+function Special_processColor	
+	temp3 = object.value11
+	temp3 >>= 16
+	temp3 &= 0xFF
+	temp4 = object.value11
+	temp4 >>= 8
+	temp4 &= 0xFF
+	temp5 = object.value11
+	temp5 &= 0xFF
+	
+	if temp3 < color7
+		temp6 = temp3
+		CallFunction(Special_getColorAdd)
+		temp3 += temp2
+		if temp3 > color7
+			temp3 = color7
+		end if
+	else
+		if temp4 < color7
+			temp6 = temp4
+			CallFunction(Special_getColorAdd)
+			temp4 += temp2
+			if temp4 > color7
+				temp4 = color7
+			end if
+		else
+			if temp5 < color7
+				temp6 = temp5
+				CallFunction(Special_getColorAdd)
+				temp5 += temp2
+				if temp5 > color7
+					temp5 = color7
+				end if
+			else
+				temp3 = color7
+				temp4 = color7
+				temp5 = color7
+			end if
+		end if	
+	end if
+	
+	object.value11 = temp3
+	object.value11 <<= 8
+	object.value11 += temp4
+	object.value11 <<= 8
+	object.value11 += temp5
+end function
+
+function Special_getColorAdd
+	if saved.graphics == 2
+		if temp6 <= color7
+			temp2 = color7
+			temp2 -= temp6
+		end if
+		if temp6 <= color6
+			temp2 = color7
+			temp2 -= color6
+		end if
+		if temp6 <= color5
+			temp2 = color6
+			temp2 -= color5
+		end if
+		if temp6 <= color4
+			temp2 = color5
+			temp2 -= color4
+		end if
+		if temp6 <= color3
+			temp2 = color4
+			temp2 -= color3
+		if temp6 <= color2
+			temp2 = color3
+			temp2 -= color2
+		end if
+		if temp6 <= color1
+			temp2 = color2
+			temp2 -= color1
+		end if
+		end if
+		if temp6 == 0
+			temp2 = color1
+		end if
+	else
+		temp2 = color1
+	end if
+end function
 
 function Start_HandleTouchControls
 	LoadSpriteSheet("LevelSelect/Touch.gif")
@@ -507,12 +611,12 @@ event ObjectMain
 					stage.activeList = SPECIAL_STAGE
 					stage.listPos = lselect.specialIndex
 					PlaySfx(SfxName[Warp], 0)
-					fadeColor = 208
+					fadeColor = color7
 					fadeColor <<= 16
-					temp0 = 255
+					temp0 = color7
 					temp0 <<= 8
 					fadeColor += temp0
-					fadeColor += 224
+					fadeColor += color7
 					object.state = 8					
 					if lselect.emeraldsEnabled == 1
 						specialStage.emeralds = 127
@@ -666,13 +770,13 @@ event ObjectMain
 		if start.timer < 768
 			music.volume -= 10
 			start.timer += 8
-			SetScreenFade(color6, color7, color6, start.timer)
+			//SetScreenFade(color6, color7, color6, start.timer)
+			CallFunction(Special_FadetoWhite)
 		else
 			GetTableValue(stage.playerListPos, lselect.characterSel, LSelect_CharacterLoad)
 			StopMusic()
 			LoadPalette("SpecialStage.act",0,0,0,128)
 			LoadStage()
-			SetScreenFade(color6, color7, color6, 255)
 		end if
 		break
 	case START_EXITTOMAINMENU // Leaving the classic level select, boot to Main Menu.
