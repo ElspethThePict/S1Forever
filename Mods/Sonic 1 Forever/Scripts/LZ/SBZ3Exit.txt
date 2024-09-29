@@ -15,10 +15,13 @@ private alias 77 : TYPE_SBZ3EXIT
 
 // Functions
 reserve function AddPoints
+reserve function RecordAnimation
 	
 function AddPoints
-	object.value5 = 0
-	
+	//We used this function to quickly hand out Time and Ring Bonus at the end of 
+	//SBZ3. Now, we return to the original behaviour in normal playthroughs, and
+	//add a fully fledged act finish in Arcade Mode
+	object.value5 = 0	
 	switch stage.minutes
 	case 0
 		if stage.seconds < 30
@@ -71,6 +74,19 @@ function AddPoints
 	end if
 end function
 
+function RecordAnimation
+	recAnimation = 0
+	temp0 = 0
+	foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+		temp1 = object[currentPlayer].animation
+		temp1 <<= 8
+		temp1 |= object[currentPlayer].direction
+		temp1 <<= temp0
+		recAnimation |= temp1
+		temp0 += 16
+	next
+end function
+
 event ObjectMain
 	switch object.state
 	case 0
@@ -81,62 +97,60 @@ event ObjectMain
 			else
 				recGoggles = 0
 			end if
+			CallFunction(RecordAnimation)
 			object[0].type = TypeName[Ring]
 			object[0].groupID = TypeName[Blank Object]
 			object[0].controlMode = -1
-			if options.gameMode == 2
-				if stage.timeEnabled == 1
-					recGoggles = 0
+			switch options.gameMode
+				default //save or nosave
+					object.state++
+					stage.timeEnabled = 0
+					//CallFunction(AddPoints)
+					break
+				case 2 //time attack
+					recAnimation = 0
+					if stage.timeEnabled == 1
+						recGoggles = 0
+						object.state = 2
+						timeAttack.result = stage.seconds
+						timeAttack.result *= 100
+						temp0 = stage.minutes
+						temp0 *= 0x1770
+						timeAttack.result += temp0
+						timeAttack.result += stage.milliSeconds
+						//stage.listPos--
+						switch stage.playerListPos
+							case 0
+								arrayPos0 = 500
+								break
+							case 1
+								arrayPos0 = 530
+								break
+							case 2
+								arrayPos0 = 560
+								break
+							case 5
+								arrayPos0 = 470
+								break						
+						end switch
+						if SuperTimeAttack == 1
+							arrayPos0 = 590
+						end if
+						arraypos0 += stage.listPos
+						if timeAttack.result < saveRAM[arrayPos0]
+							saveRAM[arrayPos0] = timeAttack.result
+							//object[9].value2 = timeAttack.result
+							PlaySfx(SfxName[Event], 0)
+						end if
+						WriteSaveRAM()
+					end if
+					stage.timeEnabled = 0
+					break
+				case 3 //arcade					
 					object.state = 2
 					stage.timeEnabled = 0
-					timeAttack.result = stage.seconds
-					timeAttack.result *= 100
-					temp0 = stage.minutes
-					temp0 *= 0x1770
-					timeAttack.result += temp0
-					timeAttack.result += stage.milliSeconds
-					//stage.listPos--
-					switch stage.playerListPos
-						case 0
-							arrayPos0 = 500
-							break
-						case 1
-							arrayPos0 = 530
-							break
-						case 2
-							arrayPos0 = 560
-							break
-						case 5
-							arrayPos0 = 470
-							break						
-					end switch
-					if SuperTimeAttack == 1
-						arrayPos0 = 590
-					end if
-					arraypos0 += stage.listPos
-					if timeAttack.result < saveRAM[arrayPos0]
-						saveRAM[arrayPos0] = timeAttack.result
-						//object[9].value2 = timeAttack.result
-						PlaySfx(SfxName[Event], 0)
-					end if
-					WriteSaveRAM()
-				end if
-				stage.timeEnabled = 0
-			else
-				object.state++
-				stage.timeEnabled = 0
-				CallFunction(AddPoints)
-			end if
-			recAnimation = 0
-			temp0 = 0
-			foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
-				temp1 = object[currentPlayer].animation
-				temp1 <<= 8
-				temp1 |= object[currentPlayer].direction
-				temp1 <<= temp0
-				recAnimation |= temp1
-				temp0 += 16
-			next
+					break
+			end switch
 		end if
 		break
 	case 1
@@ -189,7 +203,6 @@ event ObjectMain
 			object.value0++
 			music.volume -= 2
 		else
-			recAnimation = 0
 			object.type = TypeName[Blank Object]
 			object[30].type = TypeName[Act Finish]
 			object[30].drawOrder = 6
