@@ -418,7 +418,7 @@ end event
 
 event ObjectStartup
 switch saved.language //main code
-	case 0 //english
+	default //english
 		LoadSpriteSheet("Global/Pause.gif")	
 		LoadPalette("Pause.act", 7, 0, 0, 256)
 		
@@ -443,10 +443,10 @@ switch saved.language //main code
 		SpriteFrame(-84, 0, 54, 18, 138, 327) // 10 Exit HL
 		break
 	case 1 //Portuguese
-	LoadSpriteSheet("Global/PausePTBR.gif")		
-	LoadPalette("Pause.act", 7, 0, 0, 256)
-	
-	//PauseMenu
+		LoadSpriteSheet("Global/PausePTBR.gif")		
+		LoadPalette("Pause.act", 7, 0, 0, 256)
+		
+		//PauseMenu
 		SpriteFrame(-133, -160, 133, 160, 4, 289) // 0 Circle
 		SpriteFrame(0, 0, 8, 8, 158, 450) // 1 Top Border
 		SpriteFrame(0, 0, 8, 8, 149, 450) // 2 Bottom Border
