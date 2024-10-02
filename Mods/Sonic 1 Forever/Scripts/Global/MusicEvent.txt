@@ -387,7 +387,7 @@ event ObjectDraw
 				loop
 				temp0 -= 24
 				if screen.xsize == 320
-					DrawSpriteScreenXY(3, -6, temp0)
+					DrawSpriteScreenXY(3, 16, temp0)
 				else
 					DrawSpriteScreenXY(3, 36, temp0)
 				end if
