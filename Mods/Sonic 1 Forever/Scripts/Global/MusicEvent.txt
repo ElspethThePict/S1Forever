@@ -386,7 +386,11 @@ event ObjectDraw
 					temp1 += 8
 				loop
 				temp0 -= 24
-				DrawSpriteScreenXY(3, 36, temp0)
+				if screen.xsize == 320
+					DrawSpriteScreenXY(3, -6, temp0)
+				else
+					DrawSpriteScreenXY(3, 36, temp0)
+				end if
 				
 				temp0 = screen.xsize
 				temp0 += pause.xoffset
@@ -558,11 +562,7 @@ event ObjectStartup
 
 		switch saved.language //main code
 			default //english
-			if screen.xsize == 320
-				SpriteFrame(-30, 0, 144, 25, 4, 450) // 3 Paused Tab
-			else
-				SpriteFrame(0, 0, 144, 25, 4, 450) // 3 Paused Tab
-			end if
+			SpriteFrame(0, 0, 144, 25, 4, 450) // 3 Paused Tab
 			SpriteFrame(-28, 0, 18, 18, 138, 346) // 4 Selector Bar	
 			
 			SpriteFrame(-126, 0, 96, 18, 138, 383) // 5 Resume
@@ -576,42 +576,32 @@ event ObjectStartup
 			SpriteFrame(-84, 0, 54, 18, 138, 327) // 12 Exit HL
 		break	
 		case 1 //Portuguese
-			if screen.xsize == 320
-				SpriteFrame(-30, 0, 144, 25, 146, 1) // 3 Paused Tab
-			else
-				SpriteFrame(0, 0, 144, 25, 146, 1) // 3 Paused Tab
-			end if
+			SpriteFrame(0, 0, 144, 25, 146, 1) // 3 Paused Tab
 			SpriteFrame(-28, 0, 18, 18, 138, 346) // 4 Selector Bar	
 			
-			//bark bark sorry that was my dog smh these are the white sprites yeah
-			SpriteFrame(-144, 0, 114, 18, 1, 204) // 5 Resume
-			SpriteFrame(-147, 0, 118, 18, 1, 223) // 6 Restart
-			SpriteFrame(-182, 0, 152, 18, 1, 242) // 7 Checkpoint
-			SpriteFrame(-84, 0, 55, 18, 56, 242) // 8 Exit
-			//peter what are you doing		#####	sorry my dog again bluey
-			SpriteFrame(-144, 0, 114, 18, 1, 147) // 9 Resume HL
-			SpriteFrame(-147, 0, 118, 18, 1, 166) // 10 Restart HL
-			SpriteFrame(-182, 0, 152, 18, 1, 185) // 11 Checkpoint HL
-			SpriteFrame(-84, 0, 54, 18, 56, 185) // 12 Exit HL
+			SpriteFrame(-146, 0, 115, 18, 1, 204) // 5 Resume
+			SpriteFrame(-149, 0, 119, 18, 1, 223) // 6 Restart
+			SpriteFrame(-182, 0, 152, 18, 58, 242) // 7 Checkpoint
+			SpriteFrame(-86, 0, 56, 18, 1, 242) // 8 Exit
+			
+			SpriteFrame(-146, 0, 115, 18, 1, 147) // 9 Resume HL
+			SpriteFrame(-149, 0, 119, 18, 1, 166) // 10 Restart HL
+			SpriteFrame(-182, 0, 152, 18, 58, 185) // 11 Checkpoint HL
+			SpriteFrame(-86, 0, 56, 18, 1, 185) // 12 Exit HL
 		break	
 		case 2 //Spanish
-			if screen.xsize == 320
-				SpriteFrame(-30, 0, 144, 25, 1, 1) // 3 Paused Tab
-			else
-				SpriteFrame(0, 0, 144, 25, 1, 1) // 3 Paused Tab
-			end if
-			SpriteFrame(-28, 0, 18, 18, 138, 346) // 4 Selector Bar	
+			SpriteFrame(0, 0, 144, 25, 1, 1) // 3 Paused Tab
+			SpriteFrame(-28, 0, 18, 18, 138, 346) // 4 Selector Bar		
 			
-			//white ones i think
 			SpriteFrame(-166, 0, 136, 18, 1, 84) // 5 Resume
 			SpriteFrame(-149, 0, 119, 18, 1, 103) // 6 Restart
-			SpriteFrame(-182, 0, 152, 18, 1, 122) // 7 Checkpoint
-			SpriteFrame(-102, 0, 72, 18, 74, 122) // 8 Exit
-			//bluey
+			SpriteFrame(-182, 0, 152, 18, 74, 122) // 7 Checkpoint
+			SpriteFrame(-102, 0, 72, 18, 1, 122) // 8 Exit
+			
 			SpriteFrame(-166, 0, 136, 18, 1, 27) // 9 Resume HL
 			SpriteFrame(-149, 0, 119, 18, 1, 46) // 10 Restart HL
-			SpriteFrame(-182, 0, 152, 18, 1, 65) // 11 Checkpoint HL
-			SpriteFrame(-102, 0, 72, 18, 74, 65) // 12 Exit HL
+			SpriteFrame(-182, 0, 152, 18, 74, 65) // 11 Checkpoint HL
+			SpriteFrame(-102, 0, 72, 18, 1, 65) // 12 Exit HL
 		break	
 	//they dont exist yet but just so you know what will soon go there ig
 	//	case 3 //French
