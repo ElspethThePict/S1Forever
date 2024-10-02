@@ -635,7 +635,7 @@ event ObjectDraw
 		DrawSpriteScreenXY(92, temp0, temp1)
 	end if
 
-	DrawNumbers(0, 20, 50, object.state, 5, 7, 0)
+	//DrawNumbers(0, 20, 50, object.state, 5, 7, 0)
 
 	if saved.mobile == 1
 		object.inkEffect = INK_ALPHA
