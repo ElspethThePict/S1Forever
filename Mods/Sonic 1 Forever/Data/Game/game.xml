@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<game xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <title name="Sonic 1 Forever" />
+  <palette />
+  <objects />
+  <variables>
+    <variable name="SuperTimeAttack" value="0" />
+    <variable name="recGoggles" value="0" />
+    <variable name="color1" value="0" />
+    <variable name="color2" value="0" />
+    <variable name="color3" value="0" />
+    <variable name="color4" value="0" />
+    <variable name="color5" value="0" />
+    <variable name="color6" value="0" />
+    <variable name="color7" value="0" />
+    <variable name="GetScreenWidth" value="0" />
+    <variable name="SetScreenWidth" value="0" />
+    <variable name="GetFrameRate" value="0" />
+    <variable name="SetFrameRate" value="0" />
+    <variable name="GetWindowScale" value="0" />
+    <variable name="SetWindowScale" value="0" />
+    <variable name="GetWindowFullscreen" value="0" />
+    <variable name="SetWindowFullscreen" value="0" />
+    <variable name="GetWindowBorderless" value="0" />
+    <variable name="GetWindowVSync" value="0" />
+    <variable name="SetWindowVSync" value="0" />
+    <variable name="GetWindowScaleMode" value="0" />
+    <variable name="SetWindowScaleMode" value="0" />
+    <variable name="GetModActive" value="0" />
+    <variable name="SetModActive" value="0" />
+    <variable name="GetModName" value="0" />
+    <variable name="GetModDescription" value="0" />
+    <variable name="GetModAuthor" value="0" />
+    <variable name="GetModVersion" value="0" />
+    <variable name="GetModCount" value="0" />
+    <variable name="RefreshEngine" value="0" />
+    <variable name="ExitGame" value="0" />
+    <variable name="OpenModMenu" value="0" />
+    <variable name="MoveMod" value="0" />
+    <variable name="touchMisc" value="0" />
+    <variable name="ANI_SPEEN" value="43" />
+    <variable name="ANI_BDASH2" value="44" />
+    <variable name="ANI_DASHMANIA" value="45" />
+    <variable name="ANI_OUTTAHERE" value="46" />
+    <variable name="ANI_FALL" value="47" />
+    <variable name="ANI_HAMMER_JUMP" value="48" />
+    <variable name="ANI_HAMMER_SPEEN" value="49" />
+    <variable name="ANI_BDASH1" value="50" />
+    <variable name="ANI_BDASH0" value="51" />
+    <variable name="ANI_HOP" value="50" />
+    <variable name="ANI_SWING" value="51" />
+    <variable name="ANI_FALL2" value="0" />
+    <variable name="options.devMenuFlag" value="0" />
+  </variables>
+  <sounds>
+    <soundfx name="Static" path="Stage/Waterfall2.wav" />
+    <soundfx name="Drop Dash Release" path="Global/DDRelease.wav" />
+    <soundfx name="Drop Dash" path="Global/DropDash.wav" />
+    <soundfx name="Peelout Charge" path="Global/PeelCharge.wav" />
+    <soundfx name="Peelout Release" path="Global/PeelRelease.wav" />
+    <soundfx name="Ducc" path="Global/Ducc.wav" />
+    <soundfx name="Trigger" path="Global/Trigger.wav" />
+    <soundfx name="Thud" path="Global/Thud.wav" />
+    <soundfx name="BrokenLamp" path="Global/BrokenLamp.wav" />
+    <soundfx name="DrownWarn" path="Global/DrownCD.wav" />
+    <soundfx name="Outta Here" path="Global/OuttaHere.wav" />
+  </sounds>
+  <players>
+    <player name="KNUCKLES AND TAILS" />
+    <player name="AMY" />
+  </players>
+  <presentationStages>
+    <stage name="ARCADE" folder="Arcade" id="1" highlight="true" />
+    <stage name="ENDING 2" folder="Ending2" id="1" highlight="true" />
+    <stage name="MAIN MENU" folder="MainMenu" id="1" highlight="true" />
+    <stage name="SAVE SELECT" folder="SaveSelect" id="1" highlight="true" />
+    <stage name="TIME ATTACK" folder="TimeAttack" id="1" highlight="true" />
+    <stage name="GOLF MENU" folder="Golf" id="1" highlight="true" />
+  </presentationStages>
+  <regularStages />
+  <specialStages>
+    <stage name="9" folder="Special" id="9" highlight="true" />
+  </specialStages>
+  <bonusStages>
+    <stage name="BOSS RUSH" folder="BossRush" id="5" highlight="true" />
+    <stage name="GREEN HILL ZONE" folder="Zone01" id="5" highlight="true" />
+  </bonusStages>
+</game>

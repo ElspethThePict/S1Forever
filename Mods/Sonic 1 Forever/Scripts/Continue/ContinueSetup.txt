@@ -179,7 +179,7 @@ event ObjectMain
 			object.direction = FLIP_NONE
 			//engine.state = 8
 			stage.activeList = PRESENTATION_STAGE
-			stage.listPos = 6
+			stage.listPos = 8
 			LoadStage()
 		end if
 		break

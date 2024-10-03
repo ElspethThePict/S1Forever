@@ -203,7 +203,7 @@ event ObjectMain
 			music.volume -= 2
 		else
 			//stage.activeList = PRESENTATION_STAGE
-			//stage.listPos = 8
+			//stage.listPos = 10
 			StopMusic()
 			WriteSaveRAM()
 			LoadStage()

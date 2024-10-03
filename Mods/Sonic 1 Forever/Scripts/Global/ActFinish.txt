@@ -499,10 +499,10 @@ event ObjectMain
 				switch options.gameMode
 				case 2
 					if stage.activeList == BONUS_STAGE
-						stage.listPos = 6
+						stage.listPos = 8
 						recGoggles = 102
 					else
-						stage.listPos = 8
+						stage.listPos = 10
 					end if
 					stage.activeList = PRESENTATION_STAGE
 					

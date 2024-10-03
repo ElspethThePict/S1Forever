@@ -266,7 +266,7 @@ event ObjectMain
 		specialStage.emeralds = 0
 		specialStage.nextZone = 0
 		stage.activeList = PRESENTATION_STAGE
-		stage.listPos = 7
+		stage.listPos = 9
 		LoadStage()
 	end if
 end event

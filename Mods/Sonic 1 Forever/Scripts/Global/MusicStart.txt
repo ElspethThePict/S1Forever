@@ -158,10 +158,10 @@ event ObjectMain
 						object.state = 3
 						break					
 					case 3
-						stage.listPos = 6
+						stage.listPos = 8
 						if options.gameMode == 2
 							if stage.activeList != BONUS_STAGE
-								stage.listPos = 8
+								stage.listPos = 10
 							end if
 						end if
 						if options.gameMode == 3
@@ -169,7 +169,7 @@ event ObjectMain
 							temp0 = stage.playerListPos
 							temp0++
 							saveRAM[640] = temp0
-							stage.listPos = 3
+							stage.listPos = 6
 						end if
 						stage.activeList = PRESENTATION_STAGE
 						object.state = 3

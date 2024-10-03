@@ -137,7 +137,7 @@ event ObjectMain
 						temp0 = stage.playerListPos
 						temp0++
 						saveRAM[640] = temp0
-						stage.listPos = 3
+						stage.listPos = 6
 					end if
 					WriteSaveRAM()
 					LoadStage()

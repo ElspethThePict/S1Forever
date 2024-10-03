@@ -249,7 +249,7 @@ event ObjectMain
 				object.state++
 			else
 				StopMusic()
-				stage.listPos = 10
+				stage.listPos = 8
 				stage.activeList = PRESENTATION_STAGE
 				LoadStage()
 			end if
@@ -464,20 +464,20 @@ event ObjectMain
 			switch options.gameMode
 				case 4
 					stage.activeList = PRESENTATION_STAGE
-					stage.listPos = 6
+					stage.listPos = 8
 					recgoggles = 100
 					LoadStage()					
 					break
 				case 2
 					stage.activeList = PRESENTATION_STAGE
-					stage.listPos = 8
+					stage.listPos = 10
 					LoadStage()
 					break
 				default
 					if stage.listPos < stage.listSize
 						if stage.actNum == 8
 							stage.activeList = PRESENTATION_STAGE
-							stage.listPos = 6
+							stage.listPos = 8
 						end if
 						LoadStage()
 					else

@@ -86,7 +86,7 @@ event ObjectMain
 					if specialStage.emeralds >= 63
 						screen.yoffset = 0xA00
 						//stage.activeList = PRESENTATION_STAGE
-						//stage.listPos = 5
+						//stage.listPos = 7
 						//LoadStage()
 					else
 						screen.yoffset = 0x900
@@ -95,7 +95,7 @@ event ObjectMain
 					if specialStage.emeralds >= 127
 						screen.yoffset = 0xA00
 						//stage.activeList = PRESENTATION_STAGE
-						//stage.listPos = 5
+						//stage.listPos = 7
 						//LoadStage()
 					else
 						screen.yoffset = 0x900

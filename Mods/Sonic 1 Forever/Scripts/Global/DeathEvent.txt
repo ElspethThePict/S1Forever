@@ -40,7 +40,7 @@ event ObjectMain
 				recStage = stage.listPos
 				stage.activeList = PRESENTATION_STAGE
 				if player.continues == 0
-					stage.listPos = 6
+					stage.listPos = 8
 				else
 					stage.listPos = 4
 				end if
@@ -71,7 +71,7 @@ event ObjectMain
 					temp0++
 					saveRAM[640] = temp0
 					stage.activeList = PRESENTATION_STAGE
-					stage.listPos = 3
+					stage.listPos = 6
 				end if
 			end if
 			if object.state == 1
@@ -115,7 +115,7 @@ event ObjectMain
 				temp0++
 				saveRAM[640] = temp0
 				stage.activeList = PRESENTATION_STAGE
-				stage.listPos = 3
+				stage.listPos = 6
 			end if
 			WriteSaveRAM()
 			LoadStage()
@@ -137,7 +137,7 @@ event ObjectMain
 			stage.seconds = 0
 			stage.minutes = 0
 			//stage.activeList = PRESENTATION_STAGE
-			//stage.listPos = 8
+			//stage.listPos = 10
 			WriteSaveRAM()
 			LoadStage()
 			//engine.state = 8

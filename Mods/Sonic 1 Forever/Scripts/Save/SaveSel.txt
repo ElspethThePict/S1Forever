@@ -629,7 +629,7 @@ function save_exit
 	if fade.alpha >= 384
 		StopMusic()
 		stage.activeList = PRESENTATION_STAGE
-		stage.listPos = 6
+		stage.listPos = 8
 		LoadStage()
 	end if
 end function

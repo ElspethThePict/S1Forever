@@ -182,7 +182,7 @@ event ObjectMain
 							break
 						case 2
 							stage.activeList = PRESENTATION_STAGE
-							stage.listPos = 6
+							stage.listPos = 8
 							switch options.gameMode
 								case 0
 									if stage.actNum == 8

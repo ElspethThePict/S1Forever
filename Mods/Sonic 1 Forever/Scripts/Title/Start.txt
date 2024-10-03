@@ -255,7 +255,7 @@ event ObjectMain
 		if start.timer == 320
 			StopMusic()
 			stage.activeList = PRESENTATION_STAGE
-			stage.listPos = 6
+			stage.listPos = 8
 			LoadStage()
 		end if
 		SetScreenFade(0, 0, 0, start.timer)
@@ -785,7 +785,7 @@ event ObjectMain
 		if start.timer == 320
 			StopMusic()
 			stage.activeList = PRESENTATION_STAGE
-			stage.listPos = 6
+			stage.listPos = 8
 			LoadStage()
 		end if
 		SetScreenFade(0, 0, 0, start.timer)

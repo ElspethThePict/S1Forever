@@ -77,7 +77,6 @@ reserve function DrawClock
 reserve function FirstMenu
 reserve function FirstMenu43
 reserve function SecondMenu
-reserve function VersionNumber
 reserve function touch.controls
 reserve function menu.holdmovement
 
@@ -329,7 +328,7 @@ event ObjectMain
 			
 			if inputPress.buttonB == 1
 				stage.activeList = PRESENTATION_STAGE
-				stage.listPos = 6
+				stage.listPos = 8
 				object.state = 101
 				//PlaySfx(SfxName[Lamp Post], 0)
 			end if
@@ -1613,43 +1612,6 @@ function TimesSetUp
 		
 end function
 
-function VersionNumber		
-	temp0 = 7
-	temp0 -= TA.xoffset
-	temp1 = 10
-	temp2 = temp0
-	
-	if versionone > 9
-		temp0 += 8	
-	end if	
-	DrawNumbers(99, temp0, temp1, versionone, 2, 8, 0)
-	temp0 += 8
-	DrawSpriteScreenXY(109, temp0, temp1)
-	
-	temp0 += 4
-	
-	if versiontwo > 9
-		temp0 += 8	
-	end if		
-	DrawNumbers(99, temp0, temp1, versiontwo, 2, 8, 0)
-	temp0 += 8
-	DrawSpriteScreenXY(109, temp0, temp1)
-	
-	temp0 += 4
-	
-	if versionthree > 9
-		temp0 += 8	
-	end if	
-	DrawNumbers(99, temp0, temp1, versionthree, 2, 8, 0)
-	temp0 += 8
-	DrawSpriteScreenXY(109, temp0, temp1)
-	
-	temp0 += 68
-	
-	DrawNumbers(99, temp0, temp1, versionsub, 9, 8, 1)
-	
-	//DrawRect(temp2, temp1, 219, 6, 0, 0, 0, 175)
-end function
 
 event RSDKDraw
 	DrawSprite(0)
