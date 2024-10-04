@@ -97,11 +97,11 @@ Original Drop Dash Code:
 - splemb
 	
 Scrap Brain Zone GG/MS remix by Gustavo Firmino Cazonato
-	- used with permission
-	- https://www.youtube.com/watch?v=CYL_XCmn_78
+- used with permission
+- https://www.youtube.com/watch?v=CYL_XCmn_78
 	
 Original Boss Rush Tileset by Egg Master, Techokami, and Dolphman/RetroBunyip	
-	- https://www.spriters-resource.com/custom_edited/sonicthehedgehogcustoms/sheet/116537/
+- https://www.spriters-resource.com/custom_edited/sonicthehedgehogcustoms/sheet/116537/
 
 Amy Moveset and Sprites inspired by the Amy Mania mod by Troopsushi and CodenameGamma
 - used with permission
