@@ -224,7 +224,7 @@ event ObjectDraw
 			else
 				StopMusic()
 					stage.activeList = BONUS_STAGE
-					stage.listPos = 1
+					stage.listPos = StageName[B - GREEN HILL ZONE]
 					options.gameMode = 5
 					stage.debugMode = 0
 					if char.select == 3

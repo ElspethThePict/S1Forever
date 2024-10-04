@@ -489,7 +489,7 @@ function load.level
 					stage.playerListPos = char.highlight
 				end if
 				stage.activeList = BONUS_STAGE
-				stage.listPos = 0
+				stage.listPos = StageName[B - BOSS RUSH]
 				stage.debugMode = 0
 				LoadStage()
 			end if
