@@ -12,8 +12,7 @@ copyrights and registered trademarks. No financial gain is made from this
 project.
 
 
-
-Team Forever
+Credits
 
 Team Leads:
 Aprkot
@@ -29,7 +28,7 @@ with contributions by
 	Leonx254
 	GeffGeff
 
-Artists:
+Art:
 AlyStyle
 Aprkot
 Cosmic Eternity
@@ -45,7 +44,7 @@ with contributions by
 	GreenKnight9000
 	Makoto
 
-Animation Supervisor:
+Player Animations:
 RetroForever
 
 Music:
@@ -61,6 +60,7 @@ RetroForever
 Storice
 ThunderLeon
 TruthTomato
+WorksofMagic
 
 Testers:
 AlyStyle
@@ -69,13 +69,13 @@ Burrotis Man
 Cosmic Eternity
 Cybercymbre
 Denzel The Eternal Understudy
-EA
 Freezer X-Treme
 Goofyking
 Greenie
 Louplayer
 MCDUltra
 Petlamb
+Pyxie
 RetroForever
 Storice
 Tania
@@ -89,11 +89,6 @@ Trailers:
 AlyStyle
 Cosmic Eternity
 Elspeth The Pict
-
-
-
-
-
 
 Original Drop Dash Code:
 MainMemory
