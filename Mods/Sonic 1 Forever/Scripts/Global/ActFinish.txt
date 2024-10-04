@@ -449,7 +449,7 @@ event ObjectMain
 					LoadStage()
 				else
 					stage.activeList = PRESENTATION_STAGE
-					stage.listPos = 0
+					stage.listPos = StageName[P - TITLE SCREEN]
 					WriteSaveRAM()
 					LoadStage()
 				end if
@@ -499,10 +499,10 @@ event ObjectMain
 				switch options.gameMode
 				case 2
 					if stage.activeList == BONUS_STAGE
-						stage.listPos = 8
+						stage.listPos = StageName[P - MAIN MENU]
 						recGoggles = 102
 					else
-						stage.listPos = 10
+						stage.listPos = StageName[P - TIME ATTACK]
 					end if
 					stage.activeList = PRESENTATION_STAGE
 					
@@ -511,7 +511,7 @@ event ObjectMain
 					//engine.state = 8
 					break
 				case 5
-					stage.listPos = 11
+					stage.listPos = StageName[P - GOLF MENU]
 					stage.activeList = PRESENTATION_STAGE
 					LoadStage()
 				default
@@ -523,7 +523,7 @@ event ObjectMain
 						LoadStage()
 					else
 						stage.activeList = PRESENTATION_STAGE
-						stage.listPos = 0
+						stage.listPos = StageName[P - TITLE SCREEN]
 						LoadStage()
 					end if
 					break

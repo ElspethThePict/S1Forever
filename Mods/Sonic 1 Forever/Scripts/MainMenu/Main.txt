@@ -644,7 +644,7 @@ function main.exit
 		StopMusic()
 		stage.playerListPos = 0
 		stage.activeList = PRESENTATION_STAGE
-		stage.listPos = 0
+		stage.listPos = StageName[P - TITLE SCREEN]
 		LoadStage()
 	end if
 end function
@@ -676,7 +676,7 @@ function main.load
 		specialStage.emeralds = 0
 		specialStage.nextZone = 0
 		stage.activeList = PRESENTATION_STAGE
-		stage.listPos = 9
+		stage.listPos = StageName[P - SAVE SELECT]
 	
 		LoadStage()
 	end if

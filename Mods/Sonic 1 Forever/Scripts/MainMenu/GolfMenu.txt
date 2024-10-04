@@ -212,7 +212,7 @@ event ObjectDraw
 			else
 				StopMusic()
 				stage.activeList = PRESENTATION_STAGE
-				stage.listPos = 8
+				stage.listPos = StageName[P - MAIN MENU]
 				LoadStage()
 			end if
 			SetScreenFade(0, 0, 0, fade.control)

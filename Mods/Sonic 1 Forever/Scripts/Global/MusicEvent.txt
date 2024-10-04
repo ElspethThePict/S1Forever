@@ -308,12 +308,12 @@ event ObjectMain
 						object.state = 3
 						break					
 					case 3
-						stage.listPos = 8
+						stage.listPos = StageName[P - MAIN MENU]
 						if options.gameMode == 2
 							if stage.activeList == BONUS_STAGE
 								recGoggles = 102
 							else
-								stage.listPos = 10
+								stage.listPos = StageName[P - TIME ATTACK]
 							end if
 						end if
 						if options.gameMode == 3
@@ -321,10 +321,10 @@ event ObjectMain
 							temp0 = stage.playerListPos
 							temp0++
 							saveRAM[640] = temp0
-							stage.listPos = 6
+							stage.listPos = StageName[P - ARCADE]
 						end if
 						if options.gameMode == 5
-							stage.listPos = 11
+							stage.listPos = StageName[P - GOLF MENU]
 						end if						
 						stage.activeList = PRESENTATION_STAGE
 						object.state = 3

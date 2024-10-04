@@ -331,7 +331,7 @@ event ObjectStartup
 	
 	if saveRAM[410] == 0
 		stage.activeList = PRESENTATION_STAGE
-		stage.listPos = 0
+		stage.listPos = StageName[P - TITLE SCREEN]
 		options.attractMode = 0
 		LoadStage()
 	end if

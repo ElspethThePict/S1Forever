@@ -176,9 +176,9 @@ event ObjectMain
 		else
 			stage.activeList = PRESENTATION_STAGE
 			if credits.screen > 0
-				stage.listPos = 2
+				stage.listPos = StageName[P - STAFF CREDITS]
 			else
-				stage.listPos = 0
+				stage.listPos = StageName[P - TITLE SCREEN]
 				StopMusic()
 			end if
 			LoadStage()
@@ -191,7 +191,7 @@ event ObjectMain
 			music.volume -= 2
 		else
 			stage.activeList = PRESENTATION_STAGE
-			stage.listPos = 0
+			stage.listPos = StageName[P - TITLE SCREEN]
 			StopMusic()
 			LoadStage()
 		end if
@@ -203,7 +203,7 @@ event ObjectMain
 			music.volume -= 2
 		else
 			//stage.activeList = PRESENTATION_STAGE
-			//stage.listPos = 10
+			//stage.listPos = StageName[P - TIME ATTACK]
 			StopMusic()
 			WriteSaveRAM()
 			LoadStage()

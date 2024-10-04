@@ -328,7 +328,7 @@ event ObjectMain
 			
 			if inputPress.buttonB == 1
 				stage.activeList = PRESENTATION_STAGE
-				stage.listPos = 8
+				stage.listPos = StageName[P - MAIN MENU]
 				object.state = 101
 				//PlaySfx(SfxName[Lamp Post], 0)
 			end if

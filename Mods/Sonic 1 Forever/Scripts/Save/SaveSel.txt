@@ -629,7 +629,7 @@ function save_exit
 	if fade.alpha >= 384
 		StopMusic()
 		stage.activeList = PRESENTATION_STAGE
-		stage.listPos = 8
+		stage.listPos = StageName[P - MAIN MENU]
 		LoadStage()
 	end if
 end function

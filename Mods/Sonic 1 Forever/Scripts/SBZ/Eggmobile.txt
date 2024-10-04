@@ -131,7 +131,7 @@ event ObjectMain
 						saveRAM[arrayPos1] = 20
 					end if
 					stage.activeList = PRESENTATION_STAGE
-					stage.listPos = 1
+					stage.listPos = StageName[P - ENDING 1]
 					if options.gameMode == 3
 						saveRAM[630] = player.score
 						temp0 = stage.playerListPos

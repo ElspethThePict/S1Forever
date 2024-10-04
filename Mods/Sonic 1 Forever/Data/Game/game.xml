@@ -1,88 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
 <game xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <title name="Sonic 1 Forever" />
-  <palette />
-  <objects />
-  <variables>
-    <variable name="SuperTimeAttack" value="0" />
-    <variable name="recGoggles" value="0" />
-    <variable name="color1" value="0" />
-    <variable name="color2" value="0" />
-    <variable name="color3" value="0" />
-    <variable name="color4" value="0" />
-    <variable name="color5" value="0" />
-    <variable name="color6" value="0" />
-    <variable name="color7" value="0" />
-    <variable name="GetScreenWidth" value="0" />
-    <variable name="SetScreenWidth" value="0" />
-    <variable name="GetFrameRate" value="0" />
-    <variable name="SetFrameRate" value="0" />
-    <variable name="GetWindowScale" value="0" />
-    <variable name="SetWindowScale" value="0" />
-    <variable name="GetWindowFullscreen" value="0" />
-    <variable name="SetWindowFullscreen" value="0" />
-    <variable name="GetWindowBorderless" value="0" />
-    <variable name="GetWindowVSync" value="0" />
-    <variable name="SetWindowVSync" value="0" />
-    <variable name="GetWindowScaleMode" value="0" />
-    <variable name="SetWindowScaleMode" value="0" />
-    <variable name="GetModActive" value="0" />
-    <variable name="SetModActive" value="0" />
-    <variable name="GetModName" value="0" />
-    <variable name="GetModDescription" value="0" />
-    <variable name="GetModAuthor" value="0" />
-    <variable name="GetModVersion" value="0" />
-    <variable name="GetModCount" value="0" />
-    <variable name="RefreshEngine" value="0" />
-    <variable name="ExitGame" value="0" />
-    <variable name="OpenModMenu" value="0" />
-    <variable name="MoveMod" value="0" />
-    <variable name="touchMisc" value="0" />
-    <variable name="ANI_SPEEN" value="43" />
-    <variable name="ANI_BDASH2" value="44" />
-    <variable name="ANI_DASHMANIA" value="45" />
-    <variable name="ANI_OUTTAHERE" value="46" />
-    <variable name="ANI_FALL" value="47" />
-    <variable name="ANI_HAMMER_JUMP" value="48" />
-    <variable name="ANI_HAMMER_SPEEN" value="49" />
-    <variable name="ANI_BDASH1" value="50" />
-    <variable name="ANI_BDASH0" value="51" />
-    <variable name="ANI_HOP" value="50" />
-    <variable name="ANI_SWING" value="51" />
-    <variable name="ANI_FALL2" value="0" />
-    <variable name="options.devMenuFlag" value="0" />
-  </variables>
-  <sounds>
-    <soundfx name="Static" path="Stage/Waterfall2.wav" />
-    <soundfx name="Drop Dash Release" path="Global/DDRelease.wav" />
-    <soundfx name="Drop Dash" path="Global/DropDash.wav" />
-    <soundfx name="Peelout Charge" path="Global/PeelCharge.wav" />
-    <soundfx name="Peelout Release" path="Global/PeelRelease.wav" />
-    <soundfx name="Ducc" path="Global/Ducc.wav" />
-    <soundfx name="Trigger" path="Global/Trigger.wav" />
-    <soundfx name="Thud" path="Global/Thud.wav" />
-    <soundfx name="BrokenLamp" path="Global/BrokenLamp.wav" />
-    <soundfx name="DrownWarn" path="Global/DrownCD.wav" />
-    <soundfx name="Outta Here" path="Global/OuttaHere.wav" />
-  </sounds>
-  <players>
-    <player name="KNUCKLES AND TAILS" />
-    <player name="AMY" />
-  </players>
-  <presentationStages>
-    <stage name="ARCADE" folder="Arcade" id="1" highlight="true" />
-    <stage name="ENDING 2" folder="Ending2" id="1" highlight="true" />
-    <stage name="MAIN MENU" folder="MainMenu" id="1" highlight="true" />
-    <stage name="SAVE SELECT" folder="SaveSelect" id="1" highlight="true" />
-    <stage name="TIME ATTACK" folder="TimeAttack" id="1" highlight="true" />
-    <stage name="GOLF MENU" folder="Golf" id="1" highlight="true" />
-  </presentationStages>
-  <regularStages />
-  <specialStages>
-    <stage name="9" folder="Special" id="9" highlight="true" />
-  </specialStages>
-  <bonusStages>
-    <stage name="BOSS RUSH" folder="BossRush" id="5" highlight="true" />
-    <stage name="GREEN HILL ZONE" folder="Zone01" id="5" highlight="true" />
-  </bonusStages>
+	<title name="Sonic 1 Forever" />
+	<palette>
+		<color bank="0" index="0" r="255" g="0" b="255"/>
+		<color bank="0" index="1" r="0" g="0" b="0"/>
+		<color bank="0" index="2" r="32" g="32" b="128"/>
+		<color bank="0" index="3" r="64" g="64" b="160"/>
+		<color bank="0" index="4" r="96" g="96" b="192"/>
+		<color bank="0" index="5" r="128" g="128" b="224"/>
+		<color bank="0" index="6" r="224" g="224" b="224"/>
+		<color bank="0" index="7" r="160" g="160" b="160"/>
+		<color bank="0" index="8" r="128" g="128" b="128"/>
+		<color bank="0" index="9" r="64" g="64" b="64"/>
+		<color bank="0" index="10" r="224" g="160" b="128"/>
+		<color bank="0" index="11" r="160" g="96" b="64"/>
+		<color bank="0" index="12" r="224" g="0" b="0"/>
+		<color bank="0" index="13" r="128" g="0" b="0"/>
+		<color bank="0" index="14" r="64" g="0" b="0"/>
+		<color bank="0" index="15" r="224" g="224" b="0"/>
+
+		<color bank="0" index="16" r="160" g="96" b="64"/>
+		<color bank="0" index="17" r="224" g="128" b="0"/>
+		<color bank="0" index="18" r="224" g="160" b="0"/>
+		<color bank="0" index="19" r="224" g="160" b="128"/>
+		<color bank="0" index="20" r="64" g="64" b="0"/>
+		<color bank="0" index="21" r="128" g="128" b="0"/>
+		<color bank="0" index="22" r="32" g="64" b="32"/>
+		<color bank="0" index="23" r="64" g="96" b="64"/>
+		<color bank="0" index="24" r="96" g="128" b="96"/>
+		<color bank="0" index="25" r="128" g="192" b="128"/>
+		<color bank="0" index="26" r="96" g="0" b="32"/>
+		<color bank="0" index="27" r="192" g="0" b="32"/>
+		<color bank="0" index="28" r="224" g="64" b="96"/>
+		<color bank="0" index="29" r="224" g="80" b="96"/>
+		<color bank="0" index="30" r="0" g="128" b="0"/>
+		<color bank="0" index="31" r="224" g="192" b="0"/>
+
+		<color bank="0" index="32" r="64" g="64" b="96"/>
+		<color bank="0" index="33" r="96" g="96" b="160"/>
+		<color bank="0" index="34" r="128" g="128" b="192"/>
+		<color bank="0" index="35" r="160" g="160" b="224"/>
+		<color bank="0" index="36" r="224" g="128" b="224"/>
+		<color bank="0" index="37" r="224" g="64" b="160"/>
+		<color bank="0" index="38" r="224" g="64" b="0"/>
+		<color bank="0" index="39" r="160" g="160" b="0"/>
+		<color bank="0" index="40" r="0" g="32" b="32"/>
+		<color bank="0" index="41" r="32" g="64" b="64"/>
+		<color bank="0" index="42" r="64" g="96" b="96"/>
+		<color bank="0" index="43" r="96" g="160" b="128"/>
+		<color bank="0" index="44" r="128" g="224" b="160"/>
+		<color bank="0" index="45" r="192" g="192" b="224"/>
+		<color bank="0" index="46" r="160" g="160" b="192"/>
+		<color bank="0" index="47" r="96" g="96" b="128"/>
+
+		<color bank="0" index="48" r="224" g="128" b="224"/>
+		<color bank="0" index="49" r="224" g="96" b="192"/>
+		<color bank="0" index="50" r="192" g="64" b="160"/>
+		<color bank="0" index="51" r="128" g="32" b="96"/>
+		<color bank="0" index="52" r="32" g="192" b="0"/>
+		<color bank="0" index="53" r="0" g="128" b="0"/>
+		<color bank="0" index="54" r="0" g="64" b="0"/>
+		<color bank="0" index="55" r="255" g="0" b="255"/>
+		<color bank="0" index="56" r="255" g="0" b="255"/>
+		<color bank="0" index="57" r="255" g="0" b="255"/>
+		<color bank="0" index="58" r="255" g="0" b="255"/>
+		<color bank="0" index="59" r="255" g="0" b="255"/>
+		<color bank="0" index="60" r="255" g="0" b="255"/>
+		<color bank="0" index="61" r="255" g="0" b="255"/>
+		<color bank="0" index="62" r="255" g="0" b="255"/>
+		<color bank="0" index="63" r="255" g="0" b="255"/>
+
+		<color bank="0" index="64" r="160" g="96" b="64"/>
+		<color bank="0" index="65" r="224" g="128" b="0"/>
+		<color bank="0" index="66" r="224" g="160" b="0"/>
+		<color bank="0" index="67" r="224" g="160" b="128"/>
+		<color bank="0" index="68" r="255" g="0" b="255"/>
+		<color bank="0" index="69" r="255" g="0" b="255"/>
+		<color bank="0" index="70" r="255" g="0" b="255"/>
+		<color bank="0" index="71" r="255" g="0" b="255"/>
+		<color bank="0" index="72" r="255" g="0" b="255"/>
+		<color bank="0" index="73" r="255" g="0" b="255"/>
+		<color bank="0" index="74" r="96" g="0" b="32"/>
+		<color bank="0" index="75" r="192" g="0" b="32"/>
+		<color bank="0" index="76" r="224" g="64" b="96"/>
+		<color bank="0" index="77" r="224" g="80" b="96"/>
+		<color bank="0" index="78" r="255" g="0" b="255"/>
+		<color bank="0" index="79" r="255" g="0" b="255"/>
+
+		<color bank="0" index="80" r="32" g="32" b="32"/>
+		<color bank="0" index="81" r="64" g="64" b="64"/>
+		<color bank="0" index="82" r="96" g="96" b="96"/>
+		<color bank="0" index="83" r="128" g="128" b="128"/>
+		<color bank="0" index="84" r="160" g="160" b="160"/>
+		<color bank="0" index="85" r="192" g="192" b="192"/>
+		<color bank="0" index="86" r="255" g="0" b="255"/>
+		<color bank="0" index="87" r="255" g="0" b="255"/>
+		<color bank="0" index="88" r="255" g="0" b="255"/>
+		<color bank="0" index="89" r="255" g="0" b="255"/>
+		<color bank="0" index="90" r="255" g="0" b="255"/>
+		<color bank="0" index="91" r="255" g="0" b="255"/>
+		<color bank="0" index="92" r="255" g="0" b="255"/>
+		<color bank="0" index="93" r="255" g="0" b="255"/>
+		<color bank="0" index="94" r="255" g="0" b="255"/>
+		<color bank="0" index="95" r="255" g="0" b="255"/>
+	</palette>
+	<objects />
+	<variables>
+		<variable name="SuperTimeAttack" value="0" />
+		<variable name="recGoggles" value="0" />
+		<variable name="color1" value="0" />
+		<variable name="color2" value="0" />
+		<variable name="color3" value="0" />
+		<variable name="color4" value="0" />
+		<variable name="color5" value="0" />
+		<variable name="color6" value="0" />
+		<variable name="color7" value="0" />
+		<variable name="GetScreenWidth" value="0" />
+		<variable name="SetScreenWidth" value="0" />
+		<variable name="GetFrameRate" value="0" />
+		<variable name="SetFrameRate" value="0" />
+		<variable name="GetWindowScale" value="0" />
+		<variable name="SetWindowScale" value="0" />
+		<variable name="GetWindowFullscreen" value="0" />
+		<variable name="SetWindowFullscreen" value="0" />
+		<variable name="GetWindowBorderless" value="0" />
+		<variable name="GetWindowVSync" value="0" />
+		<variable name="SetWindowVSync" value="0" />
+		<variable name="GetWindowScaleMode" value="0" />
+		<variable name="SetWindowScaleMode" value="0" />
+		<variable name="GetModActive" value="0" />
+		<variable name="SetModActive" value="0" />
+		<variable name="GetModName" value="0" />
+		<variable name="GetModDescription" value="0" />
+		<variable name="GetModAuthor" value="0" />
+		<variable name="GetModVersion" value="0" />
+		<variable name="GetModCount" value="0" />
+		<variable name="RefreshEngine" value="0" />
+		<variable name="ExitGame" value="0" />
+		<variable name="OpenModMenu" value="0" />
+		<variable name="MoveMod" value="0" />
+		<variable name="touchMisc" value="0" />
+		<variable name="ANI_SPEEN" value="43" />
+		<variable name="ANI_BDASH2" value="44" />
+		<variable name="ANI_DASHMANIA" value="45" />
+		<variable name="ANI_OUTTAHERE" value="46" />
+		<variable name="ANI_FALL" value="47" />
+		<variable name="ANI_HAMMER_JUMP" value="48" />
+		<variable name="ANI_HAMMER_SPEEN" value="49" />
+		<variable name="ANI_BDASH1" value="50" />
+		<variable name="ANI_BDASH0" value="51" />
+		<variable name="ANI_HOP" value="50" />
+		<variable name="ANI_SWING" value="51" />
+		<variable name="ANI_FALL2" value="0" />
+		<variable name="options.devMenuFlag" value="0" />
+	</variables>
+	<sounds>
+		<soundfx name="Static" path="Stage/Waterfall2.wav" />
+		<soundfx name="Drop Dash Release" path="Global/DDRelease.wav" />
+		<soundfx name="Drop Dash" path="Global/DropDash.wav" />
+		<soundfx name="Peelout Charge" path="Global/PeelCharge.wav" />
+		<soundfx name="Peelout Release" path="Global/PeelRelease.wav" />
+		<soundfx name="Ducc" path="Global/Ducc.wav" />
+		<soundfx name="Trigger" path="Global/Trigger.wav" />
+		<soundfx name="Thud" path="Global/Thud.wav" />
+		<soundfx name="BrokenLamp" path="Global/BrokenLamp.wav" />
+		<soundfx name="DrownWarn" path="Global/DrownCD.wav" />
+		<soundfx name="Outta Here" path="Global/OuttaHere.wav" />
+	</sounds>
+	<players>
+		<player name="KNUCKLES AND TAILS" />
+		<player name="AMY" />
+	</players>
+	<presentationStages>
+		<stage name="ARCADE" folder="Arcade" id="1" highlight="true" />
+		<stage name="ENDING 2" folder="Ending2" id="1" highlight="true" />
+		<stage name="MAIN MENU" folder="MainMenu" id="1" highlight="true" />
+		<stage name="SAVE SELECT" folder="SaveSelect" id="1" highlight="true" />
+		<stage name="TIME ATTACK" folder="TimeAttack" id="1" highlight="true" />
+		<stage name="GOLF MENU" folder="Golf" id="1" highlight="true" />
+	</presentationStages>
+	<regularStages />
+	<specialStages>
+		<stage name="9" folder="Special" id="9" highlight="true" />
+	</specialStages>
+	<bonusStages>
+		<stage name="BOSS RUSH" folder="BossRush" id="5" highlight="true" />
+		<stage name="GREEN HILL ZONE" folder="Zone01" id="5" highlight="true" />
+	</bonusStages>
 </game>

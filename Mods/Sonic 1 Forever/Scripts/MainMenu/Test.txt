@@ -112,7 +112,7 @@ event ObjectMain
 					StopMusic()
 					WriteSaveRAM()
 					stage.activeList = PRESENTATION_STAGE
-					stage.listPos = 0
+					stage.listPos = StageName[P - TITLE SCREEN]
 					LoadStage()
 				end if
 			end if

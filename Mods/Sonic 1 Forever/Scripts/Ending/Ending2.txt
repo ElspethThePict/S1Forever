@@ -69,7 +69,7 @@ event ObjectMain
 		else
 			StopMusic()
 			stage.activeList = PRESENTATION_STAGE
-			stage.listPos = 8
+			stage.listPos = StageName[P - MAIN MENU]
 			LoadStage()
 		end if
 		SetScreenFade(0, 0, 0, object.value3)
@@ -85,7 +85,7 @@ event ObjectMain
 			temp0 |= checkResult
 			if temp0 == 1
 			stage.activeList = PRESENTATION_STAGE
-			stage.listPos = 8
+			stage.listPos = StageName[P - MAIN MENU]
 			LoadStage()
 			end if
 	

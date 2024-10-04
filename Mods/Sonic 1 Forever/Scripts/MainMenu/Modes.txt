@@ -119,17 +119,17 @@ function modes.load
 		switch modes.highlight
 			case 0 //Time Attack
 				stage.activeList = PRESENTATION_STAGE
-				stage.listPos = 10
+				stage.listPos = StageName[P - TIME ATTACK]
 				LoadStage()
 				break
 			case 1 //Arcade
 				stage.activeList = PRESENTATION_STAGE
-				stage.listPos = 6
+				stage.listPos = StageName[P - ARCADE]
 				LoadStage()
 				break
 			case 2 //Golf
 				stage.activeList = PRESENTATION_STAGE
-				stage.listPos = 11
+				stage.listPos = StageName[P - GOLF MENU]
 				LoadStage()
 				break
 		end switch

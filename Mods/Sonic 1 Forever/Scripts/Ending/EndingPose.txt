@@ -133,7 +133,7 @@ event ObjectMain
 			object.value0 += 12
 		else
 			stage.activeList = PRESENTATION_STAGE
-			stage.listPos = 2
+			stage.listPos = StageName[P - STAFF CREDITS]
 			lampPostID = 0
 			recMilliSeconds = 0
 			recSeconds = 0

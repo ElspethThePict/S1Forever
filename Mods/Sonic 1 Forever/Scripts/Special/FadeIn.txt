@@ -182,7 +182,7 @@ event ObjectMain
 							break
 						case 2
 							stage.activeList = PRESENTATION_STAGE
-							stage.listPos = 8
+							stage.listPos = StageName[P - MAIN MENU]
 							switch options.gameMode
 								case 0
 									if stage.actNum == 8
@@ -190,14 +190,13 @@ event ObjectMain
 									end if
 									break
 								case 2
-									stage.listPos = 8
 									break
 								case 3
 									saveRAM[630] = player.score
 									temp0 = stage.playerListPos
 									temp0++
 									saveRAM[640] = temp0
-									stage.listPos = 3
+									stage.listPos = StageName[P - ARCADE]
 								case 4
 									recGoggles = 100
 									break

@@ -249,7 +249,7 @@ event ObjectMain
 				object.state++
 			else
 				StopMusic()
-				stage.listPos = 8
+				stage.listPos = StageName[P - MAIN MENU]
 				stage.activeList = PRESENTATION_STAGE
 				LoadStage()
 			end if
@@ -464,25 +464,25 @@ event ObjectMain
 			switch options.gameMode
 				case 4
 					stage.activeList = PRESENTATION_STAGE
-					stage.listPos = 8
+					stage.listPos = StageName[P - MAIN MENU]
 					recgoggles = 100
 					LoadStage()					
 					break
 				case 2
 					stage.activeList = PRESENTATION_STAGE
-					stage.listPos = 10
+					stage.listPos = StageName[P - TIME ATTACK]
 					LoadStage()
 					break
 				default
 					if stage.listPos < stage.listSize
 						if stage.actNum == 8
 							stage.activeList = PRESENTATION_STAGE
-							stage.listPos = 8
+							stage.listPos = StageName[P - MAIN MENU]
 						end if
 						LoadStage()
 					else
 						stage.activeList = PRESENTATION_STAGE
-						stage.listPos = 0
+						stage.listPos = StageName[P - TITLE SCREEN]
 						LoadStage()
 					end if
 					break

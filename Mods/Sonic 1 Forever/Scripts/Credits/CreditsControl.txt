@@ -86,7 +86,7 @@ event ObjectMain
 					if specialStage.emeralds >= 63
 						screen.yoffset = 0xA00
 						//stage.activeList = PRESENTATION_STAGE
-						//stage.listPos = 7
+						//stage.listPos = StageName[P - ENDING 2]
 						//LoadStage()
 					else
 						screen.yoffset = 0x900
@@ -95,7 +95,7 @@ event ObjectMain
 					if specialStage.emeralds >= 127
 						screen.yoffset = 0xA00
 						//stage.activeList = PRESENTATION_STAGE
-						//stage.listPos = 7
+						//stage.listPos = StageName[P - ENDING 2]
 						//LoadStage()
 					else
 						screen.yoffset = 0x900
@@ -181,7 +181,7 @@ event ObjectMain
 			SetScreenFade(0, 0, 0, object.value0)
 		else
 			stage.activeList = PRESENTATION_STAGE
-			stage.listPos = 0
+			stage.listPos = StageName[P - TITLE SCREEN]
 			StopMusic()
 			options.attractMode = 0
 			SetScreenFade(0, 0, 0, 255)
