@@ -1,5 +1,5 @@
-# S1Forever
- A modification of the 2013 mobile port, based on the 2021 decompilation
+# Sonic the Hedgehog Forever
+A modification of the 2013 mobile port, based on the 2021 decompilation
 
 
 "Sonic the Hedgehog Forever" is a non-profit project. It is not
@@ -12,134 +12,125 @@ copyrights and registered trademarks. No financial gain is made from this
 project.
 
 
-Credits
+# Credits
 
 Team Leads:
-Aprkot
-ElspethThePict
-AlyStyle
+- Aprkot
+- ElspethThePict
+- AlyStyle
+
 
 Coding:
-AlyStyle
-Cosmic Eternity
-ElspethThePict
-Tania
-with contributions by
-	Leonx254
-	GeffGeff
+- AlyStyle
+- Cosmic Eternity
+- ElspethThePict
+- Tania
+- with contributions by
+	- Leonx254 
+	- GeffGeff
 
 Art:
-AlyStyle
-Aprkot
-Cosmic Eternity
-Cyb
-KatKuriN
-King the Memer
-Louplayer
-RetroForever
-Storice
-TruthTomato
-Viator_
-with contributions by
-	GreenKnight9000
-	Makoto
+- AlyStyle
+- Aprkot
+- Cosmic Eternity
+- Cyb
+- KatKuriN
+- King the Memer
+- Louplayer
+- RetroForever
+- Storice
+- TruthTomato
+- Viator_
+- with contributions by
+	- GreenKnight9000
+	- Makoto
 
 Player Animations:
-RetroForever
+- RetroForever
 
 Music:
-Glacesu
-KatKuriN
-SNick!
+- Glacesu
+- KatKuriN
+- SNick!
 
 Translation:
-Aprkot
-Cybercymbre
-Freezer X-Treme
-RetroForever
-Storice
-ThunderLeon
-TruthTomato
-WorksofMagic
+- Aprkot
+- Cybercymbre
+- Freezer X-Treme
+- RetroForever
+- Storice
+- ThunderLeon
+- TruthTomato
+- WorksofMagic
 
-Testers:
-AlyStyle
-BrySkye
-Burrotis Man
-Cosmic Eternity
-Cybercymbre
-Denzel The Eternal Understudy
-Freezer X-Treme
-Goofyking
-Greenie
-Louplayer
-MCDUltra
-Petlamb
-Pyxie
-RetroForever
-Storice
-Tania
-ThunderLeon
-TruthTomato
+Testing:
+- AlyStyle
+- BrySkye
+- Burrotis Man
+- Cosmic Eternity
+- Cybercymbre
+- Denzel The Eternal Understudy
+- Freezer X-Treme
+- Goofyking
+- Greenie
+- Louplayer
+- MCDUltra
+- Petlamb
+- Pyxie
+- RetroForever
+- Storice
+- Tania
+- ThunderLeon
+- TruthTomato
 
 Social Media:
-Petlamb
+- Petlamb
 
 Trailers:
-AlyStyle
-Cosmic Eternity
-Elspeth The Pict
+- AlyStyle
+- Cosmic Eternity
+- Elspeth The Pict
 
 Original Drop Dash Code:
-MainMemory
-campbellsonic
-splemb
+- MainMemory
+- campbellsonic
+- splemb
 	
 Scrap Brain Zone GG/MS remix by Gustavo Firmino Cazonato
-	used with permission
-	https://www.youtube.com/watch?v=CYL_XCmn_78
+	- used with permission
+	- https://www.youtube.com/watch?v=CYL_XCmn_78
 	
 Original Boss Rush Tileset by Egg Master, Techokami, and Dolphman/RetroBunyip	
-	https://www.spriters-resource.com/custom_edited/sonicthehedgehogcustoms/sheet/116537/
+	- https://www.spriters-resource.com/custom_edited/sonicthehedgehogcustoms/sheet/116537/
 
 Amy Moveset and Sprites inspired by the Amy Mania mod by Troopsushi and CodenameGamma
-	used with permission
-    	https://gamebanana.com/wips/50006
+- used with permission
+- https://gamebanana.com/wips/50006
 	
 
 RSDKv3/v4 DECOMPILATION by RubberDuckyCooly and RMGRich
-	https://github.com/Rubberduckycooly/Sonic-1-2-2013-Decompilation
+- https://github.com/Rubberduckycooly/Sonic-1-2-2013-Decompilation
 
-	The code in this repository is a decompilation of RSDK (Retro-Engine)
-	version 3 or 4. There is original code in this repo, but most of the
-	code is to be functionally the same as the version of RSDK this repo
-	specifies.
+> The code in this repository is a decompilation of RSDK (Retro-Engine)	version 3 or 4. There is original code in this repo, but most of the code is to be functionally the same as the version of RSDK this repo	specifies.
+> 
+> This code is provided as-is, that is to say, without liability or	warranty. Original authors of RSDK and authors of the decompilation	are not held responsible for any damages or other claims said. You may copy, modify, contribute, and distribute, for public or private use,	as long as the following are followed:
+> 
+> - You may not use the decompilation for commercial (any sort of profit) use.
+> - You must clearly specify that the decompilation and original code are	not yours: the developers of both must be credited.
+> - You may not distribute assets used to run the game not directly provided	by the repository (other than unique, modded assets).
+> - This license must be in all modified copies of source code, and all forks	must follow this license.
+> 
+> Original RSDK author: Christian "Taxman" Whitehead
+> 
+> Decompilation authors: Rubberduckycooly and RMGRich
 
-	This code is provided as-is, that is to say, without liability or
-	warranty. Original authors of RSDK and authors of the decompilation
-	are not held responsible for any damages or other claims said.
-	You may copy, modify, contribute, and distribute, for public or private use,
-	as long as the following are followed:
+Special thanks to Lave SIime for their help with SonLVL and format information
 
-	You may not use the decompilation for commercial (any sort of profit) use.
-	You must clearly specify that the decompilation and original code are
-	not yours: the developers of both must be credited.
-
-	You may not distribute assets used to run the game not directly provided
-	by the repository (other than unique, modded assets).
-
-	This license must be in all modified copies of source code, and all forks
-	must follow this license.
-
-	Original RSDK author: Christian "Taxman" Whitehead
-	Decompilation authors: Rubberduckycooly and RMGRich
-
-
-Special thanks to RubberDuckyCooly, Megami, Leonx254, Lave Slime, and the users
-of Retro Engine Modding Server for their advice, assistance and feedback.
-	https://dc.railgun.works/retroengine
+Special thanks to RubberDuckyCooly, Megami, Leonx254, and the users of Retro Engine Modding Server for their advice, assistance and feedback.
+- https://dc.railgun.works/retroengine
 	
 Special Thanks to huds601, flying fox, and HyperStormH for extra testing and feedback.
 
 Original Game by SEGA® and Sonic Team®
+
 Ported by Taxman and Stealth
