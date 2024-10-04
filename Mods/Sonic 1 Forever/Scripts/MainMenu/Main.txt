@@ -1303,7 +1303,7 @@ function Lang_Init
 			break
 	end switch
 	
-	EditMenuEntry(1, "1.5.1.024100400", 1, 0)
+	EditMenuEntry(1, "1.5.1.024100401", 1, 0)
 end function
 
 
