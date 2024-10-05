@@ -30,7 +30,7 @@ public alias saveRAM[296] : saved.transmobile
 private alias 0 : START_FLASH
 private alias 1 : START_STARTGAME
 private alias 2 : START_STARTLVLSEL
-private alias 3 : START_STARTLVLSEL_OLD
+private alias 3 : START_SPECIALATTRAC
 private alias 4 : START_STARTATTRACT
 private alias 5 : START_SETUPCLVLSEL
 private alias 6 : START_HANDLECLVLSEL
@@ -244,7 +244,19 @@ event ObjectMain
 			start.attractTimer++
 			if start.attractTimer == 720
 				if object.xpos == screen.xcenter
-					object.state = 4
+					if attract.stage == 3
+						object.state = START_SPECIALATTRAC 
+						PlaySfx(SfxName[Warp], 0)
+						fadeColor = color7
+						fadeColor <<= 16
+						temp0 = color7
+						temp0 <<= 8
+						fadeColor += temp0
+						fadeColor += color7
+						StopMusic()
+					else
+						object.state = START_STARTATTRACT
+					end if
 				end if
 			end if
 		end if
@@ -271,30 +283,32 @@ event ObjectMain
 		end if
 		SetScreenFade(0, 0, 0, start.timer)
 		break
-	case START_STARTLVLSEL_OLD // this is a leftover state from Sonic CD 2011, this would go to the Level Select there.
-		start.timer += 8
-		music.volume -= 2
-		if start.timer == 320
-			StopMusic()
-			stage.listPos = 4
+	case START_SPECIALATTRAC //separate state for special stage attract
+		start.timer++
+		CallFunction(Special_FadetoWhite)
+		if start.timer == 120
+			stage.activeList = SPECIAL_STAGE
+			stage.listPos = 0
+			LoadPalette("SpecialStage.act",0,0,0,128)
+			Rand(stage.playerListPos, 4)
+			if stage.playerListPos < 3
+					stage.player2Enabled = 0
+			end if
+			attract.stage++
+			attract.stage &= 3
+			options.attractMode = 1
+			credits.screen = 0
 			LoadStage()
 		end if
-		SetScreenFade(0, 0, 0, start.timer)
 		break
 	case START_STARTATTRACT // we do demo stuff here!!
 		start.timer += 8
 		music.volume -= 2
 		if start.timer == 320
 			StopMusic()
-			if attract.stage == 3
-				stage.activeList = SPECIAL_STAGE
-				stage.listPos = 0
-				LoadPalette("SpecialStage.act",0,0,0,128)
-			else
-				stage.activeList = REGULAR_STAGE
-				stage.listPos = attract.stage
-				stage.listPos *= 3
-			end if
+			stage.activeList = REGULAR_STAGE
+			stage.listPos = attract.stage
+			stage.listPos *= 3
 			Rand(stage.playerListPos, 4)
 			if stage.playerListPos < 3
 					stage.player2Enabled = 0
@@ -310,7 +324,7 @@ event ObjectMain
 	case START_SETUPCLVLSEL // sets up the classic level select from Genesis S1.
 		LoadPalette("LevelSel.act", 0, 0, 0, 256)
 		stage[0].activeLayer = 0
-		object.value10 = 1 // this is set but not used...? what was this?
+		object.value10 = 1 // Let the Logo object know to blank out the background
 		LoadSpriteSheet("LevelSelect/TextOG.gif")
 		SetupMenu(MENU_1, 0, 1, 2)
 		AddMenuEntry(MENU_1, "GREEN HILL ZONE  STAGE 1", 1)
