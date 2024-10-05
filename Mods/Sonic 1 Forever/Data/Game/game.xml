@@ -2,7 +2,6 @@
 <game xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<title name="Sonic 1 Forever" />
 	<palette>
-		<color bank="0" index="0" r="255" g="0" b="255"/>
 		<color bank="0" index="1" r="0" g="0" b="0"/>
 		<color bank="0" index="2" r="32" g="32" b="128"/>
 		<color bank="0" index="3" r="64" g="64" b="160"/>
@@ -60,32 +59,15 @@
 		<color bank="0" index="52" r="32" g="192" b="0"/>
 		<color bank="0" index="53" r="0" g="128" b="0"/>
 		<color bank="0" index="54" r="0" g="64" b="0"/>
-		<color bank="0" index="55" r="255" g="0" b="255"/>
-		<color bank="0" index="56" r="255" g="0" b="255"/>
-		<color bank="0" index="57" r="255" g="0" b="255"/>
-		<color bank="0" index="58" r="255" g="0" b="255"/>
-		<color bank="0" index="59" r="255" g="0" b="255"/>
-		<color bank="0" index="60" r="255" g="0" b="255"/>
-		<color bank="0" index="61" r="255" g="0" b="255"/>
-		<color bank="0" index="62" r="255" g="0" b="255"/>
-		<color bank="0" index="63" r="255" g="0" b="255"/>
 
 		<color bank="0" index="64" r="160" g="96" b="64"/>
 		<color bank="0" index="65" r="224" g="128" b="0"/>
 		<color bank="0" index="66" r="224" g="160" b="0"/>
 		<color bank="0" index="67" r="224" g="160" b="128"/>
-		<color bank="0" index="68" r="255" g="0" b="255"/>
-		<color bank="0" index="69" r="255" g="0" b="255"/>
-		<color bank="0" index="70" r="255" g="0" b="255"/>
-		<color bank="0" index="71" r="255" g="0" b="255"/>
-		<color bank="0" index="72" r="255" g="0" b="255"/>
-		<color bank="0" index="73" r="255" g="0" b="255"/>
 		<color bank="0" index="74" r="96" g="0" b="32"/>
 		<color bank="0" index="75" r="192" g="0" b="32"/>
 		<color bank="0" index="76" r="224" g="64" b="96"/>
 		<color bank="0" index="77" r="224" g="80" b="96"/>
-		<color bank="0" index="78" r="255" g="0" b="255"/>
-		<color bank="0" index="79" r="255" g="0" b="255"/>
 
 		<color bank="0" index="80" r="32" g="32" b="32"/>
 		<color bank="0" index="81" r="64" g="64" b="64"/>
@@ -93,16 +75,6 @@
 		<color bank="0" index="83" r="128" g="128" b="128"/>
 		<color bank="0" index="84" r="160" g="160" b="160"/>
 		<color bank="0" index="85" r="192" g="192" b="192"/>
-		<color bank="0" index="86" r="255" g="0" b="255"/>
-		<color bank="0" index="87" r="255" g="0" b="255"/>
-		<color bank="0" index="88" r="255" g="0" b="255"/>
-		<color bank="0" index="89" r="255" g="0" b="255"/>
-		<color bank="0" index="90" r="255" g="0" b="255"/>
-		<color bank="0" index="91" r="255" g="0" b="255"/>
-		<color bank="0" index="92" r="255" g="0" b="255"/>
-		<color bank="0" index="93" r="255" g="0" b="255"/>
-		<color bank="0" index="94" r="255" g="0" b="255"/>
-		<color bank="0" index="95" r="255" g="0" b="255"/>
 	</palette>
 	<objects />
 	<variables>
