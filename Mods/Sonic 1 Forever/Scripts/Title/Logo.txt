@@ -252,19 +252,6 @@ end event
 
 
 event ObjectDraw
-	if object[+1].value10 == 1 //check for level select on 'start' object
-		//We're using a palette entry here instead of just a black in case
-		//the player enters a special stage and we have to palette fade
-		GetPaletteEntry(0, 181, temp0)
-		temp1 = temp0 //red
-		temp1 >>= 16
-		temp1 &= 0xFF
-		temp2 = temp0 //blue
-		temp2 >>= 8
-		temp2 &= 0xFF
-		temp0 &= 0xFF //green
-		DrawRect(0, 0, screen.xsize, screen.ysize, temp1, temp2, temp0, 255)
-	end if
 	temp0 = object.value19
 	temp0 += screen.xcenter
 	object[+1].xpos = temp0

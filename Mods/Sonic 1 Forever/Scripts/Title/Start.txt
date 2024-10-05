@@ -323,8 +323,8 @@ event ObjectMain
 		break
 	case START_SETUPCLVLSEL // sets up the classic level select from Genesis S1.
 		LoadPalette("LevelSel.act", 0, 0, 0, 256)
-		stage[0].activeLayer = 0
-		object.value10 = 1 // Let the Logo object know to blank out the background
+		stage[0].activeLayer = 2
+		object.value10 = 1 // Let the Logo object know to stop animation
 		LoadSpriteSheet("LevelSelect/TextOG.gif")
 		SetupMenu(MENU_1, 0, 1, 2)
 		AddMenuEntry(MENU_1, "GREEN HILL ZONE  STAGE 1", 1)
