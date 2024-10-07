@@ -458,9 +458,9 @@ function load.level
 				StopMusic()
 				PlaySfx(SfxName[Warp], 0)
 			end if
-			extras.fade += 8
+			extras.fade += 4
 			SetClassicFade(color7, color7, color7, extras.fade)
-			if extras.fade >= 768			
+			if extras.fade >= 144		
 				fadeColor = color7
 				fadeColor <<= 16
 				temp0 = color7
@@ -499,9 +499,9 @@ function load.level
 				StopMusic()
 				PlaySfx(SfxName[Warp], 0)
 			end if
-			extras.fade += 8
+			extras.fade += 4
 			SetClassicFade(color7, color7, color7, extras.fade)
-			if extras.fade >= 768
+			if extras.fade >= 144
 				fadeColor = color7
 				fadeColor <<= 16
 				temp0 = color7

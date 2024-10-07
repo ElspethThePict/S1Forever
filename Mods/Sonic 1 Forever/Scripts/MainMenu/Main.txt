@@ -640,7 +640,7 @@ function main.exit
 	fade.effect += 4
 	music.volume -= 2
 	SetClassicFade(0, 0, 0, fade.effect)
-	if fade.effect >= 384
+	if fade.effect >= 144
 		StopMusic()
 		stage.playerListPos = 0
 		stage.activeList = PRESENTATION_STAGE
@@ -653,7 +653,7 @@ function main.close
 	fade.effect += 4
 	music.volume -= 4
 	SetClassicFade(0, 0, 0, fade.effect)
-	if fade.effect >= 384
+	if fade.effect >= 144
 		CallNativeFunction(ExitGame)
 	end if
 end function
@@ -662,7 +662,7 @@ function main.load
 	fade.effect += 4
 	music.volume -= 8
 	SetClassicFade(0, 0, 0, fade.effect)
-	if fade.effect >= 184
+	if fade.effect >= 144
 		options.gameMode = 0
 		stage.playerListPos = 0
 		StopMusic()
@@ -809,7 +809,7 @@ event ObjectMain
 	end if
 
 	if fade.control == 0
-		fade.effect -= 8
+		fade.effect -= 4
 		if fade.effect <= 0
 			fade.effect = 0
 			fade.control = 1
@@ -1266,7 +1266,7 @@ event ObjectStartup
 		object[9].type = TypeName[Main Menu]
 		object[9].priority = PRIORITY_ACTIVE
 		object[9].drawOrder = 6	
-		fade.effect = 384
+		fade.effect = 144
 		CallFunction(sidebar.adj)
 		touch[9].confirm = 0
 	next

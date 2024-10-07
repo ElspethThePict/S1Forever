@@ -284,9 +284,9 @@ event ObjectMain
 		break
 	case 8
 		if object[0].type == TypeName[Blank Object]
-			object.value0 += 8			
+			object.value0 += 8	4	
 			SetClassicFade(color7, color7, color7, object.value0)
-			if object.value0 == 0x400
+			if object.value0 == 144
 				fadeColor = color7
 				fadeColor <<= 16
 				temp0 = color7

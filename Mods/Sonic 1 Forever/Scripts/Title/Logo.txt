@@ -261,7 +261,7 @@ event ObjectDraw
 	case 0
 		screen.xoffset = 0
 		object.priority = PRIORITY_ACTIVE
-		object.value0 = 256
+		object.value0 = 144
 		stage[0].activeLayer = 1
 		object.state++
 		SetClassicFade(0, 0, 0, 255)

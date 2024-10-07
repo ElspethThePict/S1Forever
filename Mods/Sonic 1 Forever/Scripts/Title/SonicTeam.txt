@@ -15,7 +15,7 @@ private alias 2 : TYPE_SONICTEAM
 event ObjectMain	
 	switch object.state
 	case 0
-		object.value0 = 320
+		object.value0 = 144
 		object.state++
 		if saveRAM[278] == 1
 			LoadSpriteSheet("Title/SonicTeam.gif")
@@ -25,7 +25,7 @@ event ObjectMain
 		break
 	case 1
 		if object.value0 > 0
-			object.value0 -= 8
+			object.value0 -= 4
 		else
 			object.state++
 		end if
@@ -41,8 +41,8 @@ event ObjectMain
 		CallFunction(SkipScreen)
 		break
 	case 3
-		if object.value0 < 320
-			object.value0 += 8
+		if object.value0 < 144
+			object.value0 += 4
 		else
 			ResetObjectEntity(object.entityPos, TypeName[Logo], 0, 0, 0)
 		end if

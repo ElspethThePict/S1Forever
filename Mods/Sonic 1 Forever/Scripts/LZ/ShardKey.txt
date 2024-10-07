@@ -135,8 +135,8 @@ event ObjectMain
 			object.frame = 5
 			break
 		case 12
-			if fader < 320
-				fader += 3
+			if fader < 144
+				fader += 4
 				music.volume -= 1
 			else
 				StopMusic()
@@ -152,7 +152,7 @@ event ObjectMain
 			break
 		case 13
 			if fader > 0
-				fader -= 3
+				fader -= 4
 				if fader < 0
 					fader = 0
 				end if
@@ -270,7 +270,7 @@ event ObjectMain
 				BoxCollisionTest(C_BOX, object.entityPos, -56, -99, 56, 0, currentPlayer, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO, HITBOX_AUTO)
 			next
 			CallFunction(ParticleSpawn)
-			if fader < 320
+			if fader < 144
 				fader += 2
 				temp0 = 135
 				temp0 <<= 16

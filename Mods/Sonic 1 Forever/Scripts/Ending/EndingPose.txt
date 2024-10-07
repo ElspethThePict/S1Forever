@@ -236,10 +236,10 @@ event ObjectMain
 	case 7
 		break
 	case 8
-		if object.value0 < 384
-			object.value0 += 6
+		if object.value0 < 144
+			object.value0 += 4
 		else
-			object.value0 = 256
+			object.value0 = 144
 			SetTileLayerEntry(184, 0, 2, 2)
 			SetTileLayerEntry(185, 0, 3, 2)
 			SetTileLayerEntry(186, 0, 2, 3)
@@ -254,7 +254,7 @@ event ObjectMain
 		break
 	case 9
 		if object.value0 > 0
-			object.value0 -= 16
+			object.value0 -= 4
 			SetClassicFade(color7, color7, color7, object.value0)
 		else
 			switch stage.playerListPos

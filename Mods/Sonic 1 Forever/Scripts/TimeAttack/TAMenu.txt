@@ -558,9 +558,9 @@ event ObjectDraw
 			fade.effect = 0
 			break
 		case 7
-			if fade.effect < 768
+			if fade.effect < 144
 				music.volume -= 10
-				fade.effect += 8
+				fade.effect += 4
 			else
 				LoadPalette("SpecialStage.act",0,0,0,128)
 				fade.control++

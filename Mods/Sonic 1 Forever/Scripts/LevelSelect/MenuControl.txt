@@ -462,9 +462,9 @@ event ObjectMain
 		end if
 		break
 	case 4
-		if object.value0 < 768
+		if object.value0 < 144
 			music.volume -= 10
-			object.value0 += 8
+			object.value0 += 4
 			SetClassicFade(color7, color7, color7, object.value0)
 		else
 			StopMusic()

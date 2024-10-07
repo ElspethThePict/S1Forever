@@ -295,13 +295,13 @@ event ObjectMain
 	case 0
 		object.alpha = 0
 		object.inkEffect = INK_ALPHA
-		object.value0 = 320
+		object.value0 = 144
 		SetClassicFade(0, 0, 0, object.value0)
 		object.state++
 		break
 	case 1
 		if object.value0 > 0
-			object.value0 -= 8
+			object.value0 -= 4
 		else
 			object.value2 = screen.xcenter
 			object.value2 -= 104
@@ -343,8 +343,8 @@ event ObjectMain
 		end if
 		break
 	case 5
-		if object.value0 < 256
-			object.value0 += 8
+		if object.value0 < 144
+			object.value0 += 4
 			SetClassicFade(0, 0, 0, object.value0)
 		else
 			ResetObjectEntity(object.entityPos, TypeName[Sonic Team], 0, object.xpos, object.ypos)

@@ -161,7 +161,7 @@ event ObjectMain
 	case START_STARTGAME // Loads the Main Menu
 		start.timer += 4
 		music.volume -= 2
-		if start.timer == 140
+		if start.timer == 144
 			StopMusic()
 			stage.activeList = PRESENTATION_STAGE
 			stage.listPos = StageName[P - MAIN MENU]
@@ -181,8 +181,8 @@ event ObjectMain
 		SetScreenFade(0, 0, 0, start.timer)
 		break
 	case START_SPECIALATTRAC //separate state for special stage attract
-		start.timer += 8
-		if start.timer == 768
+		start.timer += 4
+		if start.timer == 144
 			stage.activeList = SPECIAL_STAGE
 			stage.listPos = 0
 			LoadPalette("SpecialStage.act",0,0,0,128)
@@ -199,9 +199,9 @@ event ObjectMain
 		SetClassicFade(color7, color7, color7, start.timer)
 		break
 	case START_STARTATTRACT // we do demo stuff here!!
-		start.timer += 8
+		start.timer += 4
 		music.volume -= 2
-		if start.timer == 320
+		if start.timer == 144
 			StopMusic()
 			stage.activeList = REGULAR_STAGE
 			stage.listPos = attract.stage
@@ -667,9 +667,9 @@ event ObjectMain
 		end if		
 		break
 	case START_CLVLSEL_LOADSTAGE // Load a selected stage!
-		if start.timer < 256
+		if start.timer < 144
 			music.volume -= 10
-			start.timer += 16
+			start.timer += 14
 			SetClassicFade(0, 0, 0, start.timer)
 		else
 			GetTableValue(stage.playerListPos, lselect.characterSel, LSelect_CharacterLoad)
@@ -678,9 +678,9 @@ event ObjectMain
 		end if
 		break
 	case START_CLVLSEL_LOADSS // Load a selected Special Stage!
-		if start.timer < 768
+		if start.timer < 144
 			music.volume -= 10
-			start.timer += 8
+			start.timer += 4
 		else
 			GetTableValue(stage.playerListPos, lselect.characterSel, LSelect_CharacterLoad)
 			StopMusic()
@@ -690,9 +690,9 @@ event ObjectMain
 		SetClassicFade(color7, color7, Color7, start.timer)
 		break
 	case START_EXITTOMAINMENU // Leaving the classic level select, boot to Main Menu.
-		start.timer += 8
+		start.timer += 4
 		music.volume -= 2
-		if start.timer == 320
+		if start.timer == 144
 			StopMusic()
 			stage.activeList = PRESENTATION_STAGE
 			stage.listPos = StageName[P - MAIN MENU]
