@@ -461,12 +461,12 @@ function load.level
 			extras.fade += 8
 			SetClassicFade(color7, color7, color7, extras.fade)
 			if extras.fade >= 768			
-				fadeColor = color6
+				fadeColor = color7
 				fadeColor <<= 16
 				temp0 = color7
 				temp0 <<= 8
 				fadeColor += temp0
-				fadeColor += color6
+				fadeColor += color7
 				LoadPalette("SpecialStage.act", 0, 0, 0, 128)
 				options.gameMode = 4
 				stage.playerListPos = 0
@@ -502,12 +502,12 @@ function load.level
 			extras.fade += 8
 			SetClassicFade(color7, color7, color7, extras.fade)
 			if extras.fade >= 768
-				fadeColor = color6
+				fadeColor = color7
 				fadeColor <<= 16
 				temp0 = color7
 				temp0 <<= 8
 				fadeColor += temp0
-				fadeColor += color6	
+				fadeColor += color7
 				LoadPalette("SpecialStage.act", 0, 0, 0, 128)
 				options.gameMode = 0
 				stage.playerListPos = 0

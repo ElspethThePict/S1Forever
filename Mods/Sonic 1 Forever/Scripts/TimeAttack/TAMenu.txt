@@ -549,12 +549,12 @@ event ObjectDraw
 		case 6
 			PlaySfx(SfxName[Warp], 0)
 			fade.control = 7
-			fadeColor = 208
+			fadeColor = color7
 			fadeColor <<= 16
-			temp0 = 255
+			temp0 = color7
 			temp0 <<= 8
 			fadeColor += temp0
-			fadeColor += 224
+			fadeColor += color7
 			fade.effect = 0
 			break
 		case 7
