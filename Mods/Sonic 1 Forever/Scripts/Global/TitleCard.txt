@@ -217,7 +217,7 @@ end event
 event ObjectDraw
 	if object.state < 7
 		SetActivePalette(0, 0, screen.ysize)
-		DrawRect(0, 0, screen.xsize, screen.ysize, 0, 0, 0, object.alpha)
+		ClassicTint(0, 0, screen.xsize, screen.ysize, 0, 0, 0, object.alpha)
 		temp0 = screen.xcenter
 		temp0 -= 28
 		temp0 += object.value1
