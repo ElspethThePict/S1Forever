@@ -292,7 +292,7 @@ end function
 
 function save_fadein
 	if fade.alpha == 0
-		fade.alpha = 384
+		fade.alpha = 180
 	end if
 	SetClassicFade(0, 0, 0, fade.alpha)
 	fade.alpha -= 4
@@ -446,7 +446,7 @@ function save_loadsave
 	fade.alpha += 4
 	music.volume -= 2
 	SetClassicFade(0, 0, 0, fade.alpha)
-	if fade.alpha >= 384
+	if fade.alpha >= 180
 		StopMusic()
 		options.gameMode = 1
 		options.saveSlot = save.highlight
@@ -519,7 +519,7 @@ function save_loadcomplete
 	fade.alpha += 4
 	music.volume -= 2
 	SetClassicFade(0, 0, 0, fade.alpha)
-	if fade.alpha >= 384
+	if fade.alpha >= 180
 		StopMusic()
 		options.gameMode = 1
 		options.saveSlot = save.highlight
@@ -553,7 +553,7 @@ function save_loadnew
 	fade.alpha += 4
 	music.volume -= 2
 	SetClassicFade(0, 0, 0, fade.alpha)
-	if fade.alpha >= 384
+	if fade.alpha >= 180
 		StopMusic()
 		options.gameMode = 1
 		options.saveSlot = save.highlight
@@ -626,7 +626,7 @@ function save_exit
 	fade.alpha += 4
 	music.volume -= 2
 	SetClassicFade(0, 0, 0, fade.alpha)
-	if fade.alpha >= 384
+	if fade.alpha >= 180
 		StopMusic()
 		stage.activeList = PRESENTATION_STAGE
 		stage.listPos = StageName[P - MAIN MENU]
@@ -692,7 +692,7 @@ function nosave_load
 	fade.alpha += 4
 	music.volume -= 2
 	SetClassicFade(0, 0, 0, fade.alpha)
-	if fade.alpha >= 384
+	if fade.alpha >= 180
 		StopMusic()
 		options.gameMode = 0
 		options.attractMode = 0
