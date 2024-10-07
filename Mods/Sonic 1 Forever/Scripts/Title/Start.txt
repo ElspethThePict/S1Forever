@@ -216,7 +216,7 @@ event ObjectMain
 			credits.screen = 0
 			LoadStage()
 		end if
-		SetScreenFade(0, 0, 0, start.timer)
+		SetClassicFade(0, 0, 0, start.timer)
 		break
 	case START_SETUPCLVLSEL // sets up the classic level select from Genesis S1.
 		LoadPalette("LevelSel.act", 0, 0, 0, 256)
@@ -670,11 +670,11 @@ event ObjectMain
 		if start.timer < 256
 			music.volume -= 10
 			start.timer += 16
-			SetScreenFade(0, 0, 0, start.timer)
+			SetClassicFade(0, 0, 0, start.timer)
 		else
 			GetTableValue(stage.playerListPos, lselect.characterSel, LSelect_CharacterLoad)
 			LoadStage()
-			SetScreenFade(0, 0, 0, 255)
+			SetClassicFade(0, 0, 0, 255)
 		end if
 		break
 	case START_CLVLSEL_LOADSS // Load a selected Special Stage!
@@ -698,7 +698,7 @@ event ObjectMain
 			stage.listPos = StageName[P - MAIN MENU]
 			LoadStage()
 		end if
-		SetScreenFade(0, 0, 0, start.timer)
+		SetClassicFade(0, 0, 0, start.timer)
 		break
 	end switch
 end event
