@@ -159,15 +159,15 @@ event ObjectMain
 		end if
 		break
 	case START_STARTGAME // Loads the Main Menu
-		start.timer += 8
+		start.timer += 4
 		music.volume -= 2
-		if start.timer == 320
+		if start.timer == 140
 			StopMusic()
 			stage.activeList = PRESENTATION_STAGE
 			stage.listPos = StageName[P - MAIN MENU]
 			LoadStage()
 		end if
-		SetScreenFade(0, 0, 0, start.timer)
+		SetClassicFade(0, 0, 0, start.timer)
 		break
 	case START_STARTLVLSEL // 2013 Level Select... unused code moment!
 		start.timer += 8

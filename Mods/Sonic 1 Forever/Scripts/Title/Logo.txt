@@ -264,7 +264,7 @@ event ObjectDraw
 		object.value0 = 256
 		stage[0].activeLayer = 1
 		object.state++
-		SetScreenFade(0, 0, 0, 255)
+		SetClassicFade(0, 0, 0, 255)
 		object[+1].type = TypeName[Start Message]
 		object[+1].priority = PRIORITY_ACTIVE
 		object[+1].xpos = temp0
@@ -273,12 +273,12 @@ event ObjectDraw
 	case 1
 		screen.xoffset += 2
 		if object.value0 > 0
-			object.value0 -= 8
+			object.value0 -= 4
 		else
 			PlayMusic(0)
 			object.state++
 		end if
-		SetScreenFade(0, 0, 0, object.value0)
+		SetClassicFade(0, 0, 0, object.value0)
 		break
 	case 2
 		screen.xoffset += 2
