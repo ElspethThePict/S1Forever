@@ -339,7 +339,7 @@ event ObjectMain
 			break
 		case 3
 			if pause.fade < 320
-				pause.fade += 16
+				pause.fade += 4
 			else
 				WriteSaveRAM()
 				LoadStage()
@@ -544,7 +544,7 @@ event ObjectDraw
 				
 			end if
 			if object.state == 3 
-				DrawRect(0, 0, screen.xsize, screen.ysize, 0, 0, 0, pause.fade)
+				ClassicTint(0, 0, screen.xsize, screen.ysize, 0, 0, 0, pause.fade)
 			end if
 			SetActivePalette(0, 0, screen.ysize)
 		end if
