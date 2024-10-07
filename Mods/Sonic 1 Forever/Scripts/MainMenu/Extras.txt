@@ -479,7 +479,7 @@ function load.level
 		case 1 //Boss Rush
 			extras.fade += 8
 			music.volume -= 10
-			SetScreenFade(0, 0, 0, extras.fade)
+			SetClassicFade(0, 0, 0, extras.fade)
 			if extras.fade >= 384
 				StopMusic()
 				options.gameMode = 2

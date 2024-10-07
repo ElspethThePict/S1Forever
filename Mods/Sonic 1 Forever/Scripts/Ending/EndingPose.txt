@@ -145,7 +145,7 @@ event ObjectMain
 		else
 			temp0 = 0
 		end if
-		SetScreenFade(0, 0, 0, temp0)
+		SetClassicFade(0, 0, 0, temp0)
 		break
 	case 5
 		object.value0++

@@ -196,7 +196,7 @@ event ObjectMain
 			WriteSaveRAM()
 			LoadStage()
 		end if
-		SetScreenFade(0, 0, 0, object.value0)
+		SetClassicFade(0, 0, 0, object.value0)
 		break
 	case 2
 		if object.value0 < 60

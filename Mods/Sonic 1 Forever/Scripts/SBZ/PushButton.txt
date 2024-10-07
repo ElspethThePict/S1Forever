@@ -95,7 +95,7 @@ event ObjectMain
 		if object.state == 1
 			object.value2 += 4
 			music.volume -= 2
-			SetScreenFade(0, 0, 0, object.value2)
+			SetClassicFade(0, 0, 0, object.value2)
 			if object.value2 == 384
 				fadeColor = 0
 				object.value2 = 0

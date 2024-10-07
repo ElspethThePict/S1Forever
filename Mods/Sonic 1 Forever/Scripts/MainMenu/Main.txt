@@ -639,7 +639,7 @@ end function
 function main.exit
 	fade.effect += 16
 	music.volume -= 2
-	SetScreenFade(0, 0, 0, fade.effect)
+	SetClassicFade(0, 0, 0, fade.effect)
 	if fade.effect >= 384
 		StopMusic()
 		stage.playerListPos = 0
@@ -652,7 +652,7 @@ end function
 function main.close
 	fade.effect += 16
 	music.volume -= 4
-	SetScreenFade(0, 0, 0, fade.effect)
+	SetClassicFade(0, 0, 0, fade.effect)
 	if fade.effect >= 384
 		CallNativeFunction(ExitGame)
 	end if
@@ -661,7 +661,7 @@ end function
 function main.load
 	fade.effect += 16
 	music.volume -= 8
-	SetScreenFade(0, 0, 0, fade.effect)
+	SetClassicFade(0, 0, 0, fade.effect)
 	if fade.effect >= 384
 		options.gameMode = 0
 		stage.playerListPos = 0
@@ -815,7 +815,7 @@ event ObjectMain
 			fade.control = 1
 			PlayMusic(1)
 		end if
-		SetScreenFade(0, 0, 0, fade.effect)
+		SetClassicFade(0, 0, 0, fade.effect)
 	end if
 	
 	if reset.done == 0

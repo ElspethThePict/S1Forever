@@ -20,7 +20,7 @@ event ObjectMain
 		if saveRAM[278] == 1
 			LoadSpriteSheet("Title/SonicTeam.gif")
 		end if
-		SetScreenFade(0, 0, 0, 255)
+		SetClassicFade(0, 0, 0, 255)
 		CallFunction(SkipScreen)
 		break
 	case 1
@@ -29,7 +29,7 @@ event ObjectMain
 		else
 			object.state++
 		end if
-		SetScreenFade(0, 0, 0, object.value0)
+		SetClassicFade(0, 0, 0, object.value0)
 		CallFunction(SkipScreen)
 		break
 	case 2
@@ -46,7 +46,7 @@ event ObjectMain
 		else
 			ResetObjectEntity(object.entityPos, TypeName[Logo], 0, 0, 0)
 		end if
-		SetScreenFade(0, 0, 0, object.value0)
+		SetClassicFade(0, 0, 0, object.value0)
 		break
 	end switch
 end event

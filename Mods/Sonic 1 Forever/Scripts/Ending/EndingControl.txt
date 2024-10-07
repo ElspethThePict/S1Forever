@@ -70,7 +70,7 @@ event ObjectMain
 			stage.newXBoundary2 = temp0
 			object.state++
 		end if
-		SetScreenFade(0, 0, 0, object.value0)
+		SetClassicFade(0, 0, 0, object.value0)
 		break
 	case 2
 		temp0 = object.xpos

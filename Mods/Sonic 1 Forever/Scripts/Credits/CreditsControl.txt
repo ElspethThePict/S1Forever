@@ -45,7 +45,7 @@ event ObjectMain
 	switch object.state
 	case 0
 		object.value0 = 320
-		SetScreenFade(0, 0, 0, object.value0)
+		SetClassicFade(0, 0, 0, object.value0)
 		object.state++
 		if credits.screen == 0
 			PlayMusic(0)
@@ -58,7 +58,7 @@ event ObjectMain
 			object.alpha = 128
 			object.state++
 		end if
-		SetScreenFade(0, 0, 0, object.value0)
+		SetClassicFade(0, 0, 0, object.value0)
 		break
 	case 2
 		object.value0++
@@ -70,7 +70,7 @@ event ObjectMain
 	case 3
 		if object.value0 < 256
 			object.value0 += 8
-			SetScreenFade(0, 0, 0, object.value0)
+			SetClassicFade(0, 0, 0, object.value0)
 		else
 			object.state = 0
 			credits.screen++
@@ -139,7 +139,7 @@ event ObjectMain
 				LoadStage()
 				break
 			end switch
-			SetScreenFade(0, 0, 0, 255)
+			SetClassicFade(0, 0, 0, 255)
 		end if
 		break
 	case 4
@@ -149,7 +149,7 @@ event ObjectMain
 			object.alpha = 128
 			object.state++
 		end if
-		SetScreenFade(0, 0, 0, object.value0)
+		SetClassicFade(0, 0, 0, object.value0)
 		break
 	case 5
 		object.value0++
@@ -178,13 +178,13 @@ event ObjectMain
 	case 6
 		if object.value0 < 256
 			object.value0 += 8
-			SetScreenFade(0, 0, 0, object.value0)
+			SetClassicFade(0, 0, 0, object.value0)
 		else
 			stage.activeList = PRESENTATION_STAGE
 			stage.listPos = StageName[P - TITLE SCREEN]
 			StopMusic()
 			options.attractMode = 0
-			SetScreenFade(0, 0, 0, 255)
+			SetClassicFade(0, 0, 0, 255)
 			LoadStage()
 		end if
 		break

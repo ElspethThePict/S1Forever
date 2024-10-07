@@ -188,6 +188,7 @@ event ObjectMain
 				WriteSaveRAM()
 				LoadStage()
 			end if
+			SetClassicFade(0, 0, 0, pause.fade)
 			break
 		case 4
 			if pause.fade < 20
@@ -351,9 +352,6 @@ event ObjectDraw
 				end switch
 			end if
 			
-		end if
-		if object.state == 3 
-			DrawRect(0, 0, screen.xsize, screen.ysize, 0, 0, 0, pause.fade)
 		end if
 	end if
 end event

@@ -197,7 +197,7 @@ event ObjectMain
 	switch object.state
 	case 0
 		object.value0 = 320
-		SetScreenFade(0, 0, 0, object.value0)
+		SetClassicFade(0, 0, 0, object.value0)
 		object[+1].ypos = 88
 		object[+1].priority = PRIORITY_ACTIVE
 		object[+2].ypos = 160
@@ -225,7 +225,7 @@ event ObjectMain
 			PlayMusic(0)
 			object.state++
 		end if
-		SetScreenFade(0, 0, 0, object.value0)
+		SetClassicFade(0, 0, 0, object.value0)
 		break
 	case 2
 		if inputDown.down == 1
@@ -446,7 +446,7 @@ event ObjectMain
 		if object.value0 < 256
 			music.volume -= 10
 			object.value0 += 16
-			SetScreenFade(0, 0, 0, object.value0)
+			SetClassicFade(0, 0, 0, object.value0)
 		else
 			StopMusic()
 			temp0 = object.value3
@@ -458,7 +458,7 @@ event ObjectMain
 			stage.activeList = temp1
 			stage.listPos = temp2
 			LoadStage()
-			SetScreenFade(0, 0, 0, 255)
+			SetClassicFade(0, 0, 0, 255)
 		end if
 		break
 	case 4

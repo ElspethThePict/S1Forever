@@ -188,7 +188,7 @@ event ObjectDraw
 		//Fade in/out
 		case 0
 			fade.control = 255
-			SetScreenFade(0, 0, 0, fade.control)
+			SetClassicFade(0, 0, 0, fade.control)
 			object.state++
 			break
 		case 1
@@ -198,7 +198,7 @@ event ObjectDraw
 				object.state++
 				PlayMusic(0)
 			end if
-			SetScreenFade(0, 0, 0, fade.control)
+			SetClassicFade(0, 0, 0, fade.control)
 			break
 		case 2 //Character Select
 		case 3 //Waiting to Start
@@ -215,7 +215,7 @@ event ObjectDraw
 				stage.listPos = StageName[P - MAIN MENU]
 				LoadStage()
 			end if
-			SetScreenFade(0, 0, 0, fade.control)
+			SetClassicFade(0, 0, 0, fade.control)
 			break
 		case 5 //Fade out to Green Hill
 			if fade.control < 320
@@ -234,7 +234,7 @@ event ObjectDraw
 					end if
 				LoadStage()
 			end if
-			SetScreenFade(0, 0, 0, fade.control)
+			SetClassicFade(0, 0, 0, fade.control)
 			break
 		end switch
 		

@@ -84,7 +84,7 @@ event ObjectMain
 		end if
 		if object.value3 > 0
 			music.volume -= 2
-			SetScreenFade(0, 0, 0, object.value3)
+			SetClassicFade(0, 0, 0, object.value3)
 		else
 			if inputPress.buttonA == 1
 				object.value3 = 0
@@ -120,7 +120,7 @@ event ObjectMain
 			WriteSaveRAM()
 			LoadStage()
 		end if
-		SetScreenFade(0, 0, 0, object.value3)
+		SetClassicFade(0, 0, 0, object.value3)
 		break
 	case 3
 		if object.value3 < 288
@@ -142,7 +142,7 @@ event ObjectMain
 			LoadStage()
 			//engine.state = 8
 		end if
-		SetScreenFade(0, 0, 0, object.value3)
+		SetClassicFade(0, 0, 0, object.value3)
 		break
 	end switch
 end event

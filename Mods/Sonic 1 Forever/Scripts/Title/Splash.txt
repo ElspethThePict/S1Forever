@@ -29,7 +29,7 @@ event ObjectMain
 	case 0
 		// Initialization phase
 		object.value0 = 320
-		SetScreenFade(0, 0, 0, object.value0)
+		SetClassicFade(0, 0, 0, object.value0)
 		object.state++
 		break
 	case 1
@@ -39,7 +39,7 @@ event ObjectMain
 		else
 			object.state++
 		end if
-		SetScreenFade(0, 0, 0, object.value0)
+		SetClassicFade(0, 0, 0, object.value0)
 		break
 	case 2
 		// Main phase
@@ -69,10 +69,10 @@ event ObjectMain
 		// Fade-out phase
 		if object.value0 < 256
 			object.value0 += 8
-			SetScreenFade(0, 0, 0, object.value0)
+			SetClassicFade(0, 0, 0, object.value0)
 		else
 			Callfunction(Splash_NextPhase)
-			SetScreenFade(0, 0, 0, 255)
+			SetClassicFade(0, 0, 0, 255)
 		end if
 		break
 	end switch

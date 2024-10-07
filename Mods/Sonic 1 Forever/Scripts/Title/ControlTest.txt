@@ -126,7 +126,7 @@ event ObjectDraw
 		temp0*= 8
 		temp0 -= 2145
 		if temp0 > 0
-			SetScreenFade(0, 0, 0, temp0)
+			SetClassicFade(0, 0, 0, temp0)
 		end if
 		if object.value14 > 300
 			ResetObjectEntity(object.entityPos, TypeName[Sega], 0, object.xpos, object.ypos)

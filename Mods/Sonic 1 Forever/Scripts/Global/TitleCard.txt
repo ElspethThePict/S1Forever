@@ -32,7 +32,7 @@ event ObjectMain
 			object.state = 7
 			object.value0 = 272
 			stage.state = STAGE_RUNNING
-			SetScreenFade(0, 0, 0, 255)
+			SetClassicFade(0, 0, 0, 255)
 		else
 			object.state++
 		end if
@@ -157,7 +157,7 @@ event ObjectMain
 	case 7
 		if object.value0 > 0
 			object.value0 -= 16
-			SetScreenFade(0, 0, 0, object.value0)
+			SetClassicFade(0, 0, 0, object.value0)
 		else
 			currentPlayer = 0
 			while currentPlayer < playerCount
@@ -183,7 +183,7 @@ event ObjectMain
 			end if
 			LoadStage()
 		end if
-		SetScreenFade(0, 0, 0, object.value0)
+		SetClassicFade(0, 0, 0, object.value0)
 		break
 	case 9
 		if object.value0 < 300
@@ -195,7 +195,7 @@ event ObjectMain
 			StopMusic()
 			LoadStage()
 		end if
-		SetScreenFade(0, 0, 0, object.value0)
+		SetClassicFade(0, 0, 0, object.value0)
 		break
 	case 10
 		if object.value0 < 300
@@ -208,7 +208,7 @@ event ObjectMain
 			WriteSaveRAM()
 			LoadStage()
 		end if
-		SetScreenFade(0, 0, 0, object.value0)
+		SetClassicFade(0, 0, 0, object.value0)
 		break
 	end switch
 end event
@@ -217,7 +217,7 @@ end event
 event ObjectDraw
 	if object.state < 7
 		SetActivePalette(0, 0, screen.ysize)
-		DrawRect(0, 0, screen.xsize, screen.ysize, 0, 0, 0, object.alpha)
+		ClassicTint(0, 0, screen.xsize, screen.ysize, 0, 0, 0, object.alpha)
 		temp0 = screen.xcenter
 		temp0 -= 28
 		temp0 += object.value1

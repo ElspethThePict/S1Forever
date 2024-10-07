@@ -72,7 +72,7 @@ event ObjectMain
 			stage.listPos = StageName[P - MAIN MENU]
 			LoadStage()
 		end if
-		SetScreenFade(0, 0, 0, object.value3)
+		SetClassicFade(0, 0, 0, object.value3)
 	end if
 
 			CheckEqual(inputPress.start, 1)
