@@ -143,7 +143,7 @@ event ObjectMain
 				CallFunction(TheWay)
 				object.state++
 			end if
-			SetScreenFade(color6, color7, color6, fader)
+			SetClassicFade(color7, color7, color7, fader)
 			
 			object.frame = glowtick
 			object.frame %= 2
@@ -166,7 +166,7 @@ event ObjectMain
 				PlayMusic(0)
 			end if
 			
-			SetScreenFade(color6, color7, color6, fader)
+			SetClassicFade(color7, color7, color7, fader)
 		case 14
 			object.frame = glowtick
 			object.frame %= 3
@@ -279,7 +279,7 @@ event ObjectMain
 				if object[0].ypos > temp0
 				//	object[0].ypos -= 0x4000
 				end if
-				SetScreenFade(color6, color7, color6, fader)
+				SetClassicFade(color7, color7, color7, fader)
 			else
 				PlayMusic(1)
 				object[30].type = TypeName[Act Finish]

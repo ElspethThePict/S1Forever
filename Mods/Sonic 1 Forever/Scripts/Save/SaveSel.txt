@@ -479,7 +479,7 @@ end function
 function save_loadspecial
 	fade.alpha += 8
 	music.volume -= 2
-	SetScreenFade(color5, color7, color5, fade.alpha)
+	SetClassicFade(color7, color7, color7, fade.alpha)
 	if fade.alpha >= 384
 		StopMusic()
 		options.gameMode = 1

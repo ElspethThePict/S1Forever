@@ -565,11 +565,11 @@ event ObjectDraw
 				LoadPalette("SpecialStage.act",0,0,0,128)
 				fade.control++
 			end if
-			SetScreenFade(color6, color7, color6, fade.effect)
+			SetClassicFade(color7, color7, color7, fade.effect)
 			break
 		case 8
 			StopMusic()
-			SetScreenFade(color6, color7, color6, 255)
+			SetClassicFade(color7, color7, color7, fade.effect)
 		break
 	end switch	
 	
@@ -634,7 +634,7 @@ event ObjectDraw
 		DrawSpriteScreenXY(92, temp0, temp1)
 	end if
 
-	//DrawNumbers(0, 20, 50, object.state, 5, 7, 0)
+	//DrawNumbers(0, 20, 50, fade.effect, 5, 7, 0)
 
 	if saved.mobile == 1
 		object.inkEffect = INK_ALPHA

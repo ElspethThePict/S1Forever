@@ -465,7 +465,7 @@ event ObjectMain
 		if object.value0 < 768
 			music.volume -= 10
 			object.value0 += 8
-			SetScreenFade(color6, color7, color6, object.value0)
+			SetClassicFade(color7, color7, color7, object.value0)
 		else
 			StopMusic()
 			temp0 = object.value3
@@ -478,7 +478,7 @@ event ObjectMain
 			stage.listPos = temp2
 			LoadPalette("SpecialStage.act",0,0,0,128)
 			LoadStage()
-			SetScreenFade(color6, color7, color6, 255)
+			SetClassicFade(color7, color7, color7, 255)
 		end if
 		break
 	end switch

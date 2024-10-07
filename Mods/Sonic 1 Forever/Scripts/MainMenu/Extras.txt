@@ -459,7 +459,7 @@ function load.level
 				PlaySfx(SfxName[Warp], 0)
 			end if
 			extras.fade += 8
-			SetScreenFade(color6, color7, color6, extras.fade)
+			SetClassicFade(color7, color7, color7, extras.fade)
 			if extras.fade >= 768			
 				fadeColor = color6
 				fadeColor <<= 16
@@ -500,7 +500,7 @@ function load.level
 				PlaySfx(SfxName[Warp], 0)
 			end if
 			extras.fade += 8
-			SetScreenFade(color6, color7, color6, extras.fade)
+			SetClassicFade(color7, color7, color7, extras.fade)
 			if extras.fade >= 768
 				fadeColor = color6
 				fadeColor <<= 16
