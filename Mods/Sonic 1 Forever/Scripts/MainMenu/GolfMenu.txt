@@ -435,7 +435,7 @@ event ObjectStartup
 
 	SpriteFrame(-32, 0, 32, 19, 1, 387) //30 Scoreboard Ender
 	switch saved.language
-	case 0
+	default
 		SpriteFrame(17, -85, 155, 56, 1, 431) //31 Skill Meter
 		break
 	case 1

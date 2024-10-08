@@ -619,7 +619,7 @@ event ObjectStartup
 	LoadSpriteSheet("Menus/ArcadeMode.gif")
 	CallFunction(ScoreOrder)
 	switch saved.language
-		case 0 //english
+		default //english
 			SpriteFrame(0, 0, 104, 42, 1, 45) //0 Top Border
 			SpriteFrame(-158, 0, 158, 17, 216, 13) //1 'Arcade Mode'
 			SpriteFrame(0, 0, 214, 29, 1, 1) //2 Table Header
@@ -678,7 +678,7 @@ event ObjectStartup
 	
 	//Insert Ring
 	switch saved.language
-		case 0
+		default
 		SpriteFrame(-147, -29, 147, 29, 106, 31) //29 Frame
 		break
 		case 1
@@ -699,7 +699,7 @@ event ObjectStartup
 	
 	//Gold
 	switch saved.language
-		case 0
+		default
 		SpriteFrame(-147, -29, 147, 29, 106, 61) //38 Frame
 		break
 		case 1
@@ -720,7 +720,7 @@ event ObjectStartup
 
 	//Outro
 	switch saved.language
-		case 0
+		default
 		SpriteFrame(-97, 0, 194, 56, 1, 156) //47 'Final Results'
 		SpriteFrame(0, 0, 44, 16, 47, 88) //48 'Score'
 		break
@@ -735,7 +735,7 @@ event ObjectStartup
 	end switch
 	
 	switch saved.language
-	case 0
+	default
 		SpriteFrame(0, 0, 39, 16, 1, 105) //49 'Rank'
 		break
 	case 1

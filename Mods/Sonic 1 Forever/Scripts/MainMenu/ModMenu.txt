@@ -529,7 +529,7 @@ function mods.pop
 		loop
 	else
 		switch saved.language 
-			case 0
+			default
 				AddMenuEntry(0, "No Mods Detected", 0)
 				AddMenuEntry(0, "Check out the modding", 0)
 				AddMenuEntry(0, "community at GameBanana", 0)
