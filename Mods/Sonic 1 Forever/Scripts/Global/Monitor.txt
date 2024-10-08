@@ -300,9 +300,8 @@ event ObjectStartup
 	CheckEqual(options.attractMode, 1)
 	temp0 |= checkResult
 	if temp0 == 1
-		switch stage.listPos
-		case 0 // (Boss Rush)
-			if stage.activeList == BONUS_STAGE
+		if stage.activeList == BONUS_STAGE
+			if stage.listPos == 0 //Boss Rush
 				switch object[arrayPos0].propertyValue
 				case 9
 					object[arrayPos0].propertyValue = 2
@@ -310,30 +309,32 @@ event ObjectStartup
 				case 10
 				case 11
 					object[arrayPos0].type = TypeName[Blank Object]
-					break				
+					break
 				end switch
 			end if
-			break
-		case 12
-		case 13
-		case 17
-			foreach (TypeName[Monitor], arrayPos0, ALL_ENTITIES)
-				if object[arrayPos0].propertyValue >= 9
-					if object[arrayPos0].propertyValue <= 11
-						object[arrayPos0].type = TypeName[Blank Object]
+		else
+			switch stage.listPos
+			case 12
+			case 13
+			case 17
+				foreach (TypeName[Monitor], arrayPos0, ALL_ENTITIES)
+					if object[arrayPos0].propertyValue >= 9
+						if object[arrayPos0].propertyValue <= 11
+							object[arrayPos0].type = TypeName[Blank Object]
+						end if
 					end if
-				end if
-			next
-			break
-		default
-			foreach (TypeName[Monitor], arrayPos0, ALL_ENTITIES)
-				if object[arrayPos0].propertyValue >= 9
-					if object[arrayPos0].propertyValue <= 11
-						object[arrayPos0].propertyValue = 2
+				next
+				break
+			default
+				foreach (TypeName[Monitor], arrayPos0, ALL_ENTITIES)
+					if object[arrayPos0].propertyValue >= 9
+						if object[arrayPos0].propertyValue <= 11
+							object[arrayPos0].propertyValue = 2
+						end if
 					end if
-				end if
-			next
-		end switch
+				next
+			end switch
+		end if
 	end if
 	switch options.gameMode
 		case 2
@@ -343,7 +344,7 @@ event ObjectStartup
 					case 5
 					case 6
 					case 7
-						object[arrayPos0].type = TypeName[Blank Object]
+						object[arrayPos0].propertyValue = 1
 				end switch
 				//end if
 			next
