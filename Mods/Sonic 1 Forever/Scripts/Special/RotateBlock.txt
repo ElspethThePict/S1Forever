@@ -24,7 +24,7 @@ end function
 function RotateBlock_DebugSpawn
 	temp5 = 10
 	temp4 = 0
-	CallFunction(DebugMode_Function11)
+	CallFunction(DebugMode_SpawnObject)
 	object[arrayPos0].drawOrder = 4
 	object[arrayPos0].groupID = GROUP_BLOCKS
 end function

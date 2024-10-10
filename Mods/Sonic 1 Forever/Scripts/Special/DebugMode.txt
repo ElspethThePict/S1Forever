@@ -9,21 +9,23 @@
 private alias 3 : TYPE_DEBUGMODE
 
 // Function declarations
-reserve function DebugMode_Function11
-reserve function DebugMode_Function12
-reserve function DebugMode_Function13
-reserve function DebugMode_Function14
-reserve function DebugMode_Function15
-reserve function DebugMode_Function16
-reserve function DebugMode_Function17
-reserve function DebugMode_Function18
-reserve function DebugMode_Function19
-reserve function DebugMode_Function20
-reserve function DebugMode_Function21
-reserve function DebugMode_Function22
+reserve function DebugMode_SpawnObject
+reserve function DebugMode_Blank
+reserve function DebugMode_DrawLifeIcon
+reserve function DebugMode_DeleteObject
+reserve function DebugMode_DeleteDraw
+reserve function DebugMode_LoadCustom
+reserve function DebugMode_LoadDraw
+reserve function DebugMode_SaveCustom
+reserve function DebugMode_SaveDraw
+reserve function DebugMode_ClearLevel
+reserve function DebugMode_ClearDraw
+reserve function DebugMode_TargetonScreen
 
 // Static Values
 public value DebugMode_ObjCount = 0;
+public value Slot.xpos = 0;
+public value Slot.ypos = 0;
 
 // Tables
 public table DebugMode_TypeTable
@@ -48,54 +50,67 @@ public table DebugMode_SpawnTable
 end table
 
 
-function DebugMode_Function11
+function DebugMode_SpawnObject
 	temp0 = 0
+	temp1 = 0
 	arrayPos0 = 32
 	while arrayPos0 < 0x420
-		if object[arrayPos0].type == TypeName[Blank Object]
-			temp0 = arrayPos0
+		if object[arrayPos0].type == TypeName[Blank Object] //Find unused object slots
+			if temp1 == 0 
+				temp1 = arrayPos0
+			end if
 		end if
-		if temp6 == object[arrayPos0].xpos
-			if temp7 == object[arrayPos0].ypos
-				temp0 = arrayPos0
-				arrayPos0 = 0x420
+		if Slot.xpos == object[arrayPos0].xpos //Find objects in the targeted slot
+			if Slot.ypos == object[arrayPos0].ypos
+				if temp0 == 0
+					temp0 = arrayPos0 //Mark the first one
+				end if
+				//Any objects already in that position? Kill em
+				//this fixes a bug that made objects undeletable
+				ResetObjectEntity(arrayPos0, TypeName[Blank Object], 0, 0, 0) 
 			end if
 		end if
 		arrayPos0++
 	loop
-	if temp0 != 0
+	if temp0 != 0 //Use the object slot already here
 		arrayPos0 = temp0
-		ResetObjectEntity(temp0, temp5, temp4, temp6, temp7)
-	else
-		CreateTempObject(temp5, temp4, temp6, temp7)
-		arrayPos0 = object[tempObjectPos].entityPos
+		ResetObjectEntity(temp0, temp5, temp4, Slot.xpos, Slot.ypos)
+	else 
+		if temp1 != 0//Use the first blank object slot we found
+			ResetObjectEntity(temp1, temp5, temp4, Slot.xpos, Slot.ypos)
+			arrayPos0 = temp1
+		else
+			//Object slots full, and yet no objects at the target position to overwrite
+			//Unlikely but not impossible
+			//Honestly don't know what to do here. For now, no new object spawns
+		end if
 	end if
 end function
 
 
-function DebugMode_Function12
+function DebugMode_Blank
 	temp0 = 0
 end function
 
 
-function DebugMode_Function13
+function DebugMode_DrawLifeIcon
 	DrawSprite(0)
 end function
 
 
-function DebugMode_Function14
+function DebugMode_DeleteObject
 	temp5 = 0
 	temp4 = 0
-	CallFunction(DebugMode_Function11)
+	CallFunction(DebugMode_SpawnObject)
 end function
 
 
-function DebugMode_Function15
+function DebugMode_DeleteDraw
 	DrawSprite(2)
 end function
 
 
-function DebugMode_Function16 //Load Custom Special
+function DebugMode_LoadCustom //Load Custom Special
 	arrayPos0 = 32
 	arrayPos1 = 0x800
 	while arrayPos0 < 0x420
@@ -104,61 +119,71 @@ function DebugMode_Function16 //Load Custom Special
 		temp1 = saveRAM[arrayPos1]
 		temp1 >>= 8
 		arrayPos1++
-		temp2 = saveRAM[arrayPos1]
-		temp2 &= 0x7FF
-		temp2 *= 0x180000
-		temp2 += 0xC0000
-		temp3 = saveRAM[arrayPos1]
-		temp3 >>= 11
-		temp3 *= 0x180000
-		temp3 += 0xC0000
-		ResetObjectEntity(arrayPos0, temp0, temp1, temp2, temp3)
+		if temp0 != TypeName[Blank Object]
+			temp2 = saveRAM[arrayPos1]
+			temp2 &= 0x7FF
+			temp2 *= 0x180000
+			temp2 += 0xC0000
+			temp3 = saveRAM[arrayPos1]
+			temp3 >>= 11
+			temp3 *= 0x180000
+			temp3 += 0xC0000
+			ResetObjectEntity(arrayPos0, temp0, temp1, temp2, temp3)
+		end if
 		arrayPos1++
 		arrayPos0++
 	loop
+	object.xpos = temp2
+	object.ypos = temp3
 end function
 
 
-function DebugMode_Function17
+function DebugMode_LoadDraw
 	DrawSprite(3)
 end function
 
 
-function DebugMode_Function18 //Save Custom Special
+function DebugMode_SaveCustom //Save Custom Special
 	arrayPos0 = 32
 	arrayPos1 = 0x800
 	while arrayPos0 < 0x420
-		temp2 = object[arrayPos0].propertyValue
-		temp2 <<= 8
-		temp2 += object[arrayPos0].type
-		saveRAM[arrayPos1] = temp2
-		arrayPos1++
-		temp0 = object[arrayPos0].xpos
-		temp0 /= 0x180000
-		temp1 = object[arrayPos0].ypos
-		temp1 /= 0x180000
-		if temp0 < 0
-			temp0 -= 0x180000
+		if object[arrayPos0].type != TypeName[Blank Object] //no need to save blank objects
+			temp2 = object[arrayPos0].propertyValue
+			temp2 <<= 8
+			temp2 += object[arrayPos0].type		
+			saveRAM[arrayPos1] = temp2
+			arrayPos1++
+			temp0 = object[arrayPos0].xpos
+			temp0 /= 0x180000
+			temp1 = object[arrayPos0].ypos
+			temp1 /= 0x180000
+			if temp0 < 0
+				temp0 -= 0x180000
+			end if
+			if temp1 < 0
+				temp1 -= 0x180000
+			end if
+			temp1 <<= 11
+			temp0 += temp1
+			saveRAM[arrayPos1] = temp0
+			arrayPos1++
 		end if
-		if temp1 < 0
-			temp1 -= 0x180000
-		end if
-		temp1 <<= 11
-		temp0 += temp1
-		saveRAM[arrayPos1] = temp0
-		arrayPos1++
 		arrayPos0++
+	loop
+	while arraypos1 < 0x1000 //make sure to wipe the unused space
+		saveRAM[arrayPos1] = 0
+		arrayPos1++
 	loop
 	WriteSaveRAM()
 end function
 
 
-function DebugMode_Function19
+function DebugMode_SaveDraw
 	DrawSprite(4)
 end function
 
 
-function DebugMode_Function20
+function DebugMode_ClearLevel
 	temp0 = 0
 	arrayPos0 = 32
 	while arrayPos0 < 0x420
@@ -168,16 +193,16 @@ function DebugMode_Function20
 end function
 
 
-function DebugMode_Function21
+function DebugMode_ClearDraw
 	DrawSprite(5)
 end function
 
 
-function DebugMode_Function22
-	temp2 = temp6
+function DebugMode_TargetonScreen
+	temp2 = Slot.xpos
 	temp2 -= object[0].xpos
 	temp2 >>= 8
-	temp3 = temp7
+	temp3 = Slot.ypos
 	temp3 -= object[0].ypos
 	temp3 >>= 8
 	Sin(temp4, PlayerObject_value1)
@@ -372,7 +397,7 @@ event ObjectMain
 			if inputPress.buttonC == 1
 				GetTableValue(temp0, object.value10, DebugMode_SpawnTable)
 				CallFunction(temp0)
-				object[tempObjectPos].priority = PRIORITY_XBOUNDS_DESTROY
+				object[tempObjectPos].priority = PRIORITY_ACTIVE
 			end if
 		end if
 	end if
@@ -380,21 +405,21 @@ end event
 
 
 event ObjectDraw
-	temp6 = object.xpos
-	temp7 = object.ypos
-	if temp6 < 0
-		temp6 -= 0x180000
+	Slot.xpos = object.xpos
+	Slot.ypos = object.ypos
+	if Slot.xpos < 0
+		Slot.xpos -= 0x180000
 	end if
-	if temp7 < 0
-		temp7 -= 0x180000
+	if Slot.ypos < 0
+		Slot.ypos -= 0x180000
 	end if
-	temp6 /= 0x180000
-	temp7 /= 0x180000
-	temp6 *= 0x180000
-	temp7 *= 0x180000
-	temp6 += 0xC0000
-	temp7 += 0xC0000
-	CallFunction(DebugMode_Function22)
+	Slot.xpos /= 0x180000
+	Slot.ypos /= 0x180000
+	Slot.xpos *= 0x180000
+	Slot.ypos *= 0x180000
+	Slot.xpos += 0xC0000
+	Slot.ypos += 0xC0000
+	CallFunction(DebugMode_TargetonScreen)
 	DrawSpriteXY(1, temp0, temp1)
 	GetTableValue(object.type, object.value10, DebugMode_TypeTable)
 	GetTableValue(temp0, object.value10, DebugMode_DrawTable)
@@ -411,38 +436,38 @@ end event
 
 event ObjectStartup
 	LoadSpriteSheet("Special/Objects.gif")
-	SpriteFrame(-12, -12, 24, 24, 251, 176)
-	SpriteFrame(-12, -12, 24, 24, 131, 454)
-	SpriteFrame(-12, -12, 24, 24, 131, 479)
-	SpriteFrame(-12, -12, 24, 24, 455, 486)
-	SpriteFrame(-12, -12, 24, 24, 480, 486)
-	SpriteFrame(-12, -12, 24, 24, 308, 376)
+	SpriteFrame(-12, -12, 24, 24, 251, 176) //0 Life Icon
+	SpriteFrame(-12, -12, 24, 24, 131, 454) //1 Target for new object
+	SpriteFrame(-12, -12, 24, 24, 131, 479) //2 Delete Icon
+	SpriteFrame(-12, -12, 24, 24, 455, 486) //3 Load Icon
+	SpriteFrame(-12, -12, 24, 24, 480, 486) //4 Save Icon
+	SpriteFrame(-12, -12, 24, 24, 308, 376) //5 Clear Icon
 	SpriteFrame(-16, 0, 8, 8, 151, 392)
 	SpriteFrame(8, 0, 8, 8, 160, 392)
 	DebugMode_ObjCount = 0
 	temp0 = 0
-	while temp0 < 64
-		SetTableValue(TypeName[Debug Mode], temp0, DebugMode_TypeTable)
-		SetTableValue(DebugMode_Function13, temp0, DebugMode_DrawTable)
-		SetTableValue(DebugMode_Function12, temp0, DebugMode_SpawnTable)
-		temp0++
-	loop
+	//while temp0 < 64 //What is this for??
+	//	SetTableValue(TypeName[Debug Mode], temp0, DebugMode_TypeTable)
+	//	SetTableValue(DebugMode_DrawLifeIcon, temp0, DebugMode_DrawTable)
+	//	SetTableValue(DebugMode_Blank, temp0, DebugMode_SpawnTable)
+	//	temp0++
+	//loop
 	SetTableValue(TypeName[Debug Mode], temp0, DebugMode_TypeTable)
-	SetTableValue(DebugMode_Function15, DebugMode_ObjCount, DebugMode_DrawTable)
-	SetTableValue(DebugMode_Function14, DebugMode_ObjCount, DebugMode_SpawnTable)
+	SetTableValue(DebugMode_DeleteDraw, DebugMode_ObjCount, DebugMode_DrawTable)
+	SetTableValue(DebugMode_DeleteObject, DebugMode_ObjCount, DebugMode_SpawnTable)
 	DebugMode_ObjCount++
-	if stage.actNum == 8
-		SetTableValue(TypeName[Debug Mode], temp0, DebugMode_TypeTable)
-		SetTableValue(DebugMode_Function17, DebugMode_ObjCount, DebugMode_DrawTable)
-		SetTableValue(DebugMode_Function16, DebugMode_ObjCount, DebugMode_SpawnTable)
+	if stage.actNum == 8 //Custom level only
+		SetTableValue(TypeName[Debug Mode], DebugMode_ObjCount, DebugMode_TypeTable)
+		SetTableValue(DebugMode_LoadDraw, DebugMode_ObjCount, DebugMode_DrawTable)
+		SetTableValue(DebugMode_LoadCustom, DebugMode_ObjCount, DebugMode_SpawnTable)
 		DebugMode_ObjCount++
-		SetTableValue(TypeName[Debug Mode], temp0, DebugMode_TypeTable)
-		SetTableValue(DebugMode_Function19, DebugMode_ObjCount, DebugMode_DrawTable)
-		SetTableValue(DebugMode_Function18, DebugMode_ObjCount, DebugMode_SpawnTable)
+		SetTableValue(TypeName[Debug Mode], DebugMode_ObjCount, DebugMode_TypeTable)
+		SetTableValue(DebugMode_SaveDraw, DebugMode_ObjCount, DebugMode_DrawTable)
+		SetTableValue(DebugMode_SaveCustom, DebugMode_ObjCount, DebugMode_SpawnTable)
 		DebugMode_ObjCount++
-		SetTableValue(TypeName[Debug Mode], temp0, DebugMode_TypeTable)
-		SetTableValue(DebugMode_Function21, DebugMode_ObjCount, DebugMode_DrawTable)
-		SetTableValue(DebugMode_Function20, DebugMode_ObjCount, DebugMode_SpawnTable)
+		SetTableValue(TypeName[Debug Mode], DebugMode_ObjCount, DebugMode_TypeTable)
+		SetTableValue(DebugMode_ClearDraw, DebugMode_ObjCount, DebugMode_DrawTable)
+		SetTableValue(DebugMode_ClearLevel, DebugMode_ObjCount, DebugMode_SpawnTable)
 		DebugMode_ObjCount++
 	end if
 end event

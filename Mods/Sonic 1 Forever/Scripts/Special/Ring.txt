@@ -24,7 +24,7 @@ end function
 function Ring_DebugSpawn
 	temp5 = 14
 	temp4 = 0
-	CallFunction(DebugMode_Function11)
+	CallFunction(DebugMode_SpawnObject)
 	object[arrayPos0].drawOrder = 4
 end function
 
