@@ -18,6 +18,26 @@ private alias object.value21 : gems.bonus
 
 private alias 20 : gauntletcenter
 
+//object states
+private alias 0 : SpecialFinish_Setup
+private alias 1 : SpecialFinish_SpinStage
+private alias 2 : SpecialFinish_FadeToFinish
+private alias 3 : SpecialFinish_WhiteScreenWait
+private alias 4 : SpecialFinish_Setup2
+private alias 5 : SpecialFinish_CenterLogo
+private alias 6 : SpecialFinish_CenterBonus
+private alias 7 : SpecialFinish_BonusWait
+private alias 8 : SpecialFinish_BonusCount
+private alias 9 : SpecialFinish_WaitToWarp
+private alias 10 : SpecialFinish_FadeOutWhite
+private alias 11 : SpecialFinish_FadeOutBlack
+private alias 12 : SpecialFinish_ShowContinue
+private alias 13 : SpecialFinish_NowSuperContinue
+private alias 14 : SpecialFinish_FadeToReset //We're not gonna show the finish screen here, we're going straight into a special stage
+private alias 15 : SpecialFinish_Reset
+private alias 16 : SpecialFinish_SuperSFX
+private alias 17 : SpecialFinish_CenterSuper
+
 // Function declarations
 reserve function SpecialFinish_Function53
 
@@ -51,14 +71,14 @@ end function
 
 event ObjectMain
 	switch object.state
-	case 0
+	case SpecialFinish_Setup
 		object.rotation = PlayerObject_value1
 		PlayerObject_value2 = 2
 		object.rotation <<= 2
 		object.value2 = 8
 		object.state++
 		break
-	case 1
+	case SpecialFinish_SpinStage
 		object.rotation -= object.value2
 		if object.rotation < 0
 			object.rotation += 0x800
@@ -99,7 +119,7 @@ event ObjectMain
 			end switch
 		end if
 		break
-	case 2
+	case SpecialFinish_FadeToFinish
 		object.rotation -= object.value2
 		if object.rotation < 0
 			object.rotation += 0x800
@@ -240,7 +260,7 @@ event ObjectMain
 			SetClassicFade(color7, color7, color7, 255)
 		end if
 		break
-	case 3
+	case SpecialFinish_WhiteScreenWait
 		if object.value0 < 45
 			object.value0++
 		else
@@ -256,7 +276,7 @@ event ObjectMain
 		end if
 		SetClassicFade(color7, color7, color7, 255)
 		break
-	case 4
+	case SpecialFinish_Setup2
 		PlayMusic(1)
 		object.drawOrder = 6
 		object.priority = PRIORITY_ACTIVE
@@ -275,7 +295,7 @@ event ObjectMain
 		object.value7 += 32
 		object.state++
 		break
-	case 5
+	case SpecialFinish_CenterLogo
 		if object.xpos > 0
 			object.xpos -= 16
 			if object.xpos < 0
@@ -291,7 +311,7 @@ event ObjectMain
 			object.state++
 		end if
 		break
-	case 6
+	case SpecialFinish_CenterBonus
 		if object.value6 < 256
 			object.value6 += 8
 		end if
@@ -316,7 +336,7 @@ event ObjectMain
 			object.state++
 		end if
 		break
-	case 7
+	case SpecialFinish_BonusWait
 		if object.value6 < 256
 			object.value6 += 8
 		end if
@@ -338,7 +358,7 @@ event ObjectMain
 			end if
 		end if
 		break
-	case 8
+	case SpecialFinish_BonusCount
 		temp2 = inputDown.buttonA
 		temp2 |= inputDown.buttonB
 		temp2 |= inputDown.buttonC
@@ -400,7 +420,7 @@ event ObjectMain
 			PlaySfx(SfxName[Score Total], 0)
 		end if
 		break
-	case 9
+	case SpecialFinish_WaitToWarp
 		object.value0++
 		if object.value0 == 160
 			object.value0 = 0
@@ -408,19 +428,19 @@ event ObjectMain
 			PlaySfx(SfxName[Warp], 0)
 		end if
 		break
-	case 10
+	case SpecialFinish_FadeOutWhite
 		if object.value0 < 400
 			object.value0 += 8
 			SetClassicFade(color7, color7, color7, object.value0)
 		else
-			object.value0 = 248
+			object.value0 = 0
 			object.state++
 			SetClassicFade(color7, color7, color7, 255)
 		end if
 		break
-	case 11
-		if object.value0 > 0
-			object.value0 -= 8
+	case SpecialFinish_FadeOutBlack
+		if object.value0 < 248
+			object.value0 += 8
 		else
 			if options.gameMode == 1
 				arrayPos1 = options.saveSlot
@@ -492,9 +512,9 @@ event ObjectMain
 
 			end if
 		end if
-		SetClassicFade(object.value0, object.value0, object.value0, 255)
+		SetClassicFade(0, 0, 0, object.value0)
 		break
-	case 12
+	case SpecialFinish_ShowContinue
 		object.value0++
 		if object.value0 == 120
 			object.value0 = 0
@@ -504,10 +524,10 @@ event ObjectMain
 				PlaySfx(SfxName[Event], 0)
 			else
 				PlaySfx(SfxName[Continue], 0)
-			end if			
+			end if
 		end if
 		break
-	case 13
+	case SpecialFinish_NowSuperContinue
 		if specialStage.emeralds == 127
 			CallFunction(SpecialFinish_Function53)
 		end if
@@ -518,7 +538,7 @@ event ObjectMain
 			PlaySfx(SfxName[Warp], 0)
 		end if
 		break
-	case 14
+	case SpecialFinish_FadeToReset
 		object.rotation -= object.value2
 		if object.rotation < 0
 			object.rotation += 0x800
@@ -554,7 +574,7 @@ event ObjectMain
 		end if
 		SetClassicFade(color7, color7, color7, object.value0)
 		break
-	case 15
+	case SpecialFinish_Reset
 		switch options.gameMode
 			case 2
 				break
@@ -565,7 +585,7 @@ event ObjectMain
 		LoadStage()
 		SetClassicFade(color7, color7, color7, object.value0)
 		break
-	case 16
+	case SpecialFinish_SuperSFX
 		object.value0++
 		if object.value0 == 120
 			object.value0 = 0
@@ -577,7 +597,7 @@ event ObjectMain
 			end if
 		end if
 		break
-	case 17
+	case SpecialFinish_CenterSuper
 		CallFunction(SpecialFinish_Function53)
 		object.value0++
 		if object.value0 == 480
@@ -644,6 +664,9 @@ end event
 
 event ObjectDraw
 	switch object.state
+	case 11
+		DrawRect(0, 0, screen.xsize, screen.ysize, color7, color7, color7, 255)
+		break
 	case 4
 	case 5
 	case 6
@@ -651,7 +674,6 @@ event ObjectDraw
 	case 8
 	case 9
 	case 10
-	case 11
 	case 12
 	case 13
 	case 16
@@ -884,7 +906,7 @@ event ObjectDraw
 	end if
 
 	
-	//DrawNumbers(9, screen.xcenter, 20, object.alpha, 6, 8, 0)
+	//DrawNumbers(9, screen.xcenter, 20, object.state, 6, 8, 0)
 end event
 
 
