@@ -1384,7 +1384,8 @@ event ObjectMain
 end event
 
 function header.back
-	DrawRect(51, 0, screen.xsize, 71, color7, color7, color7, 255)
+	
+	DrawRect(text.margin, 0, screen.xsize, 71, color7, color7, color7, 255)
 	if menu.highlight == 0
 		temp0 = text.margin
 		temp0 -= 4

@@ -1277,10 +1277,15 @@ event ObjectStartup
 end event
 
 function sidebar.adj
-	if screen.xsize < 400
-		sidebar.w = 5
-	else
+	sidebar.w = screen.xsize
+	sidebar.w -= 315
+	sidebar.w >>= 1
+	if sidebar.w > 50
 		sidebar.w = 50
+	else
+		if sidebar.w < 5
+			sidebar.w = 5
+		end if
 	end if
 end function
 
