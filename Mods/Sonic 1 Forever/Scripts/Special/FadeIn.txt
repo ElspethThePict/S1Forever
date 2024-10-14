@@ -416,81 +416,58 @@ event ObjectDraw
 end event
 
 event ObjectStartup
-switch saved.language //main code
-	default //english
 		LoadSpriteSheet("Global/Pause.gif")	
 		LoadPalette("Pause.act", 7, 0, 0, 256)
-		
-		//PauseMenu
 		SpriteFrame(-133, -160, 133, 160, 4, 289) // 0 Circle
 		SpriteFrame(0, 0, 8, 8, 158, 450) // 1 Top Border
 		SpriteFrame(0, 0, 8, 8, 149, 450) // 2 Bottom Border
-		if screen.xsize == 320
-			SpriteFrame(-30, 0, 144, 25, 4, 450) // 3 Paused Tab
-		else
+
+
+		switch saved.language //main code
+			default //english
 			SpriteFrame(0, 0, 144, 25, 4, 450) // 3 Paused Tab
-		end if
-		SpriteFrame(-28, 0, 18, 18, 138, 346) // 4 Selector Bar
-		
-		
-		SpriteFrame(-126, 0, 96, 18, 138, 383) // 5 Resume
-		SpriteFrame(-141, 0, 111, 18, 138, 402)) // 6 Restart
-		SpriteFrame(-84, 0, 54, 18, 138, 421) // 7 Exit
-		
-		SpriteFrame(-126, 0, 96, 18, 138, 289) // 8 Resume HL
-		SpriteFrame(-141, 0, 111, 18, 138, 308) // 9 Restart HL
-		SpriteFrame(-84, 0, 54, 18, 138, 327) // 10 Exit HL
-		break
-	case 1 //Portuguese
-		LoadSpriteSheet("Global/PausePTBR.gif")		
-		LoadPalette("Pause.act", 7, 0, 0, 256)
-		
-		//PauseMenu
-		SpriteFrame(-133, -160, 133, 160, 4, 289) // 0 Circle
-		SpriteFrame(0, 0, 8, 8, 158, 450) // 1 Top Border
-		SpriteFrame(0, 0, 8, 8, 149, 450) // 2 Bottom Border
-		if screen.xsize == 320
-			SpriteFrame(-30, 0, 144, 25, 4, 450) // 3 Paused Tab
-		else
-			SpriteFrame(0, 0, 144, 25, 4, 450) // 3 Paused Tab
-		end if
-		SpriteFrame(-28, 0, 18, 18, 138, 346) // 4 Selector Bar
-		
-		
-		SpriteFrame(-144, 0, 114, 18, 138, 383) // 5 Resume
-		SpriteFrame(-147, 0, 118, 18, 138, 402) // 6 Restart
-		SpriteFrame(-84, 0, 55, 18, 138, 421) // 7 Exit
-		
-		SpriteFrame(-144, 0, 114, 18, 138, 289) // 8 Resume HL
-		SpriteFrame(-147, 0, 118, 18, 138, 308) // 9 Restart HL
-		SpriteFrame(-84, 0, 54, 18, 138, 327) // 10 Exit HL
-		break
-	case 2 //Spanish
-		LoadSpriteSheet("Global/PauseSP.gif")		
-		LoadPalette("Pause.act", 7, 0, 0, 256)
-		
-		//PauseMenu
-		SpriteFrame(-133, -160, 133, 160, 4, 289) // 0 Circle
-		SpriteFrame(0, 0, 8, 8, 158, 450) // 1 Top Border
-		SpriteFrame(0, 0, 8, 8, 149, 450) // 2 Bottom Border
-		if screen.xsize == 320
-			SpriteFrame(-30, 0, 144, 25, 4, 450) // 3 Paused Tab
-		else
-			SpriteFrame(0, 0, 144, 25, 4, 450) // 3 Paused Tab
-		end if
-		SpriteFrame(-28, 0, 18, 18, 138, 346) // 4 Selector Bar
-		
-		
-		SpriteFrame(-166, 0, 136, 18, 138, 383) // 5 Resume
-		SpriteFrame(-149, 0, 119, 18, 138, 402) // 6 Restart
-		SpriteFrame(-102, 0, 72, 18, 138, 421) // 7 Exit
-		
-		SpriteFrame(-166, 0, 136, 18, 138, 289) // 8 Resume HL
-		SpriteFrame(-149, 0, 119, 18, 138, 308) // 9 Restart HL
-		SpriteFrame(-102, 0, 72, 18, 138, 327) // 10 Exit HL
-		break
+			SpriteFrame(-28, 0, 18, 18, 138, 346) // 4 Selector Bar	
+			
+			SpriteFrame(-126, 0, 96, 18, 138, 383) // 5 Resume
+			SpriteFrame(-141, 0, 111, 18, 138, 402) // 6 Restart
+			SpriteFrame(-84, 0, 54, 18, 138, 421) // 7 Exit
+			
+			SpriteFrame(-126, 0, 96, 18, 138, 289) // 8 Resume HL
+			SpriteFrame(-141, 0, 111, 18, 138, 308) // 9 Restart HL
+			SpriteFrame(-84, 0, 54, 18, 138, 327) // 10 Exit HL
+		break	
+		case 1 //Portuguese
+			SpriteFrame(0, 0, 144, 25, 146, 1) // 3 Paused Tab
+			SpriteFrame(-28, 0, 18, 18, 138, 346) // 4 Selector Bar	
+			
+			SpriteFrame(-146, 0, 115, 18, 1, 204) // 5 Resume
+			SpriteFrame(-149, 0, 119, 18, 1, 223) // 6 Restart
+			SpriteFrame(-86, 0, 56, 18, 1, 242) // 7 Exit
+			
+			SpriteFrame(-146, 0, 115, 18, 1, 147) // 8 Resume HL
+			SpriteFrame(-149, 0, 119, 18, 1, 166) // 9 Restart HL
+			SpriteFrame(-86, 0, 56, 18, 1, 185) // 10 Exit HL
+		break	
+		case 2 //Spanish
+			SpriteFrame(0, 0, 144, 25, 1, 1) // 3 Paused Tab
+			SpriteFrame(-28, 0, 18, 18, 138, 346) // 4 Selector Bar		
+			
+			SpriteFrame(-166, 0, 136, 18, 1, 84) // 5 Resume
+			SpriteFrame(-149, 0, 119, 18, 1, 103) // 6 Restart
+			SpriteFrame(-102, 0, 72, 18, 1, 122) // 7 Exit
+			
+			SpriteFrame(-166, 0, 136, 18, 1, 27) // 8 Resume HL
+			SpriteFrame(-149, 0, 119, 18, 1, 46) // 9 Restart HL
+			SpriteFrame(-102, 0, 72, 18, 1, 65) // 10 Exit HL
+		break	
+	//they dont exist yet but just so you know what will soon go there ig
+	//	case 3 //French
+	//	break
+	//	case 4 //German
+	//	break 
 	end switch
 	
+	//Ring Chain
 	SpriteFrame(-89, 6, 60, 6, 345, 486) // 11 Text
 	SpriteFrame(-37, 15, 8, 11, 316, 474) // 12 Numbers
 	SpriteFrame(-37, 15, 8, 11, 325, 474) // 13 Numbers
@@ -513,7 +490,7 @@ switch saved.language //main code
 
 	SpriteFrame(0, 0, 0, 0, 0, 0) // 30 Blank
 	SpriteFrame(0, 0, 0, 0, 0, 0) // 31 Blank
-	
+
 	//Emeralds	
 	SpriteFrame(0, 0, 12, 12, 1, 276) // 32
 	SpriteFrame(0, 0, 12, 12, 14, 276) // 33
