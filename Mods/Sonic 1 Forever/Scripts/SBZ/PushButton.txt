@@ -11,6 +11,7 @@ private alias 48 : TYPE_PUSHBUTTON
 // Function declarations
 reserve function PushButton_DebugDraw
 reserve function PushButton_DebugSpawn
+reserve function RecordAnimation
 
 // Static Values
 
@@ -25,6 +26,20 @@ function PushButton_DebugSpawn
 	CreateTempObject(TypeName[Push Button], 0, object.xpos, object.ypos)
 end function
 
+function RecordAnimation
+	recAnimation = 0
+	temp0 = 0
+	currentPlayer = 0
+	while currentPlayer < playerCount
+		temp1 = object[currentPlayer].animation
+		temp1 <<= 8
+		temp1 |= object[currentPlayer].direction
+		temp1 <<= temp0
+		recAnimation |= temp1
+		temp0 += 16
+		currentPlayer++
+	loop
+end function
 
 event ObjectMain
 	object.value0 = 0
@@ -139,6 +154,7 @@ event ObjectMain
 					temp0 = 1
 				end if
 				if temp0 == 0
+					CallFunction(RecordAnimation)
 					WriteSaveRAM()
 					LoadStage()
 				else
@@ -151,16 +167,6 @@ event ObjectMain
 		else
 			if object[0].ypos > object.value1
 				object.state = 1
-				recAnimation = 0
-				temp0 = 0
-				foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
-					temp1 = object[currentPlayer].animation
-					temp1 <<= 8
-					temp1 |= object[currentPlayer].direction
-					temp1 <<= temp0
-					recAnimation |= temp1
-					temp0 += 16
-				next
 				object[0].type = TypeName[Blank Object]
 			end if
 		end if

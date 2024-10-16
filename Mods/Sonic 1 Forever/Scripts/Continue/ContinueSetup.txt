@@ -177,7 +177,7 @@ event ObjectMain
 			object.value0 = 0
 			lampPostID = 0
 			object.direction = FLIP_NONE
-			//engine.state = 8
+			recAnimation = 0
 			stage.activeList = PRESENTATION_STAGE
 			stage.listPos = StageName[P - MAIN MENU]
 			LoadStage()

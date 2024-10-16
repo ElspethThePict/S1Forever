@@ -132,6 +132,7 @@ event ObjectMain
 					end if
 					stage.activeList = PRESENTATION_STAGE
 					stage.listPos = StageName[P - ENDING 1]
+					recAnimation = 0
 					if options.gameMode == 3
 						saveRAM[630] = player.score
 						temp0 = stage.playerListPos

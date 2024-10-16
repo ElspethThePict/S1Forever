@@ -77,14 +77,16 @@ end function
 function RecordAnimation
 	recAnimation = 0
 	temp0 = 0
-	foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+	currentPlayer = 0
+	while currentPlayer < playerCount
 		temp1 = object[currentPlayer].animation
 		temp1 <<= 8
 		temp1 |= object[currentPlayer].direction
 		temp1 <<= temp0
 		recAnimation |= temp1
 		temp0 += 16
-	next
+		currentPlayer++
+	loop
 end function
 
 event ObjectMain
@@ -97,7 +99,6 @@ event ObjectMain
 			else
 				recGoggles = 0
 			end if
-			CallFunction(RecordAnimation)
 			object[0].type = TypeName[Ring]
 			object[0].groupID = TypeName[Blank Object]
 			object[0].controlMode = -1
@@ -193,6 +194,7 @@ event ObjectMain
 				arrayPos1++
 				saveRAM[arrayPos1] = specialStage.listPos
 			end if
+			CallFunction(RecordAnimation)
 			WriteSaveRAM()
 			LoadStage()
 		end if
@@ -203,6 +205,7 @@ event ObjectMain
 			object.value0++
 			music.volume -= 2
 		else
+			CallFunction(RecordAnimation)
 			object.type = TypeName[Blank Object]
 			object[30].type = TypeName[Act Finish]
 			object[30].drawOrder = 6

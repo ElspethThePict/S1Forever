@@ -329,6 +329,7 @@ event ObjectMain
 						stage.activeList = PRESENTATION_STAGE
 						object.state = 3
 						lampPostID = 0
+						recAnimation = 0
 						break
 				end switch
 			end if

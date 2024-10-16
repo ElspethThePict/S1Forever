@@ -41,6 +41,7 @@ event ObjectMain
 				stage.activeList = PRESENTATION_STAGE
 				if player.continues == 0
 					stage.listPos = StageName[P - MAIN MENU]
+					recAnimation = 0
 				else
 					stage.listPos = StageName[P - CONTINUE SCREEN]
 				end if
