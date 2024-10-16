@@ -61,7 +61,7 @@ Translation:
 - Storice
 - ThunderLeon
 - TruthTomato
-- WorksofMagic
+- WorksOfMagic
 
 Testing:
 - AlyStyle
